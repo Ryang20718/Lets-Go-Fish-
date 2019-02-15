@@ -357,7 +357,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.king_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.king_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.king_Fish_Matrix[0][0] = 0;
             this.king_Fish_Matrix[0][1] = -1;
             this.king_Fish_Matrix[1][0] = 1;
@@ -385,7 +385,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.plain_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.plain_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.plain_Fish_Matrix[0][0] = 0;
             this.plain_Fish_Matrix[0][1] = -1;
             this.plain_Fish_Matrix[1][0] = 1;
@@ -400,7 +400,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.plain1_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.plain_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.plain1_Fish_Matrix[0][0] = 0;
             this.plain1_Fish_Matrix[0][1] = -1;
             this.plain1_Fish_Matrix[1][0] = 1;
@@ -415,7 +415,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.plain2_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.plain_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.plain2_Fish_Matrix[0][0] = 0;
             this.plain2_Fish_Matrix[0][1] = -1;
             this.plain2_Fish_Matrix[1][0] = 1;
@@ -430,7 +430,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry_Matrix[0][0] = 0;
             this.small_Fry_Matrix[0][1] = -1;
             this.small_Fry_Matrix[1][0] = 1;
@@ -445,7 +445,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry1_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry1_Matrix[0][0] = 0;
             this.small_Fry1_Matrix[0][1] = -1;
             this.small_Fry1_Matrix[1][0] = 1;
@@ -460,7 +460,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry2_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry2_Matrix[0][0] = 0;
             this.small_Fry2_Matrix[0][1] = -1;
             this.small_Fry2_Matrix[1][0] = 1;
@@ -475,7 +475,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry3_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry3_Matrix[0][0] = 0;
             this.small_Fry3_Matrix[0][1] = -1;
             this.small_Fry3_Matrix[1][0] = 1;
@@ -490,7 +490,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry4_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry4_Matrix[0][0] = 0;
             this.small_Fry4_Matrix[0][1] = -1;
             this.small_Fry4_Matrix[1][0] = 1;
@@ -505,7 +505,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.touchy_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.touchy_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.touchy_Fish_Matrix[0][0] = 0;
             this.touchy_Fish_Matrix[0][1] = -1;
             this.touchy_Fish_Matrix[1][0] = 1;
@@ -520,7 +520,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.nibbler_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.nibbler;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.nibbler_Matrix[0][0] = 0;
             this.nibbler_Matrix[0][1] = -1;
             this.nibbler_Matrix[1][0] = 1;
@@ -745,8 +745,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         if (this.sphere1_Matrix[2][3] < 2) {
             fish_matrix[2][3] = fish_matrix[2][3] + .02;
             fish_matrix = fish_matrix.times(Mat4.rotation(.004, [0, -.1, 0]));
-            this.shapes.plane.draw(graphics_state, fish_matrix, this.caught_fish_material);
 
+            //this.shapes.plane.draw(graphics_state, fish_matrix, this.caught_fish_material);
+            this.shapes.fish3D.draw(graphics_state, fish_matrix, this.caught_fish_material);
+            
             this.sphere1_Matrix[2][3] = this.sphere1_Matrix[2][3] + .02;
             this.sphere2_Matrix[2][3] = this.sphere2_Matrix[2][3] + .02;
             this.torus1_Matrix[2][3] = this.torus1_Matrix[2][3] + .02;
@@ -946,14 +948,15 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.plain1_model_spawn = this.plain1_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-                this.shapes.plane.draw(graphics_state, this.plain1_model_spawn, this.materials.plain_Fish);
+                this.shapes.fish3D.draw(graphics_state, this.plain1_model_spawn, this.materials.rudd_Fish);
             }
 
             if (t > this.plain1_spawn_time + 0.2) {
                 plain1_model_transform = this.plain1_Fish_Matrix.times(Mat4.translation([(0.07) * Math.cos(this.plain1_angle), (0.07) * Math.sin(this.plain1_angle), 0]));
                 this.plain1_Fish_Matrix = plain1_model_transform;
                 plain1_model_transform = plain1_model_transform.times(Mat4.rotation(this.plain1_angle, Vec.of(0, 0, 1)))
-                this.shapes.plane.draw(graphics_state, plain1_model_transform, this.materials.plain_Fish);
+
+                this.shapes.fish3D.draw(graphics_state, plain1_model_transform, this.materials.rudd_Fish);
             }
         }
 
@@ -976,14 +979,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.plain2_model_spawn = this.plain2_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-                this.shapes.plane.draw(graphics_state, this.plain2_model_spawn, this.materials.plain_Fish);
+                this.shapes.fish3D.draw(graphics_state, this.plain2_model_spawn, this.materials.rudd_Fish);
             }
 
             if (t > this.plain2_spawn_time + 0.2) {
                 plain2_model_transform = this.plain2_Fish_Matrix.times(Mat4.translation([(0.07) * Math.cos(this.plain2_angle), (0.07) * Math.sin(this.plain2_angle), 0]));
                 this.plain2_Fish_Matrix = plain2_model_transform;
                 plain2_model_transform = plain2_model_transform.times(Mat4.rotation(this.plain2_angle, Vec.of(0, 0, 1)))
-                this.shapes.plane.draw(graphics_state, plain2_model_transform, this.materials.plain_Fish);
+                this.shapes.fish3D.draw(graphics_state, plain2_model_transform, this.materials.rudd_Fish);
             }
         }
 
@@ -1006,7 +1009,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.fry_model_spawn = this.fry_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-                this.shapes.plane.draw(graphics_state, this.fry_model_spawn, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, this.fry_model_spawn, this.materials.rudd_Fish);
             }
 
             if (t > this.fry_spawn_time + 0.2) {
@@ -1021,7 +1024,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.small_Fry_Matrix = fry_model_transform;
                 fry_model_transform = fry_model_transform.times(Mat4.rotation(this.fry_angle, Vec.of(0, 0, 1)))
-                this.shapes.plane.draw(graphics_state, this.fry_model_spawn, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, fry_model_transform, this.materials.rudd_Fish);
             }
         }
 
@@ -1044,7 +1047,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.fry1_model_spawn = this.fry1_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-                this.shapes.plane.draw(graphics_state, this.fry1_model_spawn, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, this.fry1_model_spawn, this.materials.rudd_Fish);
             }
 
             if (t > this.fry1_spawn_time + 0.2) {
@@ -1059,7 +1062,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.small_Fry1_Matrix = fry1_model_transform;
                 fry1_model_transform = fry1_model_transform.times(Mat4.rotation(this.fry1_angle, Vec.of(0, 0, 1)))
-                this.shapes.plane.draw(graphics_state, fry1_model_transform, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, fry1_model_transform, this.materials.rudd_Fish);
             }
         }
 
@@ -1082,14 +1085,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.fry2_model_spawn = this.fry2_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-                this.shapes.plane.draw(graphics_state, this.fry2_model_spawn, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, this.fry2_model_spawn, this.materials.rudd_Fish);
             }
 
             if (t > this.fry2_spawn_time + 0.2) {
                 fry2_model_transform = this.small_Fry2_Matrix.times(Mat4.translation([0.1 * Math.cos(this.fry2_angle), 0.1 * Math.sin(this.fry2_angle), 0]));
                 this.small_Fry2_Matrix = fry2_model_transform;
                 fry2_model_transform = fry2_model_transform.times(Mat4.rotation(this.fry2_angle, Vec.of(0, 0, 1)))
-                this.shapes.plane.draw(graphics_state, fry2_model_transform, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, fry2_model_transform, this.materials.rudd_Fish);
             }
         }
 
@@ -1112,14 +1115,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.fry3_model_spawn = this.fry3_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-                this.shapes.plane.draw(graphics_state, this.fry3_model_spawn, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, this.fry3_model_spawn, this.materials.rudd_Fish);
             }
 
             if (t > this.fry3_spawn_time + 0.2) {
                 fry3_model_transform = this.small_Fry3_Matrix.times(Mat4.translation([0.1 * Math.cos(this.fry3_angle), 0.1 * Math.sin(this.fry3_angle), 0]));
                 this.small_Fry3_Matrix = fry3_model_transform;
                 fry3_model_transform = fry3_model_transform.times(Mat4.rotation(this.fry3_angle, Vec.of(0, 0, 1)))
-                this.shapes.plane.draw(graphics_state, fry3_model_transform, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, fry3_model_transform, this.materials.rudd_Fish);
             }
         }
 
@@ -1142,14 +1145,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.fry4_model_spawn = this.fry4_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-                this.shapes.plane.draw(graphics_state, this.fry4_model_spawn, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, this.fry4_model_spawn, this.materials.rudd_Fish);
             }
 
             if (t > this.fry4_spawn_time + 0.2) {
                 fry4_model_transform = this.small_Fry4_Matrix.times(Mat4.translation([0.2 * Math.cos(this.fry4_angle), 0.2 * Math.sin(this.fry4_angle), 0]));
                 this.small_Fry4_Matrix = fry4_model_transform;
                 fry4_model_transform = fry4_model_transform.times(Mat4.rotation(this.fry4_angle, Vec.of(0, 0, 1)))
-                this.shapes.plane.draw(graphics_state, fry4_model_transform, this.materials.small_Fry);
+                this.shapes.fish3D.draw(graphics_state, fry4_model_transform, this.materials.rudd_Fish);
             }
         }
 
@@ -1172,7 +1175,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.touchy_model_spawn = this.touchy_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-                this.shapes.plane.draw(graphics_state, this.touchy_model_spawn, this.materials.touchy_Fish);
+                this.shapes.fish3D.draw(graphics_state, this.touchy_model_spawn, this.materials.rudd_Fish);
             }
 
             if (t > this.touchy_spawn_time + 0.2) {
@@ -1187,7 +1190,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.touchy_Fish_Matrix = touchy_model_transform;
                 touchy_model_transform = touchy_model_transform.times(Mat4.rotation(this.touchy_angle, Vec.of(0, 0, 1)))
-                this.shapes.plane.draw(graphics_state, touchy_model_transform, this.materials.touchy_Fish);
+                this.shapes.fish3D.draw(graphics_state, touchy_model_transform, this.materials.rudd_Fish);
             }
         }
 
@@ -1215,7 +1218,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.nibbler_model_spawn = this.nibbler_model_spawn.times(Mat4.scale([1.4, 1.4, 1.4]));
                     }
                 }
-                this.shapes.plane.draw(graphics_state, this.nibbler_model_spawn, this.materials.nibbler);
+                this.shapes.fish3D.draw(graphics_state, this.nibbler_model_spawn, this.materials.rudd_Fish);
                 this.nibbler_Matrix[0][3] = 0;
                 this.nibbler_Matrix[1][3] = 0;
             }
@@ -1224,7 +1227,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 nibbler_model_transform = this.nibbler_Matrix.times(Mat4.translation([(0.15) * Math.cos(this.nibbler_angle), (0.15) * Math.sin(this.nibbler_angle), 0]));
                 this.nibbler_Matrix = nibbler_model_transform;
                 nibbler_model_transform = nibbler_model_transform.times(Mat4.rotation(this.nibbler_angle, Vec.of(0, 0, 1)))
-                this.shapes.plane.draw(graphics_state, nibbler_model_transform, this.materials.nibbler);
+                this.shapes.fish3D.draw(graphics_state, nibbler_model_transform, this.materials.rudd_Fish);
             }
         }
 
