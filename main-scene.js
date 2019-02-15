@@ -309,10 +309,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.catch_fish()
         }
         );
-
-        //         this.result_img = this.control_panel.appendChild( Object.assign( document.createElement( "img" ), 
-        //                 { style:"width:200px; height:" + 200 * this.aspect_ratio + "px" } ) );
-
     }
 
     move_left() {
@@ -735,9 +731,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         // Draw flattened blue sphere for temporary pond:
         this.shapes.pond.draw(graphics_state, this.pond_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.pond);
-
         this.shapes.torus.draw(graphics_state, this.ground_Matrix, this.materials.ground);
-
         this.draw_the_enviroment(graphics_state, t);
     }
 
@@ -746,7 +740,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             fish_matrix[2][3] = fish_matrix[2][3] + .02;
             fish_matrix = fish_matrix.times(Mat4.rotation(.004, [0, -.1, 0]));
 
-            //this.shapes.plane.draw(graphics_state, fish_matrix, this.caught_fish_material);
             this.shapes.fish3D.draw(graphics_state, fish_matrix, this.caught_fish_material);
             
             this.sphere1_Matrix[2][3] = this.sphere1_Matrix[2][3] + .02;
@@ -756,15 +749,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.cylinder_Matrix[2][3] = this.cylinder_Matrix[2][3] + .02;
         }
         if (this.sphere1_Matrix[2][3] > 2) {
-            //                         this.fish_is_caught = false;
-            //                   this.caught_fish_matrix[0][3] = 100;
-            //                   this.caught_fish_matrix[1][3] = 100;
             var fix_rotation = fish_matrix.times(Mat4.rotation(1, [0, -1, 0]));
             this.shapes.plane.draw(graphics_state, fix_rotation, this.caught_fish_material);
             this.zoom_animation = true;
             if (this.start_zoom == -1) {
                 this.start_zoom = t;
-
             }
             this.caught_fish_camera(graphics_state, fish_matrix, t);
         }
@@ -781,8 +770,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.storedCamera = graphics_state.camera_transform;
         } else {
             this.fish_is_caught = false;
-            this.caught_fish_matrix[0][3] = 100;
-            this.caught_fish_matrix[1][3] = 100;
+            //this.caught_fish_matrix[0][3] = 100;
+            //this.caught_fish_matrix[1][3] = 100;
             this.zoom_animation = false;
             this.start_zoom = -1;
         }
@@ -792,24 +781,18 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     // ***************************** DRAW THE ENVIROMETNT **********************
     // *************************************************************************
     draw_the_enviroment(graphics_state, t) {
-
-        //this.shapes.fish3D.draw(graphics_state,this.fish3D_Matrix,this.materials.rudd_Fish);
-        //  this.shapes.tree.draw( graphics_state, this.tree_Matrix, this.materials.tree);
         this.shapes.tree_stem.draw(graphics_state, this.tree_Matrix2, this.materials.tree_stem);
         this.shapes.tree_leaves.draw(graphics_state, this.tree_Matrix2, this.materials.tree_leaves);
 
-        //  this.shapes.tree.draw( graphics_state, this.tree_Matrix, this.materials.tree);
         this.shapes.tree_stem.draw(graphics_state, this.tree_Matrix1, this.materials.tree_stem);
         this.shapes.tree_leaves.draw(graphics_state, this.tree_Matrix1, this.materials.tree_leaves.override({
             color: Color.of(.3, .6, .2, 1)
         }));
 
-        // this.shapes.rock.draw( graphics_state, this.rock_Matrix, this.materials.rock);
         this.shapes.plane.draw(graphics_state, this.backdrop_Matrix, this.materials.pond.override({
             color: Color.of(0, 1, 1, 1),
             ambient: .8
         }));
-
     }
 
     // *************************************************************************
