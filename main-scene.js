@@ -357,7 +357,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.king_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.king_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.king_Fish_Matrix[0][0] = 0;
             this.king_Fish_Matrix[0][1] = -1;
             this.king_Fish_Matrix[1][0] = 1;
@@ -385,7 +385,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.plain_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.plain_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.plain_Fish_Matrix[0][0] = 0;
             this.plain_Fish_Matrix[0][1] = -1;
             this.plain_Fish_Matrix[1][0] = 1;
@@ -400,7 +400,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.plain1_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.plain_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.plain1_Fish_Matrix[0][0] = 0;
             this.plain1_Fish_Matrix[0][1] = -1;
             this.plain1_Fish_Matrix[1][0] = 1;
@@ -415,7 +415,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.plain2_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.plain_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.plain2_Fish_Matrix[0][0] = 0;
             this.plain2_Fish_Matrix[0][1] = -1;
             this.plain2_Fish_Matrix[1][0] = 1;
@@ -430,7 +430,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry_Matrix[0][0] = 0;
             this.small_Fry_Matrix[0][1] = -1;
             this.small_Fry_Matrix[1][0] = 1;
@@ -445,7 +445,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry1_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry1_Matrix[0][0] = 0;
             this.small_Fry1_Matrix[0][1] = -1;
             this.small_Fry1_Matrix[1][0] = 1;
@@ -460,7 +460,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry2_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry2_Matrix[0][0] = 0;
             this.small_Fry2_Matrix[0][1] = -1;
             this.small_Fry2_Matrix[1][0] = 1;
@@ -475,7 +475,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry3_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry3_Matrix[0][0] = 0;
             this.small_Fry3_Matrix[0][1] = -1;
             this.small_Fry3_Matrix[1][0] = 1;
@@ -490,7 +490,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.fry4_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.small_Fry;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.small_Fry4_Matrix[0][0] = 0;
             this.small_Fry4_Matrix[0][1] = -1;
             this.small_Fry4_Matrix[1][0] = 1;
@@ -505,7 +505,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.touchy_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.touchy_Fish;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.touchy_Fish_Matrix[0][0] = 0;
             this.touchy_Fish_Matrix[0][1] = -1;
             this.touchy_Fish_Matrix[1][0] = 1;
@@ -520,7 +520,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.splash.play();
             this.nibbler_caught = true;
             this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.nibbler;
+            this.caught_fish_material = this.materials.rudd_Fish;
             this.nibbler_Matrix[0][0] = 0;
             this.nibbler_Matrix[0][1] = -1;
             this.nibbler_Matrix[1][0] = 1;
@@ -745,8 +745,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         if (this.sphere1_Matrix[2][3] < 2) {
             fish_matrix[2][3] = fish_matrix[2][3] + .02;
             fish_matrix = fish_matrix.times(Mat4.rotation(.004, [0, -.1, 0]));
-            this.shapes.plane.draw(graphics_state, fish_matrix, this.caught_fish_material);
 
+            //this.shapes.plane.draw(graphics_state, fish_matrix, this.caught_fish_material);
+            this.shapes.fish3D.draw(graphics_state, fish_matrix, this.caught_fish_material);
+            
             this.sphere1_Matrix[2][3] = this.sphere1_Matrix[2][3] + .02;
             this.sphere2_Matrix[2][3] = this.sphere2_Matrix[2][3] + .02;
             this.torus1_Matrix[2][3] = this.torus1_Matrix[2][3] + .02;
