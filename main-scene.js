@@ -44,6 +44,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             cylinder: new Capped_Cylinder(20,20),
             tree_stem: new Shape_From_File("assets/MapleTreeStem.obj"),
             tree_leaves: new Shape_From_File("assets/MapleTreeLeaves.obj"),
+            pine_tree: new Shape_From_File("assets/Tree.obj"),
             grass: new Shape_From_File("assets/Grass_03.obj"),
             rock: new Shape_From_File("assets/Rock.obj"),
             fish3D: new Shape_From_File("assets/RuddFish.obj"),
@@ -122,6 +123,12 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 ambient: .9,
                 diffusivity: .5,
                 specularity: .5
+            }),
+            bark: context.get_instance(Fake_Bump_Map).material(Color.of(.4, .25, .15, 1), {
+                ambient: .5,
+                diffusivity: 5,
+                specularity: .5,
+                texture: context.get_instance("assets/rock_tex.jpg", false)
             }),
             rock: context.get_instance(Fake_Bump_Map).material(Color.of(.4, .25, .15, 1), {
                 ambient: .5,
@@ -266,6 +273,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.rock_Matrix = Mat4.identity().times(Mat4.rotation(1.6, Vec.of(0, 1, -.1))).times(Mat4.translation([-0, -7, 11])).times(Mat4.scale([8, 2, 2]));
 
         this.fish3D_Matrix = Mat4.identity().times(Mat4.rotation(1, Vec.of(1, 0, -.1))).times(Mat4.translation([0, 0, 11])).times(Mat4.scale([8, 8, 8]));
+
+        this.pine_tree_Matrix = Mat4.identity().times(Mat4.scale([8, 8, 8]));
 
         this.catching = false;
         this.catching_timer = 0;
@@ -781,6 +790,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     // ***************************** DRAW THE ENVIROMETNT **********************
     // *************************************************************************
     draw_the_enviroment(graphics_state, t) {
+       // this.shapes.pine_tree.draw(graphics_state, this.pine_tree_Matrix, this.materials.bark);
+        
         this.shapes.tree_stem.draw(graphics_state, this.tree_Matrix2, this.materials.tree_stem);
         this.shapes.tree_leaves.draw(graphics_state, this.tree_Matrix2, this.materials.tree_leaves);
 
