@@ -53,14 +53,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.submit_shapes(context, shapes);
 
         this.materials = {
-            pond: context.get_instance(Phong_Shader).material(Color.of(0, 123 / 255, 167 / 255, .5), {
+            pond: context.get_instance(Phong_Shader).material(Color.of(0,.7,1,.5), {
                 ambient: 0.3
             }),
             ground: context.get_instance(Fake_Bump_Map).material(Color.of(109 / 255, 78 / 255, 0 / 255, 1), {
                 ambient: .40,
                 texture: context.get_instance("assets/ground_texture.jpeg", false)
             }),
-            shadow: context.get_instance(Shadow_Shader).material(Color.of(71 / 255, 59 / 255, 51 / 255, 1), {
+            shadow: context.get_instance(Shadow_Shader).material(Color.of(.3,.3,.3,1),{
                 ambient: 1,
                 texture: this.texture
             }),
@@ -113,17 +113,17 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 specularity: .5,
                 texture: context.get_instance("assets/end_game.jpg", false)
             }),
-            tree_leaves: context.get_instance(Fake_Bump_Map).material(Color.of(0, .6, 0, 1), {
+            tree_leaves: context.get_instance(Fake_Bump_Map).material(Color.of(.1, .6, .1, 1), {
                 ambient: .7,
                 diffusivity: .5,
                 specularity: .5
             }),
-            tree_stem: context.get_instance(Fake_Bump_Map).material(Color.of(70 / 255, 50 / 255, 5 / 255, 1), {
+            tree_stem: context.get_instance(Fake_Bump_Map).material(Color.of(.3, .2, .1, 1), {
                 ambient: .9,
                 diffusivity: .5,
                 specularity: .5
             }),
-            rock: context.get_instance(Fake_Bump_Map).material(Color.of(86 / 255, 64 / 255, 29 / 255, 1), {
+            rock: context.get_instance(Fake_Bump_Map).material(Color.of(.4, .25, .15, 1), {
                 ambient: .5,
                 diffusivity: 5,
                 specularity: .5,
@@ -608,7 +608,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.menu.play();
             if (!this.begin_animation)
                 graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -5, 1030), Vec.of(0, 100, 0), Vec.of(0, 10, 0));
-            let sign_Matrix = this.sign_Matrix.times(Mat4.rotation(Math.PI/36, Vec.of(1,0,0))).times(Mat4.scale([3/2,3/2,3/2]));
+            let sign_Matrix = this.sign_Matrix.times(Mat4.rotation(Math.PI / 36, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 2, 3 / 2, 3 / 2]));
             this.shapes.plane.draw(graphics_state, sign_Matrix, this.materials.start_sign);
             if (this.begin_animation) {
                 this.trigger_animation(graphics_state)
@@ -817,7 +817,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     // *************************************************************************
 
     draw_the_fish(graphics_state, t) {
-
         // ***************************** BEGIN KING OF THE POND *****************************
         let king_model_transform = Mat4.identity();
 
@@ -826,7 +825,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             if ((Math.abs(this.king_Fish_Matrix[0][3] + Math.cos(this.king_angle) - 0.3 * Math.sin(this.king_angle)) > 5.5 || Math.abs(this.king_Fish_Matrix[1][3] + 0.3 * Math.cos(this.king_angle) + Math.sin(this.king_angle)) > 5.5) && Math.round((t % 0.3) * 10) / 10 == 0) {
                 this.random_king_angle();
             }
-
             // Code block to draw King fish      
             if (t > this.king_spawn_time && t < this.king_spawn_time + 0.2) {
                 if (this.king_model_spawn[0][0] < 2) {
@@ -839,7 +837,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.king_Fish_Matrix[0][3] = 0;
                 this.king_Fish_Matrix[1][3] = 0;
             }
-
             if (t > this.king_spawn_time + 0.2) {
                 king_model_transform = this.king_Fish_Matrix.times(Mat4.translation([(6 / (t - this.king_dist)) * (0.05) * Math.cos(this.king_angle), (6 / (t - this.king_dist)) * (0.05) * Math.sin(this.king_angle), 0]));
 
@@ -860,9 +857,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
 
         // ***************************** END KING OF THE POND *****************************  
-
         // ***************************** BEGIN MYSTERY FISH *****************************
-
         let mystery_model_transform = Mat4.identity();
 
         if (!this.mystery_caught) {
