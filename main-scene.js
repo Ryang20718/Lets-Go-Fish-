@@ -760,7 +760,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             //                   this.caught_fish_matrix[0][3] = 100;
             //                   this.caught_fish_matrix[1][3] = 100;
             var fix_rotation = fish_matrix.times(Mat4.rotation(1, [0, -1, 0]));
-            this.shapes.plane.draw(graphics_state, fix_rotation, this.caught_fish_material);
+            this.shapes.fish3D.draw(graphics_state, fix_rotation, this.caught_fish_material);
             this.zoom_animation = true;
             if (this.start_zoom == -1) {
                 this.start_zoom = t;
@@ -771,14 +771,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     }
     caught_fish_camera(graphics_state, fish_matrix, t) {
         if ((t - this.start_zoom) <= 3) {
-            var desired = Mat4.identity().times(Mat4.rotation(1.6, [1, 0, 0]));
+           /* var desired = Mat4.identity().times(Mat4.rotation(1.6, [1, 0, 0]));
             desired[0][3] = fish_matrix[0][3];
             desired[1][3] = fish_matrix[1][3];
             desired[2][3] = fish_matrix[2][3];
             desired = Mat4.inverse(desired.times(Mat4.translation([0, 0, 5])));
             desired = desired.map((x,i)=>Vec.from(graphics_state.camera_transform[i]).mix(x, .1));
             graphics_state.camera_transform = desired;
-            this.storedCamera = graphics_state.camera_transform;
+            this.storedCamera = graphics_state.camera_transform;*/
         } else {
             this.fish_is_caught = false;
             this.caught_fish_matrix[0][3] = 100;
