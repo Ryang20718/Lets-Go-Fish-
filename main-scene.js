@@ -815,7 +815,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.king_model_spawn = this.king_model_spawn.times(Mat4.scale([1.4, 1.4, 1.4]));
                     }
                 }
-                this.shapes.fish3D.draw(graphics_state, king_model_transform, this.materials.rudd_Fish);
+                this.shapes.fish3D.draw(graphics_state, this.king_model_spawn, this.materials.rudd_Fish);
                 //this.shapes.plane.draw( graphics_state, this.king_model_spawn, this.materials.king_Fish);
                 this.king_Fish_Matrix[0][3] = 0;
                 this.king_Fish_Matrix[1][3] = 0;
@@ -833,7 +833,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
                 this.king_Fish_Matrix = king_model_transform;
                 king_model_transform = king_model_transform.times(Mat4.rotation(this.king_angle, Vec.of(0, 0, 1)))
-                king_model_transform = king_model_transform.times(Mat4.scale([2, .5, 2]));
+                king_model_transform = king_model_transform.times(Mat4.scale([2, 1.5, 2]));
                 this.shapes.fish3D.draw(graphics_state, king_model_transform, this.materials.rudd_Fish);
                 //this.shapes.plane.draw( graphics_state, king_model_transform, this.materials.king_Fish);
             }
@@ -856,7 +856,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                         this.mystery_model_spawn = this.mystery_model_spawn.times(Mat4.scale([1.4, 1.4, 1.4]));
                     }
                 }
-                this.shapes.fish3D.draw(graphics_state, mystery_model_transform, this.materials.rudd_Fish);
+                this.shapes.fish3D.draw(graphics_state, this.mystery_model_spawn, this.materials.rudd_Fish);
                 //this.shapes.plane.draw( graphics_state, this.mystery_model_spawn, this.materials.mystery_Fish);
                 this.mystery_Fish_Matrix[0][3] = 0;
                 this.mystery_Fish_Matrix[1][3] = 0;
@@ -874,7 +874,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.mystery_Fish_Matrix = mystery_model_transform;
                 mystery_model_transform = mystery_model_transform.times(Mat4.rotation(this.mystery_angle, Vec.of(0, 0, 1)))
-                mystery_model_transform = mystery_model_transform.times(Mat4.scale([2, .5, 2]));
+                mystery_model_transform = mystery_model_transform.times(Mat4.scale([2, 1.5, 2]));
                 this.shapes.fish3D.draw(graphics_state, mystery_model_transform, this.materials.rudd_Fish)
                 //this.shapes.plane.draw( graphics_state, mystery_model_transform, this.materials.mystery_Fish);
             }
