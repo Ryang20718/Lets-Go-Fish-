@@ -368,6 +368,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.beginning_animation = false;
     }
 
+
     catch_fish() {
         var x = this.crosshair_Matrix[0][3];
         var y = this.crosshair_Matrix[1][3];
@@ -644,7 +645,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
             }
         }
-
+        
         if (!this.beginning_animation && this.ending_animation) {
             graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -5, 1030), Vec.of(0, 100, 0), Vec.of(0, 10, 0));
             this.shapes.plane.draw(graphics_state, this.sign_Matrix, this.materials.end_sign);
@@ -755,7 +756,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
-            let total_fish_caught = this.total_fish_caught+1;//this.total_fish_caught.times( Mat4.translation ([1,0,0])); // increment total fish counter
+            let total_fish_caught = this.total_fish_caught+1;// increment total fish counter
+            
         }
 
         // Draw flattened blue sphere for temporary pond:
