@@ -169,6 +169,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.torus2_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
         this.cylinder_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
 
+        this.rod_Matrix = Mat4.identity();
+
         this.king_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, -.15]));
         this.king_angle = 0
         this.king_model_spawn = Mat4.identity().times(Mat4.scale([.2, .05, .2]));
@@ -331,24 +333,28 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     move_left() {
         if ((this.crosshair_Matrix[0][3] - 0.2) * (this.crosshair_Matrix[0][3] - 0.2) + (this.crosshair_Matrix[1][3]) * (this.crosshair_Matrix[1][3]) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([-0.2, 0, 0]));
+            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI/1000,[0, -1, 0]));//.times(Mat4.translation([-0.1, 0, 0]));
         }
     }
 
     move_right() {
         if ((this.crosshair_Matrix[0][3] + 0.2) * (this.crosshair_Matrix[0][3] + 0.2) + (this.crosshair_Matrix[1][3]) * (this.crosshair_Matrix[1][3]) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([0.2, 0, 0]));
+            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI/1000,[0, 1, 0]));//.times(Mat4.translation([0.1, 0, 0]));
         }
     }
 
     move_up() {
         if ((this.crosshair_Matrix[0][3]) * (this.crosshair_Matrix[0][3]) + (this.crosshair_Matrix[1][3] + 0.2) * (this.crosshair_Matrix[1][3] + 0.2) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([0, 0.2, 0]));
+            this.rod_Matrix = this.rod_Matrix.times(Mat4.translation([0, 0.1, 0]));
         }
     }
 
     move_down() {
         if ((this.crosshair_Matrix[0][3]) * (this.crosshair_Matrix[0][3]) + (this.crosshair_Matrix[1][3] - 0.2) * (this.crosshair_Matrix[1][3] - 0.2) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([0, -0.2, 0]));
+            this.rod_Matrix = this.rod_Matrix.times(Mat4.translation([0, -.1, 0]));
         }
     }
     trigger_animation(graphics_state) {
@@ -377,8 +383,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.king_Fish_Matrix[1][1] = 0;
             this.king_Fish_Matrix[2][0] = 1;
             this.king_Fish_Matrix[2][1] = 0;
-            this.king_Fish_Matrix[0][3] = this.crosshair_Matrix[0][3] + .30;
-            this.king_Fish_Matrix[1][3] = this.crosshair_Matrix[1][3] - .70;
+            this.king_Fish_Matrix[0][3] = this.crosshair_Matrix[0][3] + .1;
+            this.king_Fish_Matrix[1][3] = this.crosshair_Matrix[1][3] - .5;
+                        this.king_Fish_Matrix[2][3] = this.crosshair_Matrix[2][3] - 1;
             this.caught_fish_matrix = this.king_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0))).times(Mat4.scale([1, 0.5, 1]));
         } else if (Math.abs((this.mystery_Fish_Matrix[0][3] + Math.cos(this.mystery_angle)) - x) < 1 && Math.abs((this.mystery_Fish_Matrix[1][3] + Math.sin(this.mystery_angle)) - y) < 1 && !this.mystery_caught) {
             this.splash.play();
@@ -731,6 +738,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             }
 
             //FISHING ROD
+            let rod_Matrix = this.rod_Matrix.times(Mat4.translation([0,-25,0])).times(Mat4.rotation(-Math.PI/6, Vec.of(1,0,0))).times(Mat4.scale([.1,.1,50]));
+            this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({color: Color.of(.7, .7, .7, .5)}));
             this.shapes.sphere6.draw(graphics_state, this.sphere1_Matrix, this.materials.red);
             this.shapes.sphere6.draw(graphics_state, this.sphere2_Matrix, this.materials.red);
             this.shapes.torus.draw(graphics_state, this.torus1_Matrix, this.materials.white);
@@ -755,7 +764,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     caught_fish_animation(graphics_state, fish_matrix, t) {
         if (this.sphere1_Matrix[2][3] < 8) {
             fish_matrix[2][3] = fish_matrix[2][3] + .1;
-            fish_matrix = fish_matrix.times(Mat4.rotation(.004, [0, -.1, 0]));
+            fish_matrix = fish_matrix.times(Mat4.rotation(t, [1, 0, 0]));
             
             this.shapes.fish3D.draw(graphics_state, fish_matrix, this.caught_fish_material);
             
@@ -766,7 +775,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.cylinder_Matrix[2][3] = this.cylinder_Matrix[2][3] + .1;
         }
         if (this.sphere1_Matrix[2][3] > 2) {
-            //var fix_rotation = fish_matrix.times(Mat4.rotation(1, [0, -1, 0]));
             //this.shapes.fish3D.draw(graphics_state, fix_rotation, this.caught_fish_material);
             this.zoom_animation = true;
             if (this.start_zoom == -1) {
@@ -776,7 +784,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
     }
     caught_fish_camera(graphics_state, fish_matrix, t) {
-        if ((t - this.start_zoom) <= 1.5) {
+        if ((t - this.start_zoom) <= 2) {
            /* var desired = Mat4.identity().times(Mat4.rotation(1.6, [1, 0, 0]));
             desired[0][3] = fish_matrix[0][3];
             desired[1][3] = fish_matrix[1][3];
