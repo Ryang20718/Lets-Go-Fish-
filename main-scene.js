@@ -1,4 +1,3 @@
-
 window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends Scene_Component {
     constructor(context, control_box) {
         super(context, control_box);
@@ -748,7 +747,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
             let total_fish_caught = this.total_fish_caught+1;//this.total_fish_caught.times( Mat4.translation ([1,0,0])); // increment total fish counter
-            console.log(total_fish_caught);
         }
 
         // Draw flattened blue sphere for temporary pond:
