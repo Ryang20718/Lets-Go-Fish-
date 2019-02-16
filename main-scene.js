@@ -44,7 +44,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             cylinder: new Capped_Cylinder(20,20),
             tree_stem: new Shape_From_File("assets/MapleTreeStem.obj"),
             tree_leaves: new Shape_From_File("assets/MapleTreeLeaves.obj"),
-            pine_tree: new Shape_From_File("assets/Tree.obj"),
+            pine_tree_branch: new Shape_From_File("assets/pine_tree_branch.obj"),
+            pine_tree_bark: new Shape_From_File("assets/pine_tree_bark.obj"),
             grass: new Shape_From_File("assets/Grass_03.obj"),
             rock: new Shape_From_File("assets/Rock.obj"),
             fish3D: new Shape_From_File("assets/RuddFish.obj"),
@@ -114,21 +115,15 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 specularity: .5,
                 texture: context.get_instance("assets/end_game.jpg", false)
             }),
-            tree_leaves: context.get_instance(Fake_Bump_Map).material(Color.of(.1, .6, .1, 1), {
-                ambient: .7,
+            branch: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
+                ambient: .65,
                 diffusivity: .5,
-                specularity: .5
-            }),
-            tree_stem: context.get_instance(Fake_Bump_Map).material(Color.of(.3, .2, .1, 1), {
-                ambient: .9,
-                diffusivity: .5,
-                specularity: .5
-            }),
-            bark: context.get_instance(Fake_Bump_Map).material(Color.of(.4, .25, .15, 1), {
-                ambient: .5,
-                diffusivity: 5,
                 specularity: .5,
-                texture: context.get_instance("assets/rock_tex.jpg", false)
+                texture: context.get_instance("assets/leaf.png", false)
+            }),
+            bark: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
+                ambient: 1,
+                texture: context.get_instance("assets/Bark.jpg", false)
             }),
             rock: context.get_instance(Fake_Bump_Map).material(Color.of(.4, .25, .15, 1), {
                 ambient: .5,
@@ -262,20 +257,27 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.bottom_Matrix = Mat4.identity();
         this.bottom_Matrix = this.bottom_Matrix.times(Mat4.translation([0, 0, -1])).times(Mat4.scale([15, 15, .01])).times(Mat4.rotation(Math.PI, [1.3, 0, 0]));
 
-        this.tree_Matrix = Mat4.identity();
-        this.tree_Matrix = this.tree_Matrix.times(Mat4.rotation(1.6, Vec.of(1, 0, 0))).times(Mat4.translation([-13, 5.5, -7])).times(Mat4.scale([1.5, 1.5, 1.5]));
-
-        this.tree_Matrix2 = Mat4.identity();
-        this.tree_Matrix2 = this.tree_Matrix2.times(Mat4.rotation(1.6, Vec.of(1, 0, 0))).times(Mat4.translation([-15, 9, -5])).times(Mat4.scale([4, 4, 4]));
-
-        this.tree_Matrix1 = this.tree_Matrix.times(Mat4.translation([21, 0, 0])).times(Mat4.scale([1.5, 1.5, 1.5]));
-
         this.rock_Matrix = Mat4.identity().times(Mat4.rotation(1.6, Vec.of(0, 1, -.1))).times(Mat4.translation([-0, -7, 11])).times(Mat4.scale([8, 2, 2]));
 
         this.fish3D_Matrix = Mat4.identity().times(Mat4.rotation(1, Vec.of(1, 0, -.1))).times(Mat4.translation([0, 0, 11])).times(Mat4.scale([8, 8, 8]));
 
-        this.pine_tree_Matrix = Mat4.identity().times(Mat4.scale([8, 8, 8]));
-
+        this.pine_tree_Matrix = Mat4.identity().times(Mat4.translation([0, 20, 10])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([3.5, 3.5, 3.5]));
+        
+        this.pine_tree_Matrix2 = Mat4.identity().times(Mat4.translation([0, 20, 10.5])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([3.5, 3.5, 3.5]));
+        
+        this.pine_tree_Matrix3 = Mat4.identity().times(Mat4.translation([-18, 5, 12])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([4.5, 4.5, 4.5]));
+        
+        this.pine_tree_Matrix4 = Mat4.identity().times(Mat4.translation([-18, 5, 12.5])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([4.5, 4.5, 4.5]));
+        
+        this.pine_tree_Matrix5 = Mat4.identity().times(Mat4.translation([-9, 16, 12])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([4, 4, 4]));
+        
+        this.pine_tree_Matrix6 = Mat4.identity().times(Mat4.translation([-9, 16, 12.5])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([4, 4, 4]));
+        
+        this.pine_tree_Matrix7 = Mat4.identity().times(Mat4.translation([-16, 16, 8])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([3, 3, 3]));
+        
+        this.pine_tree_Matrix8 = Mat4.identity().times(Mat4.translation([-16, 16, 8.5])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([3, 3, 3]));
+        
+        
         this.catching = false;
         this.catching_timer = 0;
         this.zoom_animation = false;
@@ -790,15 +792,18 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     // ***************************** DRAW THE ENVIROMETNT **********************
     // *************************************************************************
     draw_the_enviroment(graphics_state, t) {
-       // this.shapes.pine_tree.draw(graphics_state, this.pine_tree_Matrix, this.materials.bark);
+        this.shapes.pine_tree_bark.draw(graphics_state, this.pine_tree_Matrix, this.materials.bark);
+        this.shapes.pine_tree_branch.draw(graphics_state, this.pine_tree_Matrix2, this.materials.branch); //center tree
         
-        this.shapes.tree_stem.draw(graphics_state, this.tree_Matrix2, this.materials.tree_stem);
-        this.shapes.tree_leaves.draw(graphics_state, this.tree_Matrix2, this.materials.tree_leaves);
+        this.shapes.pine_tree_bark.draw(graphics_state, this.pine_tree_Matrix3, this.materials.bark);
+        this.shapes.pine_tree_branch.draw(graphics_state, this.pine_tree_Matrix4, this.materials.branch); //left tree
+        
+        this.shapes.pine_tree_bark.draw(graphics_state, this.pine_tree_Matrix5, this.materials.bark);
+        this.shapes.pine_tree_branch.draw(graphics_state, this.pine_tree_Matrix6, this.materials.branch); //other left tree
+        
+        this.shapes.pine_tree_bark.draw(graphics_state, this.pine_tree_Matrix7, this.materials.bark);
+        this.shapes.pine_tree_branch.draw(graphics_state, this.pine_tree_Matrix8, this.materials.branch); //other left tree
 
-        this.shapes.tree_stem.draw(graphics_state, this.tree_Matrix1, this.materials.tree_stem);
-        this.shapes.tree_leaves.draw(graphics_state, this.tree_Matrix1, this.materials.tree_leaves.override({
-            color: Color.of(.3, .6, .2, 1)
-        }));
 
         this.shapes.plane.draw(graphics_state, this.backdrop_Matrix, this.materials.pond.override({
             color: Color.of(0, 1, 1, 1),
