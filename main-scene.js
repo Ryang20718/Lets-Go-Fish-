@@ -59,8 +59,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 ambient: 0.3
             }),
             ground: context.get_instance(Fake_Bump_Map).material(Color.of(109 / 255, 78 / 255, 0 / 255, 1), {
-                ambient: .40,
-                texture: context.get_instance("assets/ground_texture.jpeg", false)
+                ambient: .20,
+                texture: context.get_instance("assets/ground_texture1.jpeg", false)
             }),
             shadow: context.get_instance(Shadow_Shader).material(Color.of(.3,.3,.3,1),{
                 ambient: 1,
@@ -114,6 +114,12 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 diffusivity: .5,
                 specularity: .5,
                 texture: context.get_instance("assets/end_game.jpg", false)
+            }),
+            clouds: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
+                ambient: .5,
+                diffusivity: .5,
+                specularity: .5,
+                texture: context.get_instance("assets/clouds.jpg", false)
             }),
             branch: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: .65,
@@ -805,9 +811,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.shapes.pine_tree_branch.draw(graphics_state, this.pine_tree_Matrix8, this.materials.branch); //other left tree
 
 
-        this.shapes.plane.draw(graphics_state, this.backdrop_Matrix, this.materials.pond.override({
-            color: Color.of(0, 1, 1, 1),
-            ambient: .8
+        this.shapes.plane.draw(graphics_state, this.backdrop_Matrix, this.materials.clouds.override({
+            color: Color.of(135/255, 206/255, 235/255, 1),
+            ambient: 0.9
         }));
     }
 
