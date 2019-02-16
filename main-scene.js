@@ -1,3 +1,4 @@
+
 window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends Scene_Component {
     constructor(context, control_box) {
         super(context, control_box);
@@ -35,6 +36,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // Initial image source: Blank gif file
         this.texture.image.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
+        
         const shapes = {
             box: new Cube(),
             plane: new Square(),
@@ -309,6 +311,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.animation_t = 0;
         this.graphics_state = context.globals.graphics_state;
         this.storedCamera = null;
+        this.total_fish_caught = 0;
     }
 
     make_control_panel() {
@@ -753,6 +756,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
+            let total_fish_caught = this.total_fish_caught+1;//this.total_fish_caught.times( Mat4.translation ([1,0,0])); // increment total fish counter
+            console.log(total_fish_caught);
         }
 
         // Draw flattened blue sphere for temporary pond:
@@ -887,7 +892,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                     }
                 }
                 this.shapes.fish3D.draw(graphics_state, this.mystery_model_spawn, this.materials.rudd_Fish);
-                //this.shapes.plane.draw( graphics_state, this.mystery_model_spawn, this.materials.mystery_Fish);
+
                 this.mystery_Fish_Matrix[0][3] = 0;
                 this.mystery_Fish_Matrix[1][3] = 0;
             }
@@ -906,7 +911,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 mystery_model_transform = mystery_model_transform.times(Mat4.rotation(this.mystery_angle, Vec.of(0, 0, 1)))
                 mystery_model_transform = mystery_model_transform.times(Mat4.scale([2, 1.5, 2]));
                 this.shapes.fish3D.draw(graphics_state, mystery_model_transform, this.materials.rudd_Fish)
-                //this.shapes.plane.draw( graphics_state, mystery_model_transform, this.materials.mystery_Fish);
             }
         }
 
