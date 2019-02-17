@@ -678,7 +678,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         let rod_Matrix = this.rod_Matrix.times(Mat4.translation([0, -25, 0])).times(Mat4.rotation(-Math.PI / 6, Vec.of(1, 0, 0))).times(Mat4.scale([.05, .05, 2]));
         let sphere1_Matrix = this.crosshair_Matrix.times(Mat4.scale([.05, .05, .1]));
         let sphere2_Matrix = this.crosshair_Matrix.times(Mat4.scale([.05, .05, .1])).times(Mat4.translation([0, 0, 10 + 0.50 * Math.sin((6 * t) % (2 * Math.PI))]));
-        let torus1_Matrix = this.crosshair_Matrix.times(Mat4.scale([.07, .07, .1])).times(Mat4.translation([0, 0, 10 + 0.50 * Math.sin((6 * t) % (2 * Math.PI))]));
+        let torus1_Matrix = this.crosshair_Matrix.times(Mat4.scale([.08, .08, .1])).times(Mat4.translation([0, 0, 10 + 0.50 * Math.sin((6 * t) % (2 * Math.PI))]));
         let torus2_Matrix = this.crosshair_Matrix.times(Mat4.scale([.08, .08, .01])).times(Mat4.translation([0, 0, 100 + 5 * Math.sin((6 * t) % (2 * Math.PI))]));
         let cylinder_Matrix = this.crosshair_Matrix.times(Mat4.scale([.01, .01, 20])).times(Mat4.translation([0, 0, 0.5]));
         this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({
@@ -687,13 +687,17 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         for (var i = 0; i < 8; i++) {
             rod_Matrix = rod_Matrix.times(Mat4.scale([20, 20, .5])).times(Mat4.translation([.1, .1, 1])).times(Mat4.rotation(-Math.PI / 50, Vec.of(1, 0, 0))).times(Mat4.translation([-.1, -.1, 1])).times(Mat4.scale([.05, .05, 2]));
             this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({
-                color: Color.of((i % 3 === 0), (i % 3 === 1), (i % 3 === 2), 1)
+                color: Color.of(.3 - i * .02, .7 - .04, .2 - .02, 1)
+            }));
+            let kink_Matrix = rod_Matrix.times(Mat4.scale([20, 20, .5])).times(Mat4.translation([.1, .1, 1])).times(Mat4.rotation(-Math.PI / 100, Vec.of(1, 0, 0))).times(Mat4.translation([-.1, -.1, 1])).times(Mat4.scale([.06, .06, .06]));
+            this.shapes.sphere6.draw(graphics_state, kink_Matrix, this.materials.white.override({
+                color: Color.of(.2 - i * .02, .6 - .04, .1 - .02, 1)
             }));
         }
-        this.shapes.sphere6.draw(graphics_state, sphere1_Matrix, this.materials.red);
-        this.shapes.sphere6.draw(graphics_state, sphere2_Matrix, this.materials.red);
-        this.shapes.torus.draw(graphics_state, torus1_Matrix, this.materials.white);
-        this.shapes.torus.draw(graphics_state, torus2_Matrix, this.materials.red);
+        this.shapes.sphere6.draw(graphics_state, sphere1_Matrix, this.materials.green);
+        this.shapes.sphere6.draw(graphics_state, sphere2_Matrix, this.materials.green);
+        this.shapes.torus.draw(graphics_state, torus1_Matrix, this.materials.red);
+        this.shapes.torus.draw(graphics_state, torus2_Matrix, this.materials.white);
         this.shapes.cylinder.draw(graphics_state, cylinder_Matrix, this.materials.white.override({
             color: Color.of(.7, .7, .7, .5)
         }));
@@ -711,24 +715,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             if (this.start_zoom == -1) {
                 this.start_zoom = t;
             }
-            this.caught_fish_camera(graphics_state, fish_matrix, t);
-        }
-    }
-    caught_fish_camera(graphics_state, fish_matrix, t) {
-        if ((t - this.start_zoom) <= 2) {/* var desired = Mat4.identity().times(Mat4.rotation(1.6, [1, 0, 0]));
-            desired[0][3] = fish_matrix[0][3];
-            desired[1][3] = fish_matrix[1][3];
-            desired[2][3] = fish_matrix[2][3];
-            desired = Mat4.inverse(desired.times(Mat4.translation([0, 0, 5])));
-            desired = desired.map((x,i)=>Vec.from(graphics_state.camera_transform[i]).mix(x, .1));
-            graphics_state.camera_transform = desired;
-            this.storedCamera = graphics_state.camera_transform;*/
-        } else {
+            if ((t - this.start_zoom) > 2) {
             this.fish_is_caught = false;
-            //this.caught_fish_matrix[0][3] = 100;
-            //this.caught_fish_matrix[1][3] = 100;
             this.zoom_animation = false;
             this.start_zoom = -1;
+        }
         }
     }
 
