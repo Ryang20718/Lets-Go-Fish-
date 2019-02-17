@@ -496,7 +496,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
     // ***************************** START OF DISPLAY ***************************** 
     display(graphics_state) {
-        //this.time_to_fish += 1; // time alloted to catch fish
+        this.time_to_fish += 1; // time alloted to catch fish
         if (this.time_to_fish > 1400) {
             //set roughly 30-40 seconds of fish catching
             this.ending_animation = true;
