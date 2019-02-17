@@ -35,7 +35,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // Initial image source: Blank gif file
         this.texture.image.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
-        
         const shapes = {
             box: new Cube(),
             plane: new Square(),
@@ -54,14 +53,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.submit_shapes(context, shapes);
 
         this.materials = {
-            pond: context.get_instance(Phong_Shader).material(Color.of(0,.7,1,.5), {
+            pond: context.get_instance(Phong_Shader).material(Color.of(0, .7, 1, .5), {
                 ambient: 0.3
             }),
             ground: context.get_instance(Fake_Bump_Map).material(Color.of(109 / 255, 78 / 255, 0 / 255, 1), {
                 ambient: .20,
                 texture: context.get_instance("assets/ground_texture1.jpeg", false)
             }),
-            shadow: context.get_instance(Shadow_Shader).material(Color.of(.3,.3,.3,1),{
+            shadow: context.get_instance(Shadow_Shader).material(Color.of(.3, .3, .3, 1), {
                 ambient: 1,
                 texture: this.texture
             }),
@@ -155,13 +154,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.splash = new Audio("assets/splash.mp3");
         this.splash.loop = false;
 
-        this.crosshair_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
-        this.sphere1_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
-        this.sphere2_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
-        this.torus1_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
-        this.torus2_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
-        this.cylinder_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
-
+        this.crosshair_Matrix = Mat4.identity().times(Mat4.scale([1, 1, 1]));
         this.rod_Matrix = Mat4.identity();
 
         this.king_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, -.15]));
@@ -262,23 +255,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.fish3D_Matrix = Mat4.identity().times(Mat4.rotation(1, Vec.of(1, 0, -.1))).times(Mat4.translation([0, 0, 11])).times(Mat4.scale([8, 8, 8]));
 
-        this.pine_tree_Matrix = Mat4.identity().times(Mat4.translation([0, 20, 10])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([3.5, 3.5, 3.5]));
-        
-        this.pine_tree_Matrix2 = Mat4.identity().times(Mat4.translation([0, 20, 10.5])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([3.5, 3.5, 3.5]));
-        
-        this.pine_tree_Matrix3 = Mat4.identity().times(Mat4.translation([-18, 5, 12])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([4.5, 4.5, 4.5]));
-        
-        this.pine_tree_Matrix4 = Mat4.identity().times(Mat4.translation([-18, 5, 12.5])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([4.5, 4.5, 4.5]));
-        
-        this.pine_tree_Matrix5 = Mat4.identity().times(Mat4.translation([-9, 16, 12])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([4, 4, 4]));
-        
-        this.pine_tree_Matrix6 = Mat4.identity().times(Mat4.translation([-9, 16, 12.5])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([4, 4, 4]));
-        
-        this.pine_tree_Matrix7 = Mat4.identity().times(Mat4.translation([-16, 16, 8])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([3, 3, 3]));
-        
-        this.pine_tree_Matrix8 = Mat4.identity().times(Mat4.translation([-16, 16, 8.5])).times(Mat4.rotation(Math.PI/2, Vec.of(1, 0, 0))).times(Mat4.scale([3, 3, 3]));
-        
-        
         this.catching = false;
         this.catching_timer = 0;
         this.zoom_animation = false;
@@ -302,9 +278,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.animation_t = 0;
         this.graphics_state = context.globals.graphics_state;
         this.storedCamera = null;
-        
+
         this.total_fish_caught = 0;
-        this.total_times_tried = 0;// how many times user tries to catch fish by pressing control
+        this.total_times_tried = 0;
+        // how many times user tries to catch fish by pressing control
         this.time_to_fish = 0;
     }
 
@@ -330,24 +307,21 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     move_left() {
         if ((this.crosshair_Matrix[0][3] - 0.2) * (this.crosshair_Matrix[0][3] - 0.2) + (this.crosshair_Matrix[1][3]) * (this.crosshair_Matrix[1][3]) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([-0.2, 0, 0]));
-            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI/300,[0, -1, 0]));//.times(Mat4.translation([-0.1, 0, 0]));
+            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI / 300, [0, -1, 0]));
         }
     }
-
     move_right() {
         if ((this.crosshair_Matrix[0][3] + 0.2) * (this.crosshair_Matrix[0][3] + 0.2) + (this.crosshair_Matrix[1][3]) * (this.crosshair_Matrix[1][3]) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([0.2, 0, 0]));
-            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI/300,[0, 1, 0]));//.times(Mat4.translation([0.1, 0, 0]));
+            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI / 300, [0, 1, 0]));
         }
     }
-
     move_up() {
         if ((this.crosshair_Matrix[0][3]) * (this.crosshair_Matrix[0][3]) + (this.crosshair_Matrix[1][3] + 0.2) * (this.crosshair_Matrix[1][3] + 0.2) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([0, 0.2, 0]));
             this.rod_Matrix = this.rod_Matrix.times(Mat4.translation([0, 0.1, 0]));
         }
     }
-
     move_down() {
         if ((this.crosshair_Matrix[0][3]) * (this.crosshair_Matrix[0][3]) + (this.crosshair_Matrix[1][3] - 0.2) * (this.crosshair_Matrix[1][3] - 0.2) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([0, -0.2, 0]));
@@ -362,9 +336,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         if (this.animation_t >= 1)
             this.beginning_animation = false;
     }
-    family_scene(graphics_state,world_matrix,t) {
+    family_scene(graphics_state, world_matrix, t) {
         if ((t - this.start_zoom) <= 2) {
-            var desired = Mat4.identity().times(Mat4.rotation(Math.PI/2, [1, 0, 0]));
+            var desired = Mat4.identity().times(Mat4.rotation(Math.PI / 2, [1, 0, 0]));
             desired = this.rock_Matrix;
             desired = Mat4.inverse(desired.times(Mat4.translation([0, 0, 100])));
             desired = desired.map((x,i)=>Vec.from(graphics_state.camera_transform[i]).mix(x, .1));
@@ -385,60 +359,60 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     }
 
     catch_fish() {
-        this.total_times_tried += 1;// how many times user tries to catch fish by pressing control
-
+        this.total_times_tried += 1;
+        // how many times user tries to catch fish by pressing control
         var x = this.crosshair_Matrix[0][3];
         var y = this.crosshair_Matrix[1][3];
-
         this.catching = true;
 
-        if (Math.abs((this.king_Fish_Matrix[0][3] + Math.cos(this.king_angle) - 0.3 * Math.sin(this.king_angle)) - x) < 200 && Math.abs((this.king_Fish_Matrix[1][3] + 0.3 * Math.cos(this.king_angle) + Math.sin(this.king_angle)) - y) < 200 && !this.king_caught) {
+        if (Math.abs((this.king_Fish_Matrix[0][3] + Math.cos(this.king_angle) - 0.3 * Math.sin(this.king_angle)) - x) < 2 && Math.abs((this.king_Fish_Matrix[1][3] + 0.3 * Math.cos(this.king_angle) + Math.sin(this.king_angle)) - y) < 2 && !this.king_caught) {
             this.king_caught = this.gen_catch();
-            this.king_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([1,.5,1]));
-            this.caught_fish_matrix = this.king_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0))).times(Mat4.scale([1, 0.5, 1]));
+            this.king_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
+            this.caught_fish_matrix = this.king_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([1, 0.5, 1]));
         } else if (Math.abs((this.mystery_Fish_Matrix[0][3] + Math.cos(this.mystery_angle)) - x) < 1 && Math.abs((this.mystery_Fish_Matrix[1][3] + Math.sin(this.mystery_angle)) - y) < 1 && !this.mystery_caught) {
             this.mystery_caught = this.gen_catch();
-            this.mystery_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([1,.5,1]));
+            this.mystery_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
+            this.caught_fish_matrix = this.mystery_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([1, 0.5, 1]));
         } else if (Math.abs((this.plain_Fish_Matrix[0][3] + 0.25 * Math.cos(this.plain_angle)) - x) < 1 && Math.abs((this.plain_Fish_Matrix[1][3] + 0.25 * Math.sin(this.plain_angle)) - y) < 1 && !this.plain_caught) {
             this.plain_caught = this.gen_catch();
-            this.plain_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.plain_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.plain_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.plain_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.plain1_Fish_Matrix[0][3] + 0.25 * Math.cos(this.plain1_angle)) - x) < 1 && Math.abs((this.plain1_Fish_Matrix[1][3] + 0.25 * Math.sin(this.plain1_angle)) - y) < 1 && !this.plain1_caught) {
             this.plain1_caught = this.gen_catch();
-            this.plain1_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.plain1_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.plain1_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.plain1_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.plain2_Fish_Matrix[0][3] + 0.25 * Math.cos(this.plain2_angle)) - x) < 1 && Math.abs((this.plain2_Fish_Matrix[1][3] + 0.25 * Math.sin(this.plain2_angle)) - y) < 1 && !this.plain2_caught) {
             this.plain2_caught = this.gen_catch();
-            this.plain2_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.plain2_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.plain2_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.plain2_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.small_Fry_Matrix[0][3] + 0.15 * Math.cos(this.fry_angle)) - x) < 1 && Math.abs((this.small_Fry_Matrix[1][3] + 0.15 * Math.sin(this.fry_angle)) - y) < 1 && !this.fry_caught) {
             this.fry_caught = this.gen_catch();
-            this.small_Fry_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.small_Fry_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.small_Fry_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.small_Fry_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.small_Fry1_Matrix[0][3] + 0.15 * Math.cos(this.fry1_angle)) - x) < 1 && Math.abs((this.small_Fry1_Matrix[1][3] + 0.15 * Math.sin(this.fry1_angle)) - y) < 1 && !this.fry1_caught) {
             this.fry1_caught = this.gen_catch();
-            this.small_Fry1_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.small_Fry1_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.small_Fry1_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.small_Fry1_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.small_Fry2_Matrix[0][3] + 0.15 * Math.cos(this.fry2_angle)) - x) < 1 && Math.abs((this.small_Fry2_Matrix[1][3] + 0.15 * Math.sin(this.fry2_angle)) - y) < 1 && !this.fry2_caught) {
             this.fry2_caught = this.gen_catch();
-            this.small_Fry2_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.small_Fry2_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.small_Fry2_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.small_Fry2_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.small_Fry3_Matrix[0][3] + 0.15 * Math.cos(this.fry3_angle)) - x) < 1 && Math.abs((this.small_Fry3_Matrix[1][3] + 0.15 * Math.sin(this.fry3_angle)) - y) < 1 && !this.fry3_caught) {
             this.fry3_caught = this.gen_catch();
-            this.small_Fry3_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.small_Fry3_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.small_Fry3_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.small_Fry3_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.small_Fry4_Matrix[0][3] + 0.15 * Math.cos(this.fry4_angle)) - x) < 1 && Math.abs((this.small_Fry4_Matrix[1][3] + 0.15 * Math.sin(this.fry4_angle)) - y) < 1 && !this.fry4_caught) {
             this.fry4_caught = this.gen_catch();
-            this.small_Fry4_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.small_Fry4_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.small_Fry4_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.small_Fry4_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.touchy_Fish_Matrix[0][3] + (0.25) * Math.cos(this.touchy_angle)) - x) < 1 && Math.abs((this.touchy_Fish_Matrix[1][3] + Math.sin(this.touchy_angle)) - y) < 1 && !this.touchy_caught) {
             this.touchy_caught = this.gen_catch();
-            this.touchy_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.touchy_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.touchy_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.touchy_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.nibbler_Matrix[0][3] + Math.cos(this.nibbler_angle)) - x) < 1 && Math.abs((this.nibbler_Matrix[1][3] + Math.sin(this.nibbler_angle)) - y) < 1 && !this.nibbler_caught) {
             this.nibbler_caught = this.gen_catch();
-            this.nibbler_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
-            this.caught_fish_matrix = this.nibbler_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
+            this.nibbler_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.nibbler_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         }
     }
 
@@ -448,57 +422,46 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         var current_angle = Math.atan2((this.king_Fish_Matrix[1][3]), (this.king_Fish_Matrix[0][3]));
         this.king_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_mystery_angle() {
         var current_angle = Math.atan2((this.mystery_Fish_Matrix[1][3]), (this.mystery_Fish_Matrix[0][3]));
         this.mystery_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_plain_angle() {
         var current_angle = Math.atan2((this.plain_Fish_Matrix[1][3]), (this.plain_Fish_Matrix[0][3]));
         this.plain_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_plain1_angle() {
         var current_angle = Math.atan2((this.plain1_Fish_Matrix[1][3]), (this.plain1_Fish_Matrix[0][3]));
         this.plain1_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_plain2_angle() {
         var current_angle = Math.atan2((this.plain2_Fish_Matrix[1][3]), (this.plain2_Fish_Matrix[0][3]));
         this.plain2_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_fry_angle() {
         var current_angle = Math.atan2((this.small_Fry_Matrix[1][3]), (this.small_Fry_Matrix[0][3]));
         this.fry_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_fry1_angle() {
         var current_angle = Math.atan2((this.small_Fry1_Matrix[1][3]), (this.small_Fry1_Matrix[0][3]));
         this.fry1_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_fry2_angle() {
         var current_angle = Math.atan2((this.small_Fry2_Matrix[1][3]), (this.small_Fry2_Matrix[0][3]));
         this.fry2_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_fry3_angle() {
         var current_angle = Math.atan2((this.small_Fry3_Matrix[1][3]), (this.small_Fry3_Matrix[0][3]));
         this.fry3_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_fry4_angle() {
         var current_angle = Math.atan2((this.small_Fry4_Matrix[1][3]), (this.small_Fry4_Matrix[0][3]));
         this.fry4_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_touchy_angle() {
         var current_angle = Math.atan2((this.touchy_Fish_Matrix[1][3]), (this.touchy_Fish_Matrix[0][3]));
         this.touchy_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-
     random_nibbler_angle() {
         var current_angle = Math.atan2((this.nibbler_Matrix[1][3]), (this.nibbler_Matrix[0][3]));
         this.nibbler_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
@@ -506,10 +469,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     // ***************************** END ANGLE HELPER FUNCTIONS ***************************** 
 
     // ***************************** START OF DISPLAY ***************************** 
-
     display(graphics_state) {
-        this.time_to_fish += 1; // time alloted to catch fish
-        if(this.time_to_fish > 1400){ //set roughly 30-40 seconds of fish catching
+        //this.time_to_fish += 1; // time alloted to catch fish
+        if (this.time_to_fish > 1400) {
+            //set roughly 30-40 seconds of fish catching
             this.ending_animation = true;
         }
         console.log(this.time_to_fish);
@@ -535,7 +498,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
             }
         }
-        
+
         if (!this.beginning_animation && this.ending_animation) {
             graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -5, 1030), Vec.of(0, 100, 0), Vec.of(0, 10, 0));
             this.shapes.plane.draw(graphics_state, this.sign_Matrix, this.materials.end_sign);
@@ -582,77 +545,29 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.gl.depthMask(true);
 
             // Draw Crosshairs
-            if (!this.catching && !this.fish_is_caught) {
-                this.sphere1_Matrix = this.crosshair_Matrix.times(Mat4.scale([.05, .05, 1]));
-                this.sphere2_Matrix = this.crosshair_Matrix.times(Mat4.scale([.05, .05, 1])).times(Mat4.translation([0, 0, 10 + 0.50 * Math.sin((6 * t) % (2 * Math.PI))]));
-                this.torus1_Matrix = this.crosshair_Matrix.times(Mat4.scale([.07, .07, 1])).times(Mat4.translation([0, 0, 10 + 0.50 * Math.sin((6 * t) % (2 * Math.PI))]));
-                this.torus2_Matrix = this.crosshair_Matrix.times(Mat4.scale([.08, .08, .1])).times(Mat4.translation([0, 0, 100 + 5 * Math.sin((6 * t) % (2 * Math.PI))]));
-                this.cylinder_Matrix = this.crosshair_Matrix.times(Mat4.scale([.01, .01, 200])).times(Mat4.translation([0, 0, 0.5]));
-            } else if (this.catching && !this.fish_is_caught) {
-                if (this.sphere1_Matrix[2][3] < 7.5 && this.catching_timer >= 0) {
-                    this.sphere1_Matrix[2][3] += 0.5;
-                } else if (this.sphere1_Matrix[2][3] > 0 && this.catching_timer == -1) {
-                    this.sphere1_Matrix[2][3] -= 0.3;
-                }
-
-                if (this.sphere2_Matrix[2][3] < 8.5 && this.catching_timer >= 0) {
-                    this.sphere2_Matrix[2][3] += 0.5;
-                } else if (this.sphere2_Matrix[2][3] > 1 && this.catching_timer == -1) {
-                    this.sphere2_Matrix[2][3] -= 0.3;
-                }
-
-                if (this.torus1_Matrix[2][3] < 8.5 && this.catching_timer >= 0) {
-                    this.torus1_Matrix[2][3] += 0.5;
-                } else if (this.torus1_Matrix[2][3] > 1 && this.catching_timer == -1) {
-                    this.torus1_Matrix[2][3] -= 0.3;
-                }
-
-                if (this.torus2_Matrix[2][3] < 8.5 && this.catching_timer >= 0) {
-                    this.torus2_Matrix[2][3] += 0.5;
-                } else if (this.torus2_Matrix[2][3] > 1 && this.catching_timer == -1) {
-                    this.torus2_Matrix[2][3] -= 0.3;
-                }
-
-                if (this.cylinder_Matrix[2][3] < 17.5 && this.catching_timer >= 0) {
-                    this.cylinder_Matrix[2][3] += 0.5;
-                } else if (this.cylinder_Matrix[2][3] > 10 && this.catching_timer == -1) {
-                    this.cylinder_Matrix[2][3] -= 0.3;
-                }
-
-                if (this.catching_timer > 25) {
+            if (this.catching && !this.fish_is_caught) {
+                if (this.crosshair_Matrix[2][3] < 7.5 && this.catching_timer >= 0)
+                    this.crosshair_Matrix[2][3] += 0.5;
+                else if (this.crosshair_Matrix[2][3] > 0 && this.catching_timer == -1)
+                    this.crosshair_Matrix[2][3] -= 0.3;
+                if (this.catching_timer > 25)
                     this.catching_timer = -1;
-                } else if (this.catching_timer >= 0) {
+                else if (this.catching_timer >= 0)
                     this.catching_timer++;
-                }
-                if (this.sphere1_Matrix[2][3] <= 0 && this.catching_timer == -1) {
+                if (this.crosshair_Matrix[2][3] <= 0 && this.catching_timer == -1) {
                     this.catching_timer = 0;
                     this.catching = false;
                 }
             }
-
-            //FISHING ROD
-            let rod_Matrix = this.rod_Matrix.times(Mat4.translation([0,-25,0])).times(Mat4.rotation(-Math.PI/6, Vec.of(1,0,0))).times(Mat4.scale([.05,.05,2]));
-            this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({color: Color.of(1, 0, 1, 1)}));
-            for (var i = 0; i < 8; i++) {
-                 rod_Matrix = rod_Matrix.times(Mat4.scale([20,20,.5])).times(Mat4.translation([.1,.1,1])).times(Mat4.rotation(-Math.PI/50, Vec.of(1,0,0))).times(Mat4.translation([-.1,-.1,1])).times(Mat4.scale([.05,.05,2]));
-                 this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({color: Color.of((i%3 === 0), (i%3 ===1), (i%3===2), 1)}));
-            }
-
-            this.shapes.sphere6.draw(graphics_state, this.sphere1_Matrix, this.materials.red);
-            this.shapes.sphere6.draw(graphics_state, this.sphere2_Matrix, this.materials.red);
-            this.shapes.torus.draw(graphics_state, this.torus1_Matrix, this.materials.white);
-            this.shapes.torus.draw(graphics_state, this.torus2_Matrix, this.materials.red);
-            this.shapes.cylinder.draw(graphics_state, this.cylinder_Matrix, this.materials.white.override({
-                color: Color.of(.7, .7, .7, .5)
-            }));
-
+            this.draw_fishing_rod(graphics_state, t);
         }
         this.gl.depthMask(true);
 
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
-            if(!this.fish_is_caught){
-            this.total_fish_caught += 1;// increment total fish counter
+            if (!this.fish_is_caught) {
+                this.total_fish_caught += 1;
+                // increment total fish counter
 
             }
             //this.family_scene(graphics_state,this.pine_tree_Matrix,t);
@@ -664,21 +579,42 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.draw_the_enviroment(graphics_state, t);
     }
 
+    // *************************************************************************
+    // ***************************** DRAW FISHING ROD **************************
+    // *************************************************************************
+    draw_fishing_rod(graphics_state, t) {
+        let rod_Matrix = this.rod_Matrix.times(Mat4.translation([0, -25, 0])).times(Mat4.rotation(-Math.PI / 6, Vec.of(1, 0, 0))).times(Mat4.scale([.05, .05, 2]));
+        let sphere1_Matrix = this.crosshair_Matrix.times(Mat4.scale([.05, .05, .1]));
+        let sphere2_Matrix = this.crosshair_Matrix.times(Mat4.scale([.05, .05, .1])).times(Mat4.translation([0, 0, 10 + 0.50 * Math.sin((6 * t) % (2 * Math.PI))]));
+        let torus1_Matrix = this.crosshair_Matrix.times(Mat4.scale([.07, .07, .1])).times(Mat4.translation([0, 0, 10 + 0.50 * Math.sin((6 * t) % (2 * Math.PI))]));
+        let torus2_Matrix = this.crosshair_Matrix.times(Mat4.scale([.08, .08, .01])).times(Mat4.translation([0, 0, 100 + 5 * Math.sin((6 * t) % (2 * Math.PI))]));
+        let cylinder_Matrix = this.crosshair_Matrix.times(Mat4.scale([.01, .01, 20])).times(Mat4.translation([0, 0, 0.5]));
+        this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({
+            color: Color.of(1, 0, 1, 1)
+        }));
+        for (var i = 0; i < 8; i++) {
+            rod_Matrix = rod_Matrix.times(Mat4.scale([20, 20, .5])).times(Mat4.translation([.1, .1, 1])).times(Mat4.rotation(-Math.PI / 50, Vec.of(1, 0, 0))).times(Mat4.translation([-.1, -.1, 1])).times(Mat4.scale([.05, .05, 2]));
+            this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({
+                color: Color.of((i % 3 === 0), (i % 3 === 1), (i % 3 === 2), 1)
+            }));
+        }
+        this.shapes.sphere6.draw(graphics_state, sphere1_Matrix, this.materials.red);
+        this.shapes.sphere6.draw(graphics_state, sphere2_Matrix, this.materials.red);
+        this.shapes.torus.draw(graphics_state, torus1_Matrix, this.materials.white);
+        this.shapes.torus.draw(graphics_state, torus2_Matrix, this.materials.red);
+        this.shapes.cylinder.draw(graphics_state, cylinder_Matrix, this.materials.white.override({
+            color: Color.of(.7, .7, .7, .5)
+        }));
+    }
+
     caught_fish_animation(graphics_state, fish_matrix, t) {
-        if (this.sphere1_Matrix[2][3] < 8) {
+        if (this.crosshair_Matrix[2][3] < 8) {
             fish_matrix[2][3] = fish_matrix[2][3] + .1;
             fish_matrix = fish_matrix.times(Mat4.rotation(t, [1, 0, 0]));
-            
             this.shapes.fish3D.draw(graphics_state, fish_matrix, this.caught_fish_material);
-            
-            this.sphere1_Matrix[2][3] = this.sphere1_Matrix[2][3] + .1;
-            this.sphere2_Matrix[2][3] = this.sphere2_Matrix[2][3] + .1;
-            this.torus1_Matrix[2][3] = this.torus1_Matrix[2][3] + .1;
-            this.torus2_Matrix[2][3] = this.torus2_Matrix[2][3] + .1;
-            this.cylinder_Matrix[2][3] = this.cylinder_Matrix[2][3] + .1;
+            this.crosshair_Matrix[2][3] += .1;
         }
-        if (this.sphere1_Matrix[2][3] > 2) {
-            //this.shapes.fish3D.draw(graphics_state, fix_rotation, this.caught_fish_material);
+        if (this.crosshair_Matrix[2][3] > 2) {
             this.zoom_animation = true;
             if (this.start_zoom == -1) {
                 this.start_zoom = t;
@@ -687,8 +623,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
     }
     caught_fish_camera(graphics_state, fish_matrix, t) {
-        if ((t - this.start_zoom) <= 2) {
-           /* var desired = Mat4.identity().times(Mat4.rotation(1.6, [1, 0, 0]));
+        if ((t - this.start_zoom) <= 2) {/* var desired = Mat4.identity().times(Mat4.rotation(1.6, [1, 0, 0]));
             desired[0][3] = fish_matrix[0][3];
             desired[1][3] = fish_matrix[1][3];
             desired[2][3] = fish_matrix[2][3];
@@ -708,22 +643,21 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     // *************************************************************************
     // ***************************** DRAW THE ENVIROMETNT **********************
     // *************************************************************************
+    draw_tree(graphics_state, t, trans_vec, scale_vec) {
+        let bark_Matrix = Mat4.identity().times(Mat4.translation(trans_vec)).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale(scale_vec));
+        trans_vec[2] += .5;
+        let branch_Matrix = Mat4.identity().times(Mat4.translation(trans_vec)).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale(scale_vec));
+        this.shapes.pine_tree_bark.draw(graphics_state, bark_Matrix, this.materials.bark);
+        this.shapes.pine_tree_branch.draw(graphics_state, branch_Matrix, this.materials.branch);
+    }
+
     draw_the_enviroment(graphics_state, t) {
-        this.shapes.pine_tree_bark.draw(graphics_state, this.pine_tree_Matrix, this.materials.bark);
-        this.shapes.pine_tree_branch.draw(graphics_state, this.pine_tree_Matrix2, this.materials.branch); //center tree
-        
-        this.shapes.pine_tree_bark.draw(graphics_state, this.pine_tree_Matrix3, this.materials.bark);
-        this.shapes.pine_tree_branch.draw(graphics_state, this.pine_tree_Matrix4, this.materials.branch); //left tree
-        
-        this.shapes.pine_tree_bark.draw(graphics_state, this.pine_tree_Matrix5, this.materials.bark);
-        this.shapes.pine_tree_branch.draw(graphics_state, this.pine_tree_Matrix6, this.materials.branch); //other left tree
-        
-        this.shapes.pine_tree_bark.draw(graphics_state, this.pine_tree_Matrix7, this.materials.bark);
-        this.shapes.pine_tree_branch.draw(graphics_state, this.pine_tree_Matrix8, this.materials.branch); //other left tree
-
-
+        let tree_list = [[[12, 22, 10], [3.5, 3.5, 3.5]], [[-15, 30, 28], [10, 10, 10]], [[30, 24, 28], [10, 10, 10]], [[0, 20, 10], [3.5, 3.5, 3.5]], [[-18, 7, 12], [4.5, 4.5, 4.5]], [[-9, 19, 12], [4, 4, 4]], [[-16, 16, 8], [3, 3, 3]], [[8, 20, 7], [2.5, 2.5, 2.5]], [[15, 5, 14], [5, 5, 5]], [[10, -17, 8], [3, 3, 3]], [[-9, -16, 8], [2.5, 2.5, 2.5]]];
+        for (var i = 0; i < tree_list.length; i++) {
+            this.draw_tree(graphics_state, t, tree_list[i][0], tree_list[i][1]);
+        }
         this.shapes.plane.draw(graphics_state, this.backdrop_Matrix, this.materials.clouds.override({
-            color: Color.of(135/255, 206/255, 235/255, 1),
+            color: Color.of(.1, .4, .5, 1),
             ambient: 0.9
         }));
     }
