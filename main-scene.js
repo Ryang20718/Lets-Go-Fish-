@@ -536,7 +536,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             }
         }
         
-        if (!this.beginning_animation && this.ending_animation) {
+        if (!this.beginning_animation && this.ending_animation) { //ending scene, so this is where we draw the family
             graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -5, 1030), Vec.of(0, 100, 0), Vec.of(0, 10, 0));
             this.shapes.plane.draw(graphics_state, this.sign_Matrix, this.materials.end_sign);
             if (this.veiled_in_black_volume > 0) {
