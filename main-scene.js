@@ -369,190 +369,65 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.beginning_animation = false;
     }
 
+    gen_catch() {
+        this.splash.play();
+        this.fish_is_caught = true;
+        this.caught_fish_material = this.materials.rudd_Fish;
+        return true;
+    }
+
     catch_fish() {
         var x = this.crosshair_Matrix[0][3];
         var y = this.crosshair_Matrix[1][3];
 
         this.catching = true;
 
-        if (Math.abs((this.king_Fish_Matrix[0][3] + Math.cos(this.king_angle) - 0.3 * Math.sin(this.king_angle)) - x) < 2 && Math.abs((this.king_Fish_Matrix[1][3] + 0.3 * Math.cos(this.king_angle) + Math.sin(this.king_angle)) - y) < 2 && !this.king_caught) {
-            this.splash.play();
-            this.king_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.king_Fish_Matrix[0][0] = 0;
-            this.king_Fish_Matrix[0][1] = -1;
-            this.king_Fish_Matrix[1][0] = 1;
-            this.king_Fish_Matrix[1][1] = 0;
-            this.king_Fish_Matrix[2][0] = 1;
-            this.king_Fish_Matrix[2][1] = 0;
-            this.king_Fish_Matrix[0][3] = this.crosshair_Matrix[0][3] + .1;
-            this.king_Fish_Matrix[1][3] = this.crosshair_Matrix[1][3] - .5;
-                        this.king_Fish_Matrix[2][3] = this.crosshair_Matrix[2][3] - 1;
+        if (Math.abs((this.king_Fish_Matrix[0][3] + Math.cos(this.king_angle) - 0.3 * Math.sin(this.king_angle)) - x) < 200 && Math.abs((this.king_Fish_Matrix[1][3] + 0.3 * Math.cos(this.king_angle) + Math.sin(this.king_angle)) - y) < 200 && !this.king_caught) {
+            this.king_caught = this.gen_catch();
+            this.king_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([1,.5,1]));
             this.caught_fish_matrix = this.king_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0))).times(Mat4.scale([1, 0.5, 1]));
         } else if (Math.abs((this.mystery_Fish_Matrix[0][3] + Math.cos(this.mystery_angle)) - x) < 1 && Math.abs((this.mystery_Fish_Matrix[1][3] + Math.sin(this.mystery_angle)) - y) < 1 && !this.mystery_caught) {
-            this.splash.play();
-            this.mystery_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.mystery_Fish_Matrix[0][0] = 0;
-            this.mystery_Fish_Matrix[0][1] = -1;
-            this.mystery_Fish_Matrix[1][0] = 1;
-            this.mystery_Fish_Matrix[1][1] = 0;
-            this.mystery_Fish_Matrix[2][0] = 1;
-            this.mystery_Fish_Matrix[2][1] = 0;
-            this.mystery_Fish_Matrix[0][3] = this.crosshair_Matrix[0][3];
-            this.mystery_Fish_Matrix[1][3] = this.crosshair_Matrix[1][3] - 1;
-            this.caught_fish_matrix = this.mystery_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0))).times(Mat4.scale([1, 0.5, 1]));
+            this.mystery_caught = this.gen_catch();
+            this.mystery_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([1,.5,1]));
         } else if (Math.abs((this.plain_Fish_Matrix[0][3] + 0.25 * Math.cos(this.plain_angle)) - x) < 1 && Math.abs((this.plain_Fish_Matrix[1][3] + 0.25 * Math.sin(this.plain_angle)) - y) < 1 && !this.plain_caught) {
-            this.splash.play();
-            this.plain_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.plain_Fish_Matrix[0][0] = 0;
-            this.plain_Fish_Matrix[0][1] = -1;
-            this.plain_Fish_Matrix[1][0] = 1;
-            this.plain_Fish_Matrix[1][1] = 0;
-            this.plain_Fish_Matrix[2][0] = 1;
-            this.plain_Fish_Matrix[2][1] = 0;
-            this.plain_Fish_Matrix[0][3] = this.crosshair_Matrix[0][3] - .2;
-            this.plain_Fish_Matrix[1][3] = this.crosshair_Matrix[1][3] - .5;
-            this.plain_Fish_Matrix = this.plain_Fish_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.plain_caught = this.gen_catch();
+            this.plain_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.plain_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         } else if (Math.abs((this.plain1_Fish_Matrix[0][3] + 0.25 * Math.cos(this.plain1_angle)) - x) < 1 && Math.abs((this.plain1_Fish_Matrix[1][3] + 0.25 * Math.sin(this.plain1_angle)) - y) < 1 && !this.plain1_caught) {
-            this.splash.play();
-            this.plain1_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.plain1_Fish_Matrix[0][0] = 0;
-            this.plain1_Fish_Matrix[0][1] = -1;
-            this.plain1_Fish_Matrix[1][0] = 1;
-            this.plain1_Fish_Matrix[1][1] = 0;
-            this.plain1_Fish_Matrix[2][0] = 1;
-            this.plain1_Fish_Matrix[2][1] = 0;
-            this.plain1_Fish_Matrix[0][3] = this.crosshair_Matrix[0][3] - .2;
-            this.plain1_Fish_Matrix[1][3] = this.crosshair_Matrix[1][3] - .5;
-            this.plain1_Fish_Matrix = this.plain1_Fish_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.plain1_caught = this.gen_catch();
+            this.plain1_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.plain1_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         } else if (Math.abs((this.plain2_Fish_Matrix[0][3] + 0.25 * Math.cos(this.plain2_angle)) - x) < 1 && Math.abs((this.plain2_Fish_Matrix[1][3] + 0.25 * Math.sin(this.plain2_angle)) - y) < 1 && !this.plain2_caught) {
-            this.splash.play();
-            this.plain2_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.plain2_Fish_Matrix[0][0] = 0;
-            this.plain2_Fish_Matrix[0][1] = -1;
-            this.plain2_Fish_Matrix[1][0] = 1;
-            this.plain2_Fish_Matrix[1][1] = 0;
-            this.plain2_Fish_Matrix[2][0] = 1;
-            this.plain2_Fish_Matrix[2][1] = 0;
-            this.plain2_Fish_Matrix[0][3] = this.crosshair_Matrix[0][3] - .2;
-            this.plain2_Fish_Matrix[1][3] = this.crosshair_Matrix[1][3] - .5;
-            this.plain2_Fish_Matrix = this.plain2_Fish_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.plain2_caught = this.gen_catch();
+            this.plain2_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.plain2_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         } else if (Math.abs((this.small_Fry_Matrix[0][3] + 0.15 * Math.cos(this.fry_angle)) - x) < 1 && Math.abs((this.small_Fry_Matrix[1][3] + 0.15 * Math.sin(this.fry_angle)) - y) < 1 && !this.fry_caught) {
-            this.splash.play();
-            this.fry_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.small_Fry_Matrix[0][0] = 0;
-            this.small_Fry_Matrix[0][1] = -1;
-            this.small_Fry_Matrix[1][0] = 1;
-            this.small_Fry_Matrix[1][1] = 0;
-            this.small_Fry_Matrix[2][0] = 1;
-            this.small_Fry_Matrix[2][1] = 0;
-            this.small_Fry_Matrix[0][3] = this.crosshair_Matrix[0][3] - .2;
-            this.small_Fry_Matrix[1][3] = this.crosshair_Matrix[1][3] - .5;
-            this.small_Fry_Matrix = this.small_Fry_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.fry_caught = this.gen_catch();
+            this.small_Fry_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.small_Fry_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         } else if (Math.abs((this.small_Fry1_Matrix[0][3] + 0.15 * Math.cos(this.fry1_angle)) - x) < 1 && Math.abs((this.small_Fry1_Matrix[1][3] + 0.15 * Math.sin(this.fry1_angle)) - y) < 1 && !this.fry1_caught) {
-            this.splash.play();
-            this.fry1_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.small_Fry1_Matrix[0][0] = 0;
-            this.small_Fry1_Matrix[0][1] = -1;
-            this.small_Fry1_Matrix[1][0] = 1;
-            this.small_Fry1_Matrix[1][1] = 0;
-            this.small_Fry1_Matrix[2][0] = 1;
-            this.small_Fry1_Matrix[2][1] = 0;
-            this.small_Fry1_Matrix[0][3] = this.crosshair_Matrix[0][3];
-            this.small_Fry1_Matrix[1][3] = this.crosshair_Matrix[1][3] - .8;
-            this.small_Fry1_Matrix = this.small_Fry1_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.fry1_caught = this.gen_catch();
+            this.small_Fry1_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.small_Fry1_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         } else if (Math.abs((this.small_Fry2_Matrix[0][3] + 0.15 * Math.cos(this.fry2_angle)) - x) < 1 && Math.abs((this.small_Fry2_Matrix[1][3] + 0.15 * Math.sin(this.fry2_angle)) - y) < 1 && !this.fry2_caught) {
-            this.splash.play();
-            this.fry2_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.small_Fry2_Matrix[0][0] = 0;
-            this.small_Fry2_Matrix[0][1] = -1;
-            this.small_Fry2_Matrix[1][0] = 1;
-            this.small_Fry2_Matrix[1][1] = 0;
-            this.small_Fry2_Matrix[2][0] = 1;
-            this.small_Fry2_Matrix[2][1] = 0;
-            this.small_Fry2_Matrix[0][3] = this.crosshair_Matrix[0][3];
-            this.small_Fry2_Matrix[1][3] = this.crosshair_Matrix[1][3] - .8;
-            this.small_Fry2_Matrix = this.small_Fry2_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.fry2_caught = this.gen_catch();
+            this.small_Fry2_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.small_Fry2_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         } else if (Math.abs((this.small_Fry3_Matrix[0][3] + 0.15 * Math.cos(this.fry3_angle)) - x) < 1 && Math.abs((this.small_Fry3_Matrix[1][3] + 0.15 * Math.sin(this.fry3_angle)) - y) < 1 && !this.fry3_caught) {
-            this.splash.play();
-            this.fry3_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.small_Fry3_Matrix[0][0] = 0;
-            this.small_Fry3_Matrix[0][1] = -1;
-            this.small_Fry3_Matrix[1][0] = 1;
-            this.small_Fry3_Matrix[1][1] = 0;
-            this.small_Fry3_Matrix[2][0] = 1;
-            this.small_Fry3_Matrix[2][1] = 0;
-            this.small_Fry3_Matrix[0][3] = this.crosshair_Matrix[0][3];
-            this.small_Fry3_Matrix[1][3] = this.crosshair_Matrix[1][3] - .8;
-            this.small_Fry3_Matrix = this.small_Fry3_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.fry3_caught = this.gen_catch();
+            this.small_Fry3_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.small_Fry3_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         } else if (Math.abs((this.small_Fry4_Matrix[0][3] + 0.15 * Math.cos(this.fry4_angle)) - x) < 1 && Math.abs((this.small_Fry4_Matrix[1][3] + 0.15 * Math.sin(this.fry4_angle)) - y) < 1 && !this.fry4_caught) {
-            this.splash.play();
-            this.fry4_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.small_Fry4_Matrix[0][0] = 0;
-            this.small_Fry4_Matrix[0][1] = -1;
-            this.small_Fry4_Matrix[1][0] = 1;
-            this.small_Fry4_Matrix[1][1] = 0;
-            this.small_Fry4_Matrix[2][0] = 1;
-            this.small_Fry4_Matrix[2][1] = 0;
-            this.small_Fry4_Matrix[0][3] = this.crosshair_Matrix[0][3] - .2;
-            this.small_Fry4_Matrix[1][3] = this.crosshair_Matrix[1][3] - .8;
-            this.small_Fry4_Matrix = this.small_Fry4_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.fry4_caught = this.gen_catch();
+            this.small_Fry4_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.small_Fry4_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         } else if (Math.abs((this.touchy_Fish_Matrix[0][3] + (0.25) * Math.cos(this.touchy_angle)) - x) < 1 && Math.abs((this.touchy_Fish_Matrix[1][3] + Math.sin(this.touchy_angle)) - y) < 1 && !this.touchy_caught) {
-            this.splash.play();
-            this.touchy_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.touchy_Fish_Matrix[0][0] = 0;
-            this.touchy_Fish_Matrix[0][1] = -1;
-            this.touchy_Fish_Matrix[1][0] = 1;
-            this.touchy_Fish_Matrix[1][1] = 0;
-            this.touchy_Fish_Matrix[2][0] = 1;
-            this.touchy_Fish_Matrix[2][1] = 0;
-            this.touchy_Fish_Matrix[0][3] = this.crosshair_Matrix[0][3] - .2;
-            this.touchy_Fish_Matrix[1][3] = this.crosshair_Matrix[1][3] - .8;
-            this.touchy_Fish_Matrix = this.touchy_Fish_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.touchy_caught = this.gen_catch();
+            this.touchy_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.touchy_Fish_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         } else if (Math.abs((this.nibbler_Matrix[0][3] + Math.cos(this.nibbler_angle)) - x) < 1 && Math.abs((this.nibbler_Matrix[1][3] + Math.sin(this.nibbler_angle)) - y) < 1 && !this.nibbler_caught) {
-            this.splash.play();
-            this.nibbler_caught = true;
-            this.fish_is_caught = true;
-            this.caught_fish_material = this.materials.rudd_Fish;
-            this.nibbler_Matrix[0][0] = 0;
-            this.nibbler_Matrix[0][1] = -1;
-            this.nibbler_Matrix[1][0] = 1;
-            this.nibbler_Matrix[1][1] = 0;
-            this.nibbler_Matrix[2][0] = 1;
-            this.nibbler_Matrix[2][1] = 0;
-            this.nibbler_Matrix[0][3] = this.crosshair_Matrix[0][3] - .2;
-            this.nibbler_Matrix[1][3] = this.crosshair_Matrix[1][3] - .8;
-            this.nibbler_Matrix = this.nibbler_Matrix.times(Mat4.scale([.5, .5, .5]));
+            this.nibbler_caught = this.gen_catch();
+            this.nibbler_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI/2, Vec.of(0,1,0))).times(Mat4.scale([.5,.5,.5]));
             this.caught_fish_matrix = this.nibbler_Matrix.times(Mat4.rotation(Math.PI/4,Vec.of(1,0,0)));
         }
     }
