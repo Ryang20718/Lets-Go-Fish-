@@ -638,7 +638,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
             if(!this.fish_is_caught){
             this.total_fish_caught += 1;// increment total fish counter
-            console.log(this.total_fish_caught);
+
             }
             //this.family_scene(graphics_state,this.pine_tree_Matrix,t);
         }
