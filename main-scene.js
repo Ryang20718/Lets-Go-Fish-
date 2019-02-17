@@ -330,14 +330,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     move_left() {
         if ((this.crosshair_Matrix[0][3] - 0.2) * (this.crosshair_Matrix[0][3] - 0.2) + (this.crosshair_Matrix[1][3]) * (this.crosshair_Matrix[1][3]) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([-0.2, 0, 0]));
-            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI/1000,[0, -1, 0]));//.times(Mat4.translation([-0.1, 0, 0]));
+            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI/300,[0, -1, 0]));//.times(Mat4.translation([-0.1, 0, 0]));
         }
     }
 
     move_right() {
         if ((this.crosshair_Matrix[0][3] + 0.2) * (this.crosshair_Matrix[0][3] + 0.2) + (this.crosshair_Matrix[1][3]) * (this.crosshair_Matrix[1][3]) < 72.25 && !this.catching) {
             this.crosshair_Matrix = this.crosshair_Matrix.times(Mat4.translation([0.2, 0, 0]));
-            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI/1000,[0, 1, 0]));//.times(Mat4.translation([0.1, 0, 0]));
+            this.rod_Matrix = this.rod_Matrix.times(Mat4.rotation(Math.PI/300,[0, 1, 0]));//.times(Mat4.translation([0.1, 0, 0]));
         }
     }
 
@@ -631,8 +631,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             }
 
             //FISHING ROD
-            let rod_Matrix = this.rod_Matrix.times(Mat4.translation([0,-25,0])).times(Mat4.rotation(-Math.PI/6, Vec.of(1,0,0))).times(Mat4.scale([.1,.1,50]));
-            this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({color: Color.of(.7, .7, .7, .5)}));
+            let rod_Matrix = this.rod_Matrix.times(Mat4.translation([0,-25,0])).times(Mat4.rotation(-Math.PI/6, Vec.of(1,0,0))).times(Mat4.scale([.05,.05,2]));
+            this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({color: Color.of(1, 0, 1, 1)}));
+            for (var i = 0; i < 8; i++) {
+                 rod_Matrix = rod_Matrix.times(Mat4.scale([20,20,.5])).times(Mat4.translation([.1,.1,1])).times(Mat4.rotation(-Math.PI/50, Vec.of(1,0,0))).times(Mat4.translation([-.1,-.1,1])).times(Mat4.scale([.05,.05,2]));
+                 this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({color: Color.of((i%3 === 0), (i%3 ===1), (i%3===2), 1)}));
+            }
+
             this.shapes.sphere6.draw(graphics_state, this.sphere1_Matrix, this.materials.red);
             this.shapes.sphere6.draw(graphics_state, this.sphere2_Matrix, this.materials.red);
             this.shapes.torus.draw(graphics_state, this.torus1_Matrix, this.materials.white);
