@@ -160,6 +160,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.veiled_in_black.volume = 0.5;
         this.splash = new Audio("assets/splash.mp3");
         this.splash.loop = false;
+        this.laughter = new Audio("assets/laughter.mp3"); //insult scene
 
         this.crosshair_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
         this.sphere1_Matrix = Mat4.identity().times(Mat4.scale([1, 1, .1]));
@@ -601,6 +602,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.rText.set_string("Some babies were dropped on their heads but you were clearly thrown at a wall");
             }
             
+            this.laughter.play(); //play insult laughter
             this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.scale([1/4, 1/4, 1/4])).times(Mat4.translation([-55, 0, -6])), this.materials.text_image ); //draw response text
             
             
