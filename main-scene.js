@@ -43,8 +43,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             pond: new (Circle.prototype.make_flat_shaded_version())(20,20),
             torus: new Torus(20,20),
             cylinder: new Capped_Cylinder(20,20),
-            tree_stem: new Shape_From_File("assets/MapleTreeStem.obj"),
-            tree_leaves: new Shape_From_File("assets/MapleTreeLeaves.obj"),
             pine_tree_branch: new Shape_From_File("assets/pine_tree_branch.obj"),
             pine_tree_bark: new Shape_From_File("assets/pine_tree_bark.obj"),
             grass: new Shape_From_File("assets/Grass_03.obj"),
@@ -77,28 +75,22 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 ambient: 1
             }),
             king_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1,
-                texture: context.get_instance("assets/King_Of_The_Pond.png", false)
+                ambient: 1
             }),
             mystery_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1,
-                texture: context.get_instance("assets/Mystery_Fish.png", false)
+                ambient: 1
             }),
             plain_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1,
-                texture: context.get_instance("assets/Plain_Ol_Fish.png", false)
+                ambient: 1
             }),
             small_Fry: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1,
-                texture: context.get_instance("assets/Small_Fry.png", false)
+                ambient: 1
             }),
             touchy_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1,
-                texture: context.get_instance("assets/Touchy_Fish.png", false)
+                ambient: 1
             }),
             nibbler: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1,
-                texture: context.get_instance("assets/Nibbler.png", false)
+                ambient: 1
             }),
             rudd_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: 1,
@@ -266,7 +258,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.bottom_Matrix = Mat4.identity();
         this.bottom_Matrix = this.bottom_Matrix.times(Mat4.translation([0, 0, -1])).times(Mat4.scale([15, 15, .01])).times(Mat4.rotation(Math.PI, [1.3, 0, 0]));
 
-        this.rock_Matrix = Mat4.identity().times(Mat4.rotation(1.6, Vec.of(0, 1, -.1))).times(Mat4.translation([-0, -7, 11])).times(Mat4.scale([8, 2, 2]));
+        this.rock_Matrix = Mat4.identity().times(Mat4.rotation(1.6, Vec.of(0, 1, -.1))).times(Mat4.translation([-0, 200, 11])).times(Mat4.scale([8, 2, 2]));
 
         this.fish3D_Matrix = Mat4.identity().times(Mat4.rotation(1, Vec.of(1, 0, -.1))).times(Mat4.translation([0, 0, 11])).times(Mat4.scale([8, 8, 8]));
 
@@ -367,7 +359,20 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         if (this.animation_t >= 1)
             this.beginning_animation = false;
     }
+    family_scene(graphics_state,world_matrix,t) {
+        if ((t - this.start_zoom) <= 2) {
+            var desired = Mat4.identity().times(Mat4.rotation(Math.PI/2, [1, 0, 0]));
+            desired = this.rock_Matrix;
+            desired = Mat4.inverse(desired.times(Mat4.translation([0, 0, 100])));
+            desired = desired.map((x,i)=>Vec.from(graphics_state.camera_transform[i]).mix(x, .1));
+            graphics_state.camera_transform = desired;
+            this.storedCamera = graphics_state.camera_transform;
+        } else {
+            this.zoom_animation = false;
+            this.start_zoom = -1;
+        }
 
+    }
 
     catch_fish() {
         var x = this.crosshair_Matrix[0][3];
@@ -756,8 +761,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
-            let total_fish_caught = this.total_fish_caught+1;// increment total fish counter
-            
+            if(!this.fish_is_caught){
+            this.total_fish_caught += 1;// increment total fish counter
+            console.log(this.total_fish_caught);
+            }
+            //this.family_scene(graphics_state,this.pine_tree_Matrix,t);
         }
 
         // Draw flattened blue sphere for temporary pond:
