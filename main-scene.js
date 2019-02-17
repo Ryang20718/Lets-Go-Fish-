@@ -686,6 +686,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.shapes.cylinder.draw(graphics_state, rod_Matrix, this.materials.white.override({
                 color: Color.of(.3 - i * .02, .7 - .04, .2 - .02, 1)
             }));
+            let kink_Matrix = rod_Matrix.times(Mat4.scale([20, 20, .5])).times(Mat4.translation([.1, .1, 1])).times(Mat4.rotation(-Math.PI / 100, Vec.of(1, 0, 0))).times(Mat4.translation([-.1, -.1, 1])).times(Mat4.scale([.06, .06, .06]));
+            this.shapes.sphere6.draw(graphics_state, kink_Matrix, this.materials.white.override({
+                color: Color.of(.2 - i * .02, .6 - .04, .1 - .02, 1)
+            }));
         }
         this.shapes.sphere6.draw(graphics_state, sphere1_Matrix, this.materials.green);
         this.shapes.sphere6.draw(graphics_state, sphere2_Matrix, this.materials.green);
