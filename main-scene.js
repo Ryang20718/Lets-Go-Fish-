@@ -383,6 +383,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.caught_fish_material = this.materials.rudd_Fish;
         return true;
     }
+    
+    play_laughter(){
+        this.laughter.play();
+    }
 
     catch_fish() {
         this.total_times_tried += 1;
@@ -501,7 +505,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             //set roughly 30-40 seconds of fish catching
             this.ending_animation = true;
         }
-        console.log(this.time_to_fish);
         graphics_state.lights = this.lights;
         const t = graphics_state.animation_time / 1000
           , dt = graphics_state.animation_delta_time / 1000;
@@ -520,7 +523,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 if (this.menu_volume <= 0) {
                     this.menu.pause();
-                    this.veiled_in_black.play();
+                    //this.veiled_in_black.play();
                 }
             }
         }
@@ -540,8 +543,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             }
             if (this.veiled_in_black_volume <= 0 && this.fanfare_count == 0) {
                 this.veiled_in_black.pause();
-                this.fanfare.play();
-                this.fanfare_count = 1;
+                this.play_laughter();
+                //this.fanfare.play();
+                //this.fanfare_count = 1;
             }
             
             //transforming camera backwd
@@ -589,7 +593,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.rText.set_string("Some babies were dropped on their heads but you were clearly thrown at a wall");
             }
             
-            this.laughter.play(); //play insult laughter
             this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.scale([1/4, 1/4, 1/4])).times(Mat4.translation([-55, 0, -6])), this.materials.text_image ); //draw response text
             
             
