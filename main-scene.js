@@ -302,7 +302,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.animation_t = 0;
         this.graphics_state = context.globals.graphics_state;
         this.storedCamera = null;
+        
         this.total_fish_caught = 0;
+        this.total_times_tried = 0;// how many times user tries to catch fish by pressing control
+        this.time_to_fish = 0;
     }
 
     make_control_panel() {
@@ -382,6 +385,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     }
 
     catch_fish() {
+        this.total_times_tried += 1;// how many times user tries to catch fish by pressing control
+
         var x = this.crosshair_Matrix[0][3];
         var y = this.crosshair_Matrix[1][3];
 
@@ -503,6 +508,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     // ***************************** START OF DISPLAY ***************************** 
 
     display(graphics_state) {
+        this.time_to_fish += 1; // time alloted to catch fish
+        if(this.time_to_fish > 1400){ //set roughly 30-40 seconds of fish catching
+            this.ending_animation = true;
+        }
+        console.log(this.time_to_fish);
         graphics_state.lights = this.lights;
         const t = graphics_state.animation_time / 1000
           , dt = graphics_state.animation_delta_time / 1000;
