@@ -544,25 +544,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.draw_the_enviroment(graphics_state, t);
             //this.shapes.mText.draw( graphics_state, this.mom_matrix.times(Mat4.scale([1/4, 1/4, 1/4])).times(Mat4.translation([-55, 0, 1])), this.materials.text_image );
 
-<<<<<<< HEAD
-            if (this.total_fish_caught >= 7) {
-                this.shapes.rText.set_string("Nice Job!");
-            } else if (this.total_fish_caught >= 6) {
-                this.shapes.rText.set_string("Is that all we have for dinner?");
-            } else if (this.total_fish_caught >= 5) {
-                this.shapes.rText.set_string("Maybe you're not useless after all!");
-            } else if (this.total_fish_caught >= 4) {
-                this.shapes.rText.set_string("Dad you're, are an oxygen thief!");
-            } else if (this.total_fish_caught >= 3) {
-                this.shapes.rText.set_string("Your brain is smaller than the fish you caught");
-            } else if (this.total_fish_caught >= 2) {
-                this.shapes.rText.set_string("You're about as useful as a fish");
-            } else if (this.total_fish_caught >= 1) {
-                this.shapes.rText.set_string("Mr.Terzopoulos could do better!");
-            } else {
-                this.shapes.rText.set_string("Guess we'll starve to death");
-            }
-
             this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.translation([-5, 3, -4])).times(Mat4.scale([1/6, 1/6, 1/6])), this.materials.text_image ); //draw response text            
             this.shapes.mom.draw(graphics_state,this.mom_matrix,this.materials.clouds.override({
             color: Color.of(241/255, 194/255, 125/255, 1),
@@ -575,7 +556,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             //left eye
             this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([-.3, 1.2, 0])).times(Mat4.rotation(Math.PI /4, Vec.of(0, -1, 0))).times(Mat4.scale([1/6, 1/6, 1/6])),this.materials.eye_img); //draw the mum
 
-=======
+
             var responses = ["Guess we'll starve to death", "Mr.Terzopoulos could do better!", "You're about as useful as a fish", "Your brain is smaller than that fish", "Dad you're, are an oxygen thief!", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"]
             if (this.total_fish_caught < responses.length)
                 this.shapes.rText.set_string(responses[this.total_fish_caught]);
@@ -586,7 +567,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             //draw response text            
             this.shapes.mom.draw(graphics_state, this.mom_matrix, this.materials.mom_img);
             //draw the mum
->>>>>>> cb0caa2b9fcda495064895784c44aa5fa24fd09a
+
 
         }
 
