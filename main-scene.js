@@ -153,13 +153,12 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.fanfare = new Audio("assets/Fanfare.flac");
         this.fanfare.loop = false;
         this.fanfare_count = 0;
-        this.menu = new Audio("assets/Menu.flac");
+        this.menu = new Audio("assets/Menu.mp3");
         this.menu.loop = true;
         this.menu_volume = 0.5;
-        this.veiled_in_black = new Audio("assets/Veiled in Black.flac");
-        this.veiled_in_black.loop = true;
-        this.veiled_in_black_volume = 0.5;
-        this.veiled_in_black.volume = 0.5;
+        this.fishing_ost = new Audio("assets/fishing_ost.mp3");
+        this.fishing_ost.loop = true;
+        this.fishing_ost_volume = 0.5;
         this.splash = new Audio("assets/splash.mp3");
         this.splash.loop = false;
         this.laughter = new Audio("assets/laughter.mp3");
@@ -487,9 +486,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
     // ***************************** START OF DISPLAY ***************************** 
     display(graphics_state) {
-        // this.time_to_fish += 1; // time alloted to catch fish
-        if (this.time_to_fish > 1400) {
-            //set roughly 30-40 seconds of fish catching
+        this.time_to_fish += 1; // time alloted to catch fish
+        if (this.time_to_fish > 1400) { //set roughly 30-40 seconds of fish catching
             this.ending_animation = true;
         }
         graphics_state.lights = this.lights;
@@ -504,14 +502,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.shapes.plane.draw(graphics_state, sign_Matrix, this.materials.start_sign);
             if (this.begin_animation) {
                 this.trigger_animation(graphics_state)
-                if (this.menu_volume > 0) {
-                    this.menu.volume = this.menu_volume;
+                if (this.menu_volume > 0)
                     this.menu_volume = this.menu_volume - 0.01;
-                }
-                if (this.menu_volume <= 0) {
+                else
                     this.menu.pause();
-                    //this.veiled_in_black.play();
-                }
             }
         }
 
@@ -524,12 +518,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             //      graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -5, 1030), Vec.of(0, 100, 0), Vec.of(0, 10, 0));
             //     this.shapes.plane.draw(graphics_state, this.sign_Matrix, this.materials.end_sign);
 
-            if (this.veiled_in_black_volume > 0) {
-                this.veiled_in_black.volume = this.veiled_in_black_volume;
-                this.veiled_in_black_volume = this.veiled_in_black_volume - 0.01;
-            }
-            if (this.veiled_in_black_volume <= 0 && this.fanfare_count == 0) {
-                this.veiled_in_black.pause();
+            if (this.fishing_ost_volume > 0)
+                this.fishing_ost_volume -= 0.01;
+            if (this.fishing_ost_volume <= 0 && this.fanfare_count == 0) {
+                this.fishing_ost.pause();
                 this.play_laughter();
                 //this.fanfare.play();
                 //this.fanfare_count = 1;
@@ -585,7 +577,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
             this.draw_the_fish(graphics_state, t)
             //transforming camera to light source
-
+            this.fishing_ost.play();
             this.scratchpad_context.drawImage(this.webgl_manager.canvas, 0, 0, 256, 256);
             this.texture.image.src = this.scratchpad.toDataURL("image/png");
             // Clear the canvas and start over, beginning scene 2:
