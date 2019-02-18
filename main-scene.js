@@ -169,14 +169,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.king_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, -.15]));
         this.king_angle = 0
-        this.king_model_spawn = Mat4.identity().times(Mat4.scale([.2, .05, .2]));
+        this.king_model_spawn = Mat4.identity().times(Mat4.scale([.1, .05, .1]));
         this.king_spawn_time = Math.random() * 12 + 15;
         this.king_dist = 0.01;
         this.king_caught = false;
 
         this.mystery_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, -0.1]));
         this.mystery_angle = 0;
-        this.mystery_model_spawn = Mat4.identity().times(Mat4.scale([.2, .05, .2]));
+        this.mystery_model_spawn = Mat4.identity().times(Mat4.scale([.1, .05, .1]));
         this.mystery_spawn_time = Math.random() * 12 + 10;
         this.mystery_dist = 0.01;
         this.mystery_caught = false;
@@ -384,7 +384,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         if (Math.abs((this.king_Fish_Matrix[0][3] + Math.cos(this.king_angle) - 0.3 * Math.sin(this.king_angle)) - x) < 2 && Math.abs((this.king_Fish_Matrix[1][3] + 0.3 * Math.cos(this.king_angle) + Math.sin(this.king_angle)) - y) < 2 && !this.king_caught) {
             this.king_caught = this.gen_catch();
             this.king_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
-            this.caught_fish_matrix = this.king_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([1, 0.5, 1]));
+            this.caught_fish_matrix = this.king_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.mystery_Fish_Matrix[0][3] + Math.cos(this.mystery_angle)) - x) < 1 && Math.abs((this.mystery_Fish_Matrix[1][3] + Math.sin(this.mystery_angle)) - y) < 1 && !this.mystery_caught) {
             this.mystery_caught = this.gen_catch();
             this.mystery_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
@@ -737,7 +737,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             if (t > this.king_spawn_time && t < this.king_spawn_time + 0.2) {
                 if (this.king_model_spawn[0][0] < 2) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
-                        this.king_model_spawn = this.king_model_spawn.times(Mat4.scale([1.4, 1.4, 1.4]));
+                        this.king_model_spawn = this.king_model_spawn.times(Mat4.scale([1, 1, 1]));
                     }
                 }
                 this.shapes.fish3D.draw(graphics_state, this.king_model_spawn, this.materials.rudd_Fish);
