@@ -149,9 +149,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.t_reset = false;
 
-        this.fanfare = new Audio("assets/Fanfare.flac");
-        this.fanfare.loop = false;
-        this.fanfare_count = 0;
+        //this.fanfare = new Audio("assets/Fanfare.flac");
+        //this.fanfare.loop = false;
+        //this.fanfare_count = 0;
         this.menu = new Audio("assets/Menu.mp3");
         this.menu.loop = true;
         this.menu_volume = 0.5;
@@ -251,7 +251,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.backdrop_Matrix = Mat4.identity().times(Mat4.translation([0, 100, 1])).times(Mat4.rotation(1.6, Vec.of(1, 0, 0))).times(Mat4.scale([200, 100, 1]));
 
-        this.star_array = new Array(250).fill([0,0]);
+        this.star_array = new Array(250).fill([0, 0]);
 
         this.pond_Matrix = Mat4.identity();
         this.pond_Matrix = this.pond_Matrix.times(Mat4.translation([0, 0, 1])).times(Mat4.scale([7, 7, .01]));
@@ -266,7 +266,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.fish3D_Matrix = Mat4.identity().times(Mat4.rotation(1, Vec.of(1, 0, -.1))).times(Mat4.translation([0, 0, 11])).times(Mat4.scale([8, 8, 8]));
 
-        this.mom_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3/5, 3/5, 3/5]));
+        this.mom_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 5, 3 / 5, 3 / 5]));
 
         this.catching = false;
         this.catching_timer = 0;
@@ -356,8 +356,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.caught_fish_material = this.materials.rudd_Fish;
         return true;
     }
-    
-    play_laughter(){
+
+    play_laughter() {
         this.laughter.play();
     }
 
@@ -473,8 +473,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
     // ***************************** START OF DISPLAY ***************************** 
     display(graphics_state) {
-        this.time_to_fish += 1; // time alloted to catch fish
-        if (this.time_to_fish > 1400) { //set roughly 30-40 seconds of fish catching
+        this.time_to_fish += 1;
+        // time alloted to catch fish
+        if (this.time_to_fish > 1400) {
+            //set roughly 30-40 seconds of fish catching
             this.ending_animation = true;
         }
         graphics_state.lights = this.lights;
@@ -531,26 +533,16 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.draw_the_enviroment(graphics_state, t);
             //this.shapes.mText.draw( graphics_state, this.mom_matrix.times(Mat4.scale([1/4, 1/4, 1/4])).times(Mat4.translation([-55, 0, 1])), this.materials.text_image );
 
-            if (this.total_fish_caught >= 7) {
-                this.shapes.rText.set_string("Nice Job!");
-            } else if (this.total_fish_caught >= 6) {
-                this.shapes.rText.set_string("Is that all we have for dinner?");
-            } else if (this.total_fish_caught >= 5) {
-                this.shapes.rText.set_string("Maybe you're not useless after all!");
-            } else if (this.total_fish_caught >= 4) {
-                this.shapes.rText.set_string("Dad you're, are an oxygen thief!");
-            } else if (this.total_fish_caught >= 3) {
-                this.shapes.rText.set_string("Your brain is smaller than the fish you caught");
-            } else if (this.total_fish_caught >= 2) {
-                this.shapes.rText.set_string("You're about as useful as a fish");
-            } else if (this.total_fish_caught >= 1) {
-                this.shapes.rText.set_string("Mr.Terzopoulos could do better!");
-            } else {
-                this.shapes.rText.set_string("Guess we'll starve to death");
-            }
-
-            this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.translation([-3, 3, -4])).times(Mat4.scale([1/6, 1/6, 1/6])), this.materials.text_image ); //draw response text            
-            this.shapes.mom.draw(graphics_state,this.mom_matrix,this.materials.mom_img); //draw the mum
+            var responses = ["Guess we'll starve to death", "Mr.Terzopoulos could do better!", "You're about as useful as a fish", "Your brain is smaller than that fish", "Dad you're, are an oxygen thief!", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"]
+            if (this.total_fish_caught < responses.length)
+                this.shapes.rText.set_string(responses[this.total_fish_caught]);
+            else
+                this.shapes.rText.set_string(responses[responses.length - 1]);
+             
+            this.shapes.rText.draw(graphics_state, this.mom_matrix.times(Mat4.translation([-6, 3, -4])).times(Mat4.scale([1 / 6, 1 / 6, 1 / 6])), this.materials.text_image);
+            //draw response text            
+            this.shapes.mom.draw(graphics_state, this.mom_matrix, this.materials.mom_img);
+            //draw the mum
 
         }
 
@@ -675,21 +667,15 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     // ***************************** DRAW THE ENVIROMETNT **********************
     // *************************************************************************
     draw_stars(graphics_state, t) {
-        for (var i = 0; i < 250; i ++) {
+        for (var i = 0; i < 250; i++) {
             if (Math.random() * 250 > 248) {
                 this.star_array[i] = [Math.random() * 200 - 100, Math.random() * 110 - 10];
             }
-            let star_Matrix = Mat4.identity().times(Mat4.translation([this.star_array[i][0], 75, this.star_array[i][1]])).times(Mat4.scale([.3,.3,.3]));
-            let star_Matrix2 = star_Matrix.times(Mat4.rotation(Math.PI/4, Vec.of(0,1,0)));
+            let star_Matrix = Mat4.identity().times(Mat4.translation([this.star_array[i][0], 75, this.star_array[i][1]])).times(Mat4.scale([.3, .3, .3]));
+            let star_Matrix2 = star_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(0, 1, 0)));
             this.shapes.box.draw(graphics_state, star_Matrix, this.materials.white);
             this.shapes.box.draw(graphics_state, star_Matrix2, this.materials.yellow);
-        }/*
-        for (var i = 0; i < 2500; i += 5) {
-            let star_Matrix = Mat4.identity().times(Mat4.translation([i % 41 + i % 159 - 100, 75, i % 23 + i % 77])).times(Mat4.scale([.3,.3,.3]));
-            let star_Matrix2 = star_Matrix.times(Mat4.rotation(Math.PI/4, Vec.of(0,1,0)));
-            this.shapes.box.draw(graphics_state, star_Matrix, this.materials.white);
-            this.shapes.box.draw(graphics_state, star_Matrix2, this.materials.yellow);
-        }*/
+        }
     }
 
     draw_tree(graphics_state, t, trans_vec, scale_vec) {
@@ -709,7 +695,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             color: Color.of(.1, .4, .5, 1),
             ambient: 0.9
         }));
-        this.draw_stars(graphics_state,t);
+        this.draw_stars(graphics_state, t);
     }
 
     // *************************************************************************
@@ -1134,5 +1120,3 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     }
 
 }
-
-
