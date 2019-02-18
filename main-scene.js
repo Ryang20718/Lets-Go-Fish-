@@ -50,6 +50,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             mom: new Shape_From_File("assets/mom.obj"),
             mText: new Text_Line(35),
             rText: new Text_Line(200),
+            eye: new Shape_From_File("assets/eye_right.obj"),
         }
         this.submit_shapes(context, shapes);
 
@@ -102,6 +103,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             mom_img: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: 0.5,
                 texture: context.get_instance("assets/mom.jpg", false)
+            }),
+            eye_img: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
+                ambient: 0.5,
+                texture: context.get_instance("assets/eye_map.jpg", false)
             }),
             start_sign: context.get_instance(Fake_Bump_Map).material(Color.of(0, 0, 0, 1), {
                 ambient: .8,
@@ -267,6 +272,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.fish3D_Matrix = Mat4.identity().times(Mat4.rotation(1, Vec.of(1, 0, -.1))).times(Mat4.translation([0, 0, 11])).times(Mat4.scale([8, 8, 8]));
 
         this.mom_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3/5, 3/5, 3/5]));
+        
+        this.eye_matrix = this.mom_matrix;
 
         this.catching = false;
         this.catching_timer = 0;
@@ -295,7 +302,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.total_fish_caught = 0;
         this.total_times_tried = 0;
         // how many times user tries to catch fish by pressing control
-        this.time_to_fish = 0;
+        this.time_to_fish = 1200;
     }
 
     make_control_panel() {
@@ -549,8 +556,18 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.rText.set_string("Guess we'll starve to death");
             }
 
-            this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.translation([-3, 3, -4])).times(Mat4.scale([1/6, 1/6, 1/6])), this.materials.text_image ); //draw response text            
-            this.shapes.mom.draw(graphics_state,this.mom_matrix,this.materials.mom_img); //draw the mum
+            this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.translation([-5, 3, -4])).times(Mat4.scale([1/6, 1/6, 1/6])), this.materials.text_image ); //draw response text            
+            this.shapes.mom.draw(graphics_state,this.mom_matrix,this.materials.clouds.override({
+            color: Color.of(241/255, 194/255, 125/255, 1),
+            ambient: 0.9
+            })); //draw the mum
+            
+            //right eye
+            this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([0.3, 1.2, 0])).times(Mat4.rotation(Math.PI /8, Vec.of(1, 0, 0))).times(Mat4.scale([1/7, 1/7, 1/7])),this.materials.eye_img); //draw the mum
+            
+            //left eye
+            this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([-.3, 1.2, 0])).times(Mat4.rotation(Math.PI /4, Vec.of(0, -1, 0))).times(Mat4.scale([1/6, 1/6, 1/6])),this.materials.eye_img); //draw the mum
+
 
         }
 
