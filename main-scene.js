@@ -44,7 +44,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             cylinder: new Capped_Cylinder(20,20),
             pine_tree_branch: new Shape_From_File("assets/pine_tree_branch.obj"),
             pine_tree_bark: new Shape_From_File("assets/pine_tree_bark.obj"),
-            grass: new Shape_From_File("assets/Grass_03.obj"),
             rock: new Shape_From_File("assets/Rock.obj"),
             fish3D: new Shape_From_File("assets/RuddFish.obj"),
             circle: new Circle(),
@@ -267,7 +266,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.fish3D_Matrix = Mat4.identity().times(Mat4.rotation(1, Vec.of(1, 0, -.1))).times(Mat4.translation([0, 0, 11])).times(Mat4.scale([8, 8, 8]));
 
-        this.mom_matrix = Mat4.identity().times(Mat4.translation([10, 0, 7])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([2, 2, 2]));
+        this.mom_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3/5, 3/5, 3/5]));
 
         this.catching = false;
         this.catching_timer = 0;
@@ -349,20 +348,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.animation_t += 0.01;
         if (this.animation_t >= 1)
             this.beginning_animation = false;
-    }
-    family_scene(graphics_state, world_matrix, t) {
-        if ((t - this.start_zoom) <= 2) {
-            var desired = Mat4.identity().times(Mat4.rotation(Math.PI / 2, [1, 0, 0]));
-            desired = this.rock_Matrix;
-            desired = Mat4.inverse(desired.times(Mat4.translation([0, 0, 100])));
-            desired = desired.map((x,i)=>Vec.from(graphics_state.camera_transform[i]).mix(x, .1));
-            graphics_state.camera_transform = desired;
-            this.storedCamera = graphics_state.camera_transform;
-        } else {
-            this.zoom_animation = false;
-            this.start_zoom = -1;
-        }
-
     }
 
     gen_catch() {
@@ -547,11 +532,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             //this.shapes.mText.draw( graphics_state, this.mom_matrix.times(Mat4.scale([1/4, 1/4, 1/4])).times(Mat4.translation([-55, 0, 1])), this.materials.text_image );
 
             if (this.total_fish_caught >= 7) {
-                this.shapes.rText.set_string("Nice Job! Maybe you're not useless after all!");
+                this.shapes.rText.set_string("Nice Job!");
             } else if (this.total_fish_caught >= 6) {
                 this.shapes.rText.set_string("Grandpa Terpazerp could do better!");
             } else if (this.total_fish_caught >= 5) {
-                this.shapes.rText.set_string("Nice Job! Maybe you're not useless after all!");
+                this.shapes.rText.set_string("Maybe you're not useless after all!");
             } else if (this.total_fish_caught >= 4) {
                 this.shapes.rText.set_string("You, sir, are an oxygen thief!");
             } else if (this.total_fish_caught >= 3) {
@@ -561,15 +546,15 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             } else if (this.total_fish_caught >= 1) {
                 this.shapes.rText.set_string("Grandpa Terpazerp could do better!");
             } else {
-                this.shapes.rText.set_string("Some babies were dropped on their heads but you were clearly thrown at a wall");
+                this.shapes.rText.set_string("Guess we'll starve to death ");
             }
 
-            this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.scale([1/4, 1/4, 1/4])).times(Mat4.translation([-55, 0, -6])), this.materials.text_image ); //draw response text            
+            this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.translation([-3, 3, -4])).times(Mat4.scale([1/6, 1/6, 1/6])), this.materials.text_image ); //draw response text            
             this.shapes.mom.draw(graphics_state,this.mom_matrix,this.materials.clouds.override({
             color: Color.of(241/255, 194/255, 125/255, 1),
             ambient: 0.9
             })); //draw the mum
-            setTimeout(function() {}, 1000000); //essentially pause the program
+
         }
 
         if (!this.beginning_animation && !this.ending_animation) {
@@ -629,7 +614,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 // increment total fish counter
 
             }
-            //this.family_scene(graphics_state,this.pine_tree_Matrix,t);
         }
 
         // Draw flattened blue sphere for temporary pond:
@@ -713,7 +697,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
     draw_tree(graphics_state, t, trans_vec, scale_vec) {
         let bark_Matrix = Mat4.identity().times(Mat4.translation(trans_vec)).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale(scale_vec));
-        trans_vec[2] += .5;
+        trans_vec[2] += .1;
         let branch_Matrix = Mat4.identity().times(Mat4.translation(trans_vec)).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale(scale_vec));
         this.shapes.pine_tree_bark.draw(graphics_state, bark_Matrix, this.materials.bark);
         this.shapes.pine_tree_branch.draw(graphics_state, branch_Matrix, this.materials.branch);
