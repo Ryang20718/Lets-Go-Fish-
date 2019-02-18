@@ -252,6 +252,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.backdrop_Matrix = Mat4.identity().times(Mat4.translation([0, 100, 1])).times(Mat4.rotation(1.6, Vec.of(1, 0, 0))).times(Mat4.scale([200, 100, 1]));
 
+        this.star_array = new Array(250).fill([0,0]);
+
         this.pond_Matrix = Mat4.identity();
         this.pond_Matrix = this.pond_Matrix.times(Mat4.translation([0, 0, 1])).times(Mat4.scale([7, 7, .01]));
 
@@ -692,12 +694,21 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     // ***************************** DRAW THE ENVIROMETNT **********************
     // *************************************************************************
     draw_stars(graphics_state, t) {
+        for (var i = 0; i < 250; i ++) {
+            if (Math.random() * 250 > 248) {
+                this.star_array[i] = [Math.random() * 200 - 100, Math.random() * 110 - 10];
+            }
+            let star_Matrix = Mat4.identity().times(Mat4.translation([this.star_array[i][0], 75, this.star_array[i][1]])).times(Mat4.scale([.3,.3,.3]));
+            let star_Matrix2 = star_Matrix.times(Mat4.rotation(Math.PI/4, Vec.of(0,1,0)));
+            this.shapes.box.draw(graphics_state, star_Matrix, this.materials.white);
+            this.shapes.box.draw(graphics_state, star_Matrix2, this.materials.yellow);
+        }/*
         for (var i = 0; i < 2500; i += 5) {
             let star_Matrix = Mat4.identity().times(Mat4.translation([i % 41 + i % 159 - 100, 75, i % 23 + i % 77])).times(Mat4.scale([.3,.3,.3]));
             let star_Matrix2 = star_Matrix.times(Mat4.rotation(Math.PI/4, Vec.of(0,1,0)));
             this.shapes.box.draw(graphics_state, star_Matrix, this.materials.white);
             this.shapes.box.draw(graphics_state, star_Matrix2, this.materials.yellow);
-        }
+        }*/
     }
 
     draw_tree(graphics_state, t, trans_vec, scale_vec) {
