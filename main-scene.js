@@ -534,26 +534,23 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             if (this.total_fish_caught >= 7) {
                 this.shapes.rText.set_string("Nice Job!");
             } else if (this.total_fish_caught >= 6) {
-                this.shapes.rText.set_string("Grandpa Terpazerp could do better!");
+                this.shapes.rText.set_string("Is that all we have for dinner?");
             } else if (this.total_fish_caught >= 5) {
                 this.shapes.rText.set_string("Maybe you're not useless after all!");
             } else if (this.total_fish_caught >= 4) {
-                this.shapes.rText.set_string("You, sir, are an oxygen thief!");
+                this.shapes.rText.set_string("Dad you're, are an oxygen thief!");
             } else if (this.total_fish_caught >= 3) {
-                this.shapes.rText.set_string("You're the reason the gene pool needs a lifeguard");
+                this.shapes.rText.set_string("Your brain is smaller than the fish you caught");
             } else if (this.total_fish_caught >= 2) {
-                this.shapes.rText.set_string("I'd slap you, but that would be animal abuse");
+                this.shapes.rText.set_string("You're about as useful as a fish");
             } else if (this.total_fish_caught >= 1) {
-                this.shapes.rText.set_string("Grandpa Terpazerp could do better!");
+                this.shapes.rText.set_string("Mr.Terzopoulos could do better!");
             } else {
-                this.shapes.rText.set_string("Guess we'll starve to death ");
+                this.shapes.rText.set_string("Guess we'll starve to death");
             }
 
             this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.translation([-3, 3, -4])).times(Mat4.scale([1/6, 1/6, 1/6])), this.materials.text_image ); //draw response text            
-            this.shapes.mom.draw(graphics_state,this.mom_matrix,this.materials.clouds.override({
-            color: Color.of(241/255, 194/255, 125/255, 1),
-            ambient: 0.9
-            })); //draw the mum
+            this.shapes.mom.draw(graphics_state,this.mom_matrix,this.materials.mom_img); //draw the mum
 
         }
 
@@ -1138,54 +1135,4 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
 }
 
-class Texture_Scroll_X extends Phong_Shader {
-    fragment_glsl_code() {
-        return `
-        uniform sampler2D texture;
-        void main()
-        { if( GOURAUD || COLOR_NORMALS )    // Do smooth "Phong" shading unless options like "Gouraud mode" are wanted instead.di
-          { gl_FragColor = VERTEX_COLOR;    // Otherwise, we already have final colors to smear (interpolate) across vertices.            
-            return;
-          }                                 // If we get this far, calculate Smooth "Phong" Shading as opposed to Gouraud Shading.
-                                            // Phong shading is not to be confused with the Phong Reflection Model.
-          vec2 mVector = f_tex_coord; 
-          mat4 mMatrix = mat4(vec4(1., 0., 0., 0.), vec4(0., 1., 0., 0.), vec4( 0., 0., 1., 0.), vec4( mod(2.0 * animation_time, 88.) , 0., 0., 1.)); 
-          vec4 tempVector = vec4(mVector, 0, 0); 
-          tempVector = tempVector + vec4(1., 1., 0., 1.); 
-          tempVector = mMatrix * tempVector; 
 
-          vec4 tex_color = texture2D( texture, tempVector.xy );                         // Sample the texture image in the correct place.
-                                                                                      // Compute an initial (ambient) color:
-          if( USE_TEXTURE ) gl_FragColor = vec4( ( tex_color.xyz + shapeColor.xyz ) * ambient, shapeColor.w * tex_color.w ); 
-          else gl_FragColor = vec4( shapeColor.xyz * ambient, shapeColor.w );
-          gl_FragColor.xyz += phong_model_lights( N );                     // Compute the final color with contributions from lights.
-        }`;
-    }
-}
-
-class Texture_Rotate extends Phong_Shader {
-    fragment_glsl_code() {
-        return `
-        uniform sampler2D texture;
-        void main()
-        { if( GOURAUD || COLOR_NORMALS )    // Do smooth "Phong" shading unless options like "Gouraud mode" are wanted instead.
-          { gl_FragColor = VERTEX_COLOR;    // Otherwise, we already have final colors to smear (interpolate) across vertices.            
-            return;
-          }                                 // If we get this far, calculate Smooth "Phong" Shading as opposed to Gouraud Shading.
-                                            // Phong shading is not to be confused with the Phong Reflection Model.
-
-          vec2 mVector = f_tex_coord; 
-          mat4 mMatrix = mat4(cos( mod((6.28) * .25 * animation_time, 44. * 3.14)), sin( mod((6.28) * .25 * animation_time, 44. * 3.14)), 0, 0, -sin( mod((6.28) * .25 * animation_time, 44. * 3.14)), cos( mod((6.28) * .25 * animation_time, 44. * 3.14)), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-          vec4 tempVector = vec4(mVector, 0, 0); 
-          tempVector = tempVector + vec4(-.5, -.5, 0., 0.);
-          tempVector = mMatrix * tempVector; 
-          tempVector = tempVector + vec4(.5, .5, 0., 0.);
-          
-          vec4 tex_color = texture2D( texture, tempVector.xy );                         // Sample the texture image in the correct place.
-                                                                                      // Compute an initial (ambient) color:
-          if( USE_TEXTURE ) gl_FragColor = vec4( ( tex_color.xyz + shapeColor.xyz ) * ambient, shapeColor.w * tex_color.w ); 
-          else gl_FragColor = vec4( shapeColor.xyz * ambient, shapeColor.w );
-          gl_FragColor.xyz += phong_model_lights( N );                     // Compute the final color with contributions from lights.
-        }`;
-    }
-}
