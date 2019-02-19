@@ -529,11 +529,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
             if (this.fishing_ost_volume > 0)
                 this.fishing_ost_volume -= 0.01;
-            if (this.fishing_ost_volume <= 0 && this.fanfare_count == 0) {
+            if (this.fishing_ost_volume <= 0) {
                 this.fishing_ost.pause();
                 this.play_laughter();
-                //this.fanfare.play();
-                //this.fanfare_count = 1;
             }
 
             //transforming camera backwd
