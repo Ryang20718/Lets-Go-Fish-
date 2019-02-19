@@ -103,10 +103,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 ambient: 1,
                 texture: context.get_instance("assets/RuddFish.png", false)
             }),
-            mom_img: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 0.5,
-                texture: context.get_instance("assets/mom.jpg", false)
-            }),
             eye_img: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: 0.5,
                 texture: context.get_instance("assets/eye_map.jpg", false)
