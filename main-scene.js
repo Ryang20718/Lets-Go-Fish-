@@ -315,7 +315,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.total_fish_caught = 0;
         this.total_times_tried = 0;
         // how many times user tries to catch fish by pressing control
-        this.time_to_fish = 1200;
+        this.time_to_fish = 0;
     }
 
     make_control_panel() {
