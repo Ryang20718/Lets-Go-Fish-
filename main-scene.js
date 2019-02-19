@@ -51,6 +51,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             mText: new Text_Line(35),
             rText: new Text_Line(200),
             eye: new Shape_From_File("assets/eye_right.obj"),
+            tShirt: new Shape_From_File("assets/tShirt.obj"),
+            pants: new Shape_From_File("assets/pants.obj"),
+            hair: new Shape_From_File("assets/hair.obj")
         }
         this.submit_shapes(context, shapes);
 
@@ -271,13 +274,19 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.fish3D_Matrix = Mat4.identity().times(Mat4.rotation(1, Vec.of(1, 0, -.1))).times(Mat4.translation([0, 0, 11])).times(Mat4.scale([8, 8, 8]));
 
-<<<<<<< HEAD
+
         this.mom_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3/5, 3/5, 3/5]));
         
         this.eye_matrix = this.mom_matrix;
-=======
+        
+        this.tShirt_matrix = this.mom_matrix;
+        
+        this.pants_matrix = this.mom_matrix;
+        
+        this.hair_matrix = this.mom_matrix;
+
         this.mom_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 5, 3 / 5, 3 / 5]));
->>>>>>> cb0caa2b9fcda495064895784c44aa5fa24fd09a
+
 
         this.catching = false;
         this.catching_timer = 0;
@@ -543,8 +552,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.shapes.mText.set_string(accuracy);
             this.draw_the_enviroment(graphics_state, t);
             //this.shapes.mText.draw( graphics_state, this.mom_matrix.times(Mat4.scale([1/4, 1/4, 1/4])).times(Mat4.translation([-55, 0, 1])), this.materials.text_image );
-
-            this.shapes.rText.draw( graphics_state, this.mom_matrix.times(Mat4.translation([-5, 3, -4])).times(Mat4.scale([1/6, 1/6, 1/6])), this.materials.text_image ); //draw response text            
+          
             this.shapes.mom.draw(graphics_state,this.mom_matrix,this.materials.clouds.override({
             color: Color.of(241/255, 194/255, 125/255, 1),
             ambient: 0.9
@@ -555,7 +563,24 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             
             //left eye
             this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([-.3, 1.2, 0])).times(Mat4.rotation(Math.PI /4, Vec.of(0, -1, 0))).times(Mat4.scale([1/6, 1/6, 1/6])),this.materials.eye_img); //draw the mum
-
+            
+            //tSHIRT
+            this.shapes.tShirt.draw(graphics_state,this.tShirt_matrix.times(Mat4.translation([0, -0.1, 0])).times(Mat4.scale([2/5, 2/5, 2/5])),this.materials.clouds.override({
+            color: Color.of(50/255, 50/255, 50/255, 1),
+            ambient: 0.9
+            })); 
+            
+            //pants
+            this.shapes.pants.draw(graphics_state,this.pants_matrix.times(Mat4.translation([0, -0.40, 0.15])).times(Mat4.scale([0.55, 0.55, 0.55])),this.materials.clouds.override({
+            color: Color.of(20/255, 100/255, 200/255, 1),
+            ambient: 0.9
+            })); 
+            
+            //hair
+            this.shapes.hair.draw(graphics_state,this.hair_matrix.times(Mat4.translation([0, 1.5, 0])).times(Mat4.scale([0.5, 0.5, 0.5])),this.materials.clouds.override({
+            color: Color.of(0/255, 0/255, 0/255, 1),
+            ambient: 0.9
+            })); 
 
             var responses = ["Guess we'll starve to death", "Mr.Terzopoulos could do better!", "You're about as useful as a fish", "Your brain is smaller than that fish", "Dad you're, are an oxygen thief!", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"]
             if (this.total_fish_caught < responses.length)
