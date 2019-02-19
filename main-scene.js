@@ -315,7 +315,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.total_fish_caught = 0;
         this.total_times_tried = 0;
         // how many times user tries to catch fish by pressing control
-        this.time_to_fish = 0;
+        this.time_to_fish = 1200;
     }
 
     make_control_panel() {
@@ -557,10 +557,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             })); //draw the mum
             
             //right eye
-            this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([0.3, 1.2, 0])).times(Mat4.rotation(Math.PI /8, Vec.of(1, 0, 0))).times(Mat4.scale([1/7, 1/7, 1/7])),this.materials.eye_img); //draw the mum
+            this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([0.3, 1.25, 0.3])).times(Mat4.rotation(Math.PI /8, Vec.of(1, 0, 0))).times(Mat4.scale([1/7, 1/7, 1/7])),this.materials.eye_img); //draw the mum
             
             //left eye
-            this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([-.3, 1.2, 0])).times(Mat4.rotation(Math.PI /4, Vec.of(0, -1, 0))).times(Mat4.scale([1/6, 1/6, 1/6])),this.materials.eye_img); //draw the mum
+            this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([-.3, 1.25, 0.2])).times(Mat4.rotation(Math.PI /4, Vec.of(0, -1, 0))).times(Mat4.scale([1/6, 1/6, 1/6])),this.materials.eye_img); //draw the mum
             
             //tSHIRT
             this.shapes.tShirt.draw(graphics_state,this.tShirt_matrix.times(Mat4.translation([0, -0.1, 0])).times(Mat4.scale([2/5, 2/5, 2/5])),this.materials.clouds.override({
