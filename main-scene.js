@@ -576,7 +576,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             ambient: 0.9
             })); 
 
-            var responses = ["Guess we'll starve to death", "Mr.Terzopoulos could do better!", "You're about as useful as a fish", "Your brain is smaller than that fish", "Dad you're, are an oxygen thief!", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"]
+            var responses = ["Son of a Fish", "Mr.Terzopoulos could do better!", "Dad you're a dumb bass", "Your brain is smaller than that fish", "Not bad for a bottom feeder", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"]
             if (this.total_fish_caught < responses.length)
                 this.shapes.rText.set_string(responses[this.total_fish_caught]);
             else
