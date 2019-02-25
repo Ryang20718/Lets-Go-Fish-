@@ -4,9 +4,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         if (!context.globals.has_controls)
             context.register_scene_component(new Movement_Controls(context,control_box.parentElement.insertCell()));
 
-        //          context.globals.graphics_state.camera_transform = Mat4.look_at( Vec.of( 0, -20, 15 ), Vec.of( 0,0,0 ), Vec.of( 0,10, 0 ) );
 
-        // beginning look at sign
+        // Opening Screen
         context.globals.graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -5, 1030), Vec.of(0, 100, 0), Vec.of(0, 10, 0));
 
         const r = context.width / context.height;
@@ -84,7 +83,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             big_fish1: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: 1
             }),
-            mystery_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
+            big_fish2: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: 1
             }),
             plain_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
@@ -153,9 +152,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.t_reset = false;
 
-        //this.fanfare = new Audio("assets/Fanfare.flac");
-        //this.fanfare.loop = false;
-        //this.fanfare_count = 0;
+
         this.menu = new Audio("assets/Menu.mp3");
         this.menu.loop = true;
         this.menu_volume = 0.5;
@@ -177,13 +174,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.big_fish1_dist = 0.01;
         this.big_fish1_caught = false;
 
-        this.mystery_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, -0.1]));
-        this.mystery_angle = 0;
-        this.mystery_model_spawn = Mat4.identity().times(Mat4.scale([.1, .05, .1]));
-        this.mystery_spawn_time = Math.random() * 12 + 10;
-        this.mystery_dist = 0.01;
-        this.mystery_caught = false;
-        this.mystery_direction = -1;
+        this.big_fish2_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, -0.1]));
+        this.big_fish2_angle = 0;
+        this.big_fish2_model_spawn = Mat4.identity().times(Mat4.scale([.1, .05, .1]));
+        this.big_fish2_spawn_time = Math.random() * 12 + 10;
+        this.big_fish2_dist = 0.01;
+        this.big_fish2_caught = false;
+        this.big_fish2_direction = -1;
 
         this.plain_Fish_Matrix = Mat4.identity().times(Mat4.translation([Math.random() * 2 - 1, Math.random() * 2 - 1, 0])).times(Mat4.scale([.7, .7, .7]));
         this.plain_angle = Math.random() * 2 * Math.PI;
@@ -367,10 +364,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.big_fish1_caught = this.gen_catch();
             this.big_fish1_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
             this.caught_fish_matrix = this.big_fish1_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
-        } else if (Math.abs((this.mystery_Fish_Matrix[0][3] + Math.cos(this.mystery_angle)) - x) < 1 && Math.abs((this.mystery_Fish_Matrix[1][3] + Math.sin(this.mystery_angle)) - y) < 1 && !this.mystery_caught) {
-            this.mystery_caught = this.gen_catch();
-            this.mystery_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
-            this.caught_fish_matrix = this.mystery_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([1, 0.5, 1]));
+        } else if (Math.abs((this.big_fish2_Fish_Matrix[0][3] + Math.cos(this.big_fish2_angle)) - x) < 1 && Math.abs((this.big_fish2_Fish_Matrix[1][3] + Math.sin(this.big_fish2_angle)) - y) < 1 && !this.big_fish2_caught) {
+            this.big_fish2_caught = this.gen_catch();
+            this.big_fish2_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
+            this.caught_fish_matrix = this.big_fish2_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([1, 0.5, 1]));
         } else if (Math.abs((this.plain_Fish_Matrix[0][3] + 0.25 * Math.cos(this.plain_angle)) - x) < 1 && Math.abs((this.plain_Fish_Matrix[1][3] + 0.25 * Math.sin(this.plain_angle)) - y) < 1 && !this.plain_caught) {
             this.plain_caught = this.gen_catch();
             this.plain_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
@@ -414,15 +411,17 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
     }
 
-    // ***************************** BEGIN ANGLE HELPER FUNCTIONS *****************************
+    /*
+    Angle Functions
+    */
 
     random_big_fish1_angle() {
         var current_angle = Math.atan2((this.big_fish1_Fish_Matrix[1][3]), (this.big_fish1_Fish_Matrix[0][3]));
         this.big_fish1_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-    random_mystery_angle() {
-        var current_angle = Math.atan2((this.mystery_Fish_Matrix[1][3]), (this.mystery_Fish_Matrix[0][3]));
-        this.mystery_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
+    random_big_fish2_angle() {
+        var current_angle = Math.atan2((this.big_fish2_Fish_Matrix[1][3]), (this.big_fish2_Fish_Matrix[0][3]));
+        this.big_fish2_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
     random_plain_angle() {
         var current_angle = Math.atan2((this.plain_Fish_Matrix[1][3]), (this.plain_Fish_Matrix[0][3]));
@@ -751,48 +750,58 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             }
         }
 
-        /* ===================== Finish Drawing BigFish1  =====================
+        /* 
+        
+        ===================== Finish Drawing BigFish1  =====================
         */
-        // ***************************** BEGIN MYSTERY FISH *****************************
-        let mystery_model_transform = Mat4.identity();
+        /*
+        
+        
+        
+       ===================== BIGFISH 2 DRAWING =====================
+        */
+        let big_fish2_model_transform = Mat4.identity();
 
-        if (!this.mystery_caught) {
+        if (!this.big_fish2_caught) {
             // If statement to turn fish if it will translate out of pond
-            if ((Math.abs(this.mystery_Fish_Matrix[0][3] + Math.cos(this.mystery_angle)) > 5 || Math.abs(this.mystery_Fish_Matrix[1][3] + Math.sin(this.mystery_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
-                this.random_mystery_angle();
+            if ((Math.abs(this.big_fish2_Fish_Matrix[0][3] + Math.cos(this.big_fish2_angle)) > 5 || Math.abs(this.big_fish2_Fish_Matrix[1][3] + Math.sin(this.big_fish2_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
+                this.random_big_fish2_angle();
             }
 
-            // Code block to draw Mystery fish 
-            if (t > this.mystery_spawn_time && t < this.mystery_spawn_time + 0.2) {
-                if (this.mystery_model_spawn[0][0] < 2) {
+            /* draw BIGFISH2 
+            */
+            if (t > this.big_fish2_spawn_time && t < this.big_fish2_spawn_time + 0.2) {
+                if (this.big_fish2_model_spawn[0][0] < 2) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
-                        this.mystery_model_spawn = this.mystery_model_spawn.times(Mat4.scale([1.4, 1.4, 1.4]));
+                        this.big_fish2_model_spawn = this.big_fish2_model_spawn.times(Mat4.scale([1.4, 1.4, 1.4]));
                     }
                 }
-                this.shapes.fish3D.draw(graphics_state, this.mystery_model_spawn, this.materials.rudd_Fish);
+                this.shapes.fish3D.draw(graphics_state, this.big_fish2_model_spawn, this.materials.rudd_Fish);
 
-                this.mystery_Fish_Matrix[0][3] = 0;
-                this.mystery_Fish_Matrix[1][3] = 0;
+                this.big_fish2_Fish_Matrix[0][3] = 0;
+                this.big_fish2_Fish_Matrix[1][3] = 0;
             }
 
-            if (t > this.mystery_spawn_time + 0.2) {
-                mystery_model_transform = this.mystery_Fish_Matrix.times(Mat4.translation([(5 / (t - this.mystery_dist)) * (0.05) * Math.cos(this.mystery_angle), (5 / (t - this.mystery_dist)) * (0.05) * Math.sin(this.mystery_angle), 0]));
+            if (t > this.big_fish2_spawn_time + 0.2) {
+                big_fish2_model_transform = this.big_fish2_Fish_Matrix.times(Mat4.translation([(5 / (t - this.big_fish2_dist)) * (0.05) * Math.cos(this.big_fish2_angle), (5 / (t - this.big_fish2_dist)) * (0.05) * Math.sin(this.big_fish2_angle), 0]));
 
-                if (6 / (t - this.mystery_dist) < 0.83) {
-                    this.mystery_dist += 1;
+                if (6 / (t - this.big_fish2_dist) < 0.83) {
+                    this.big_fish2_dist += 1;
                 }
 
-                if (t - this.mystery_dist > 2) {
-                    this.mystery_dist += 1;
+                if (t - this.big_fish2_dist > 2) {
+                    this.big_fish2_dist += 1;
                 }
-                this.mystery_Fish_Matrix = mystery_model_transform;
-                mystery_model_transform = mystery_model_transform.times(Mat4.rotation(this.mystery_angle, Vec.of(0, 0, 1)))
-                mystery_model_transform = mystery_model_transform.times(Mat4.scale([2, 1.5, 2]));
-                this.shapes.fish3D.draw(graphics_state, mystery_model_transform, this.materials.rudd_Fish)
+                this.big_fish2_Fish_Matrix = big_fish2_model_transform;
+                big_fish2_model_transform = big_fish2_model_transform.times(Mat4.rotation(this.big_fish2_angle, Vec.of(0, 0, 1)))
+                big_fish2_model_transform = big_fish2_model_transform.times(Mat4.scale([2, 1.5, 2]));
+                this.shapes.fish3D.draw(graphics_state, big_fish2_model_transform, this.materials.rudd_Fish)
             }
         }
 
-        // ***************************** END MYSTERY FISH ***************************** 
+        /*
+        Finish Bigfish2 
+        */
 
         // ***************************** BEGIN PLAIN FISH *****************************
 
