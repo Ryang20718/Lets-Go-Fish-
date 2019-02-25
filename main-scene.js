@@ -257,32 +257,12 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.star_array = new Array(250).fill([0, 0]);
 
-        this.pond_Matrix = Mat4.identity();
-        this.pond_Matrix = this.pond_Matrix.times(Mat4.translation([0, 0, 1])).times(Mat4.scale([7, 7, .01]));
-
-        this.ground_Matrix = Mat4.identity();
-        this.ground_Matrix = this.ground_Matrix.times(Mat4.translation([0, 0, 1])).times(Mat4.scale([42.6, 42.6, .01]));
-
         this.bottom_Matrix = Mat4.identity();
         this.bottom_Matrix = this.bottom_Matrix.times(Mat4.translation([0, 0, -1])).times(Mat4.scale([15, 15, .01])).times(Mat4.rotation(Math.PI, [1.3, 0, 0]));
 
         this.rock_Matrix = Mat4.identity().times(Mat4.rotation(1.6, Vec.of(0, 1, -.1))).times(Mat4.translation([-0, 200, 11])).times(Mat4.scale([8, 2, 2]));
 
         this.fish3D_Matrix = Mat4.identity().times(Mat4.rotation(1, Vec.of(1, 0, -.1))).times(Mat4.translation([0, 0, 11])).times(Mat4.scale([8, 8, 8]));
-
-
-        this.mom_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3/5, 3/5, 3/5]));
-        
-        this.eye_matrix = this.mom_matrix;
-        
-        this.tShirt_matrix = this.mom_matrix;
-        
-        this.pants_matrix = this.mom_matrix;
-        
-        this.hair_matrix = this.mom_matrix;
-
-        this.mom_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 5, 3 / 5, 3 / 5]));
-
 
         this.catching = false;
         this.catching_timer = 0;
@@ -310,8 +290,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.total_fish_caught = 0;
         this.total_times_tried = 0;
-        // how many times user tries to catch fish by pressing control
-        this.time_to_fish = 1200;
+        this.time_to_fish = 0;
     }
 
     make_control_panel() {
@@ -514,28 +493,18 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             }
         }
 
-        if (!this.beginning_animation && this.ending_animation) {//ending scene, so this is where we draw the family
-        // graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -5, 1030), Vec.of(0, 100, 0), Vec.of(0, 10, 0));
-        //this.shapes.plane.draw(graphics_state, this.sign_Matrix, this.materials.end_sign);
-        }
-
         if (!this.beginning_animation && this.ending_animation) {
-            //      graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -5, 1030), Vec.of(0, 100, 0), Vec.of(0, 10, 0));
-            //     this.shapes.plane.draw(graphics_state, this.sign_Matrix, this.materials.end_sign);
-
             if (this.fishing_ost_volume > 0)
                 this.fishing_ost_volume -= 0.01;
             if (this.fishing_ost_volume <= 0) {
                 this.fishing_ost.pause();
                 this.play_laughter();
             }
-
             //transforming camera backwd
             if (!this.zoom_animation)
                 graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -25, 10), Vec.of(0, 0, 0), Vec.of(0, 10, 0));
             else
                 graphics_state.camera_transform = this.storedCamera;
-
             graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -28, 8), Vec.of(0, 0, 0), Vec.of(0, 10, 0));
 
             this.gl.depthMask(true);
@@ -545,49 +514,15 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
             this.shapes.mText.set_string(accuracy);
             this.draw_the_enviroment(graphics_state, t);
-            //this.shapes.mText.draw( graphics_state, this.mom_matrix.times(Mat4.scale([1/4, 1/4, 1/4])).times(Mat4.translation([-55, 0, 1])), this.materials.text_image );
-          
-            this.shapes.mom.draw(graphics_state,this.mom_matrix,this.materials.clouds.override({
-            color: Color.of(241/255, 194/255, 125/255, 1),
-            ambient: 0.9
-            })); //draw the mum
-            
-            //right eye
-            this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([0.3, 1.25, 0.3])).times(Mat4.rotation(Math.PI /8, Vec.of(1, 0, 0))).times(Mat4.scale([1/7, 1/7, 1/7])),this.materials.eye_img); //draw the mum
-            
-            //left eye
-            this.shapes.eye.draw(graphics_state,this.eye_matrix.times(Mat4.translation([-.3, 1.25, 0.2])).times(Mat4.rotation(Math.PI /4, Vec.of(0, -1, 0))).times(Mat4.scale([1/6, 1/6, 1/6])),this.materials.eye_img); //draw the mum
-            
-            //tSHIRT
-            this.shapes.tShirt.draw(graphics_state,this.tShirt_matrix.times(Mat4.translation([0, -0.1, 0])).times(Mat4.scale([2/5, 2/5, 2/5])),this.materials.clouds.override({
-            color: Color.of(50/255, 50/255, 50/255, 1),
-            ambient: 0.9
-            })); 
-            
-            //pants
-            this.shapes.pants.draw(graphics_state,this.pants_matrix.times(Mat4.translation([0, -0.40, 0.15])).times(Mat4.scale([0.55, 0.55, 0.55])),this.materials.clouds.override({
-            color: Color.of(20/255, 100/255, 200/255, 1),
-            ambient: 0.9
-            })); 
-            
-            //hair
-            this.shapes.hair.draw(graphics_state,this.hair_matrix.times(Mat4.translation([0, 1.5, 0])).times(Mat4.scale([0.5, 0.5, 0.5])),this.materials.clouds.override({
-            color: Color.of(0/255, 0/255, 0/255, 1),
-            ambient: 0.9
-            })); 
-
-            var responses = ["Son of a Fish", "Mr.Terzopoulos could do better!", "Dad you're a dumb bass", "Your brain is smaller than that fish", "Not bad for a bottom feeder", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"]
+ 
+            let text_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 5, 3 / 5, 3 / 5]));
+            var responses = ["Son of a Fish", "Mr.Terzopoulos could do better!", "Dad you're a dumb bass", "Your brain is smaller than that fish", "Not bad for a bottom feeder", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"];
             if (this.total_fish_caught < responses.length)
                 this.shapes.rText.set_string(responses[this.total_fish_caught]);
             else
                 this.shapes.rText.set_string(responses[responses.length - 1]);
-             
-            this.shapes.rText.draw(graphics_state, this.mom_matrix.times(Mat4.translation([-6, 3, -4])).times(Mat4.scale([1 / 6, 1 / 6, 1 / 6])), this.materials.text_image);
-            //draw response text            
-            this.shapes.mom.draw(graphics_state, this.mom_matrix, this.materials.mom_img);
-            //draw the mum
-
-
+            this.shapes.rText.draw(graphics_state, text_matrix.times(Mat4.translation([-6, 3, -4])).times(Mat4.scale([1 / 6, 1 / 6, 1 / 6])), this.materials.text_image);
+            this.draw_kid(graphics_state, t);
         }
 
         if (!this.beginning_animation && !this.ending_animation) {
@@ -601,7 +536,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.scratchpad_context.drawImage(this.webgl_manager.canvas, 0, 0, 256, 256);
             this.texture.image.src = this.scratchpad.toDataURL("image/png");
             // Clear the canvas and start over, beginning scene 2:
-            //               this.texture.image.src = this.result_img.src = this.scratchpad.toDataURL("image/png");
+            // this.texture.image.src = this.result_img.src = this.scratchpad.toDataURL("image/png");
             this.webgl_manager.gl.clear(this.webgl_manager.gl.COLOR_BUFFER_BIT | this.webgl_manager.gl.DEPTH_BUFFER_BIT);
             //  ******************************* End Shadow Map ****************************
 
@@ -616,9 +551,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.shapes.sphere6.draw(graphics_state, this.bottom_Matrix, this.materials.shadow);
 
             this.gl.depthMask(false);
-
             this.draw_the_fish(graphics_state, t)
-
             this.gl.depthMask(true);
 
             // Draw Crosshairs
@@ -650,8 +583,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
 
         // Draw flattened blue sphere for temporary pond:
-        this.shapes.pond.draw(graphics_state, this.pond_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.pond);
-        this.shapes.torus.draw(graphics_state, this.ground_Matrix, this.materials.ground);
+        let pond_Matrix = Mat4.identity().times(Mat4.translation([0, 0, 1])).times(Mat4.scale([7, 7, .01]));
+        this.shapes.pond.draw(graphics_state, pond_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.pond);
         this.draw_the_enviroment(graphics_state, t);
     }
 
@@ -740,6 +673,35 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             ambient: 0.9
         }));
         this.draw_stars(graphics_state, t);
+        let ground_Matrix = Mat4.identity().times(Mat4.translation([0, 0, 1])).times(Mat4.scale([42.6, 42.6, .01]));
+        this.shapes.torus.draw(graphics_state, ground_Matrix, this.materials.ground);
+    }
+
+    draw_kid(graphics_state, t) {
+        let kid_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 5, 3 / 5, 3 / 5]));
+        this.shapes.mom.draw(graphics_state, kid_matrix, this.materials.clouds.override({
+            color: Color.of(241 / 255, 194 / 255, 125 / 255, 1),
+            ambient: 0.9
+        }));
+        //right eye / left eye
+        this.shapes.eye.draw(graphics_state, kid_matrix.times(Mat4.translation([0.3, 1.25, 0.3])).times(Mat4.rotation(Math.PI / 8, Vec.of(1, 0, 0))).times(Mat4.scale([1 / 7, 1 / 7, 1 / 7])), this.materials.eye_img);
+        this.shapes.eye.draw(graphics_state, kid_matrix.times(Mat4.translation([-.3, 1.25, 0.2])).times(Mat4.rotation(Math.PI / 4, Vec.of(0, -1, 0))).times(Mat4.scale([1 / 6, 1 / 6, 1 / 6])), this.materials.eye_img);
+        this.shapes.tShirt.draw(graphics_state, kid_matrix.times(Mat4.translation([0, -0.1, 0])).times(Mat4.scale([2 / 5, 2 / 5, 2 / 5])), this.materials.clouds.override({
+            color: Color.of(50 / 255, 50 / 255, 50 / 255, 1),
+            ambient: 0.9
+        }));
+        //shirt
+        this.shapes.pants.draw(graphics_state, kid_matrix.times(Mat4.translation([0, -0.40, 0.15])).times(Mat4.scale([0.55, 0.55, 0.55])), this.materials.clouds.override({
+            color: Color.of(20 / 255, 100 / 255, 200 / 255, 1),
+            ambient: 0.9
+        }));
+        //pants
+        this.shapes.hair.draw(graphics_state, kid_matrix.times(Mat4.translation([0, 1.5, 0])).times(Mat4.scale([0.5, 0.5, 0.5])), this.materials.clouds.override({
+            color: Color.of(0 / 255, 0 / 255, 0 / 255, 1),
+            ambient: 0.9
+        }));
+        //hair
+        this.shapes.mom.draw(graphics_state, kid_matrix, this.materials.mom_img);
     }
 
     // *************************************************************************
