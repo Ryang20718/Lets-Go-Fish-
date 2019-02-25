@@ -81,7 +81,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             yellow: context.get_instance(Phong_Shader).material(Color.of(1, 1, 0, 1), {
                 ambient: 1
             }),
-            king_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
+            big_fish1: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: 1
             }),
             mystery_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
@@ -170,12 +170,12 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.crosshair_Matrix = Mat4.identity().times(Mat4.scale([1, 1, 1]));
         this.rod_Matrix = Mat4.identity();
 
-        this.king_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, -.15]));
-        this.king_angle = 0
-        this.king_model_spawn = Mat4.identity().times(Mat4.scale([.1, .05, .1]));
-        this.king_spawn_time = Math.random() * 12 + 15;
-        this.king_dist = 0.01;
-        this.king_caught = false;
+        this.big_fish1_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, -.15]));
+        this.big_fish1_angle = 0
+        this.big_fish1_model_spawn = Mat4.identity().times(Mat4.scale([.1, .05, .1]));
+        this.big_fish1_spawn_time = Math.random() * 12 + 15;
+        this.big_fish1_dist = 0.01;
+        this.big_fish1_caught = false;
 
         this.mystery_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, -0.1]));
         this.mystery_angle = 0;
@@ -363,10 +363,10 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         var y = this.crosshair_Matrix[1][3];
         this.catching = true;
 
-        if (Math.abs((this.king_Fish_Matrix[0][3] + Math.cos(this.king_angle) - 0.3 * Math.sin(this.king_angle)) - x) < 2 && Math.abs((this.king_Fish_Matrix[1][3] + 0.3 * Math.cos(this.king_angle) + Math.sin(this.king_angle)) - y) < 2 && !this.king_caught) {
-            this.king_caught = this.gen_catch();
-            this.king_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
-            this.caught_fish_matrix = this.king_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
+        if (Math.abs((this.big_fish1_Fish_Matrix[0][3] + Math.cos(this.big_fish1_angle) - 0.3 * Math.sin(this.big_fish1_angle)) - x) < 2 && Math.abs((this.big_fish1_Fish_Matrix[1][3] + 0.3 * Math.cos(this.big_fish1_angle) + Math.sin(this.big_fish1_angle)) - y) < 2 && !this.big_fish1_caught) {
+            this.big_fish1_caught = this.gen_catch();
+            this.big_fish1_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
+            this.caught_fish_matrix = this.big_fish1_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         } else if (Math.abs((this.mystery_Fish_Matrix[0][3] + Math.cos(this.mystery_angle)) - x) < 1 && Math.abs((this.mystery_Fish_Matrix[1][3] + Math.sin(this.mystery_angle)) - y) < 1 && !this.mystery_caught) {
             this.mystery_caught = this.gen_catch();
             this.mystery_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
@@ -416,9 +416,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
     // ***************************** BEGIN ANGLE HELPER FUNCTIONS *****************************
 
-    random_king_angle() {
-        var current_angle = Math.atan2((this.king_Fish_Matrix[1][3]), (this.king_Fish_Matrix[0][3]));
-        this.king_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
+    random_big_fish1_angle() {
+        var current_angle = Math.atan2((this.big_fish1_Fish_Matrix[1][3]), (this.big_fish1_Fish_Matrix[0][3]));
+        this.big_fish1_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
     random_mystery_angle() {
         var current_angle = Math.atan2((this.mystery_Fish_Matrix[1][3]), (this.mystery_Fish_Matrix[0][3]));
@@ -704,51 +704,55 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.shapes.mom.draw(graphics_state, kid_matrix, this.materials.mom_img);
     }
 
-    // *************************************************************************
-    // ***************************** DRAW THE FISH *****************************
-    // *************************************************************************
+      /*
+    ====================== DRAW fishies ======================
+    */
 
     draw_the_fish(graphics_state, t) {
-        // ***************************** BEGIN KING OF THE POND *****************************
-        let king_model_transform = Mat4.identity();
+        /*
+        Start of BIG FISH1
+        */
+        let big_fish1_model_transform = Mat4.identity();
 
-        if (!this.king_caught) {
+        if (!this.big_fish1_caught) {
             // If statement to turn fish if it will translate out of pond
-            if ((Math.abs(this.king_Fish_Matrix[0][3] + Math.cos(this.king_angle) - 0.3 * Math.sin(this.king_angle)) > 5.5 || Math.abs(this.king_Fish_Matrix[1][3] + 0.3 * Math.cos(this.king_angle) + Math.sin(this.king_angle)) > 5.5) && Math.round((t % 0.3) * 10) / 10 == 0) {
-                this.random_king_angle();
+            if ((Math.abs(this.big_fish1_Fish_Matrix[0][3] + Math.cos(this.big_fish1_angle) - 0.3 * Math.sin(this.big_fish1_angle)) > 5.5 || Math.abs(this.big_fish1_Fish_Matrix[1][3] + 0.3 * Math.cos(this.big_fish1_angle) + Math.sin(this.big_fish1_angle)) > 5.5) && Math.round((t % 0.3) * 10) / 10 == 0) {
+                this.random_big_fish1_angle();
             }
-            // Code block to draw King fish      
-            if (t > this.king_spawn_time && t < this.king_spawn_time + 0.2) {
-                if (this.king_model_spawn[0][0] < 2) {
+            // draw big1 fish
+            
+            if (t > this.big_fish1_spawn_time && t < this.big_fish1_spawn_time + 0.2) {
+                if (this.big_fish1_model_spawn[0][0] < 2) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
-                        this.king_model_spawn = this.king_model_spawn.times(Mat4.scale([1, 1, 1]));
+                        this.big_fish1_model_spawn = this.big_fish1_model_spawn.times(Mat4.scale([1, 1, 1]));
                     }
                 }
-                this.shapes.fish3D.draw(graphics_state, this.king_model_spawn, this.materials.rudd_Fish);
-                //this.shapes.plane.draw( graphics_state, this.king_model_spawn, this.materials.king_Fish);
-                this.king_Fish_Matrix[0][3] = 0;
-                this.king_Fish_Matrix[1][3] = 0;
+                this.shapes.fish3D.draw(graphics_state, this.big_fish1_model_spawn, this.materials.rudd_Fish);
+
+                this.big_fish1_Fish_Matrix[0][3] = 0;
+                this.big_fish1_Fish_Matrix[1][3] = 0;
             }
-            if (t > this.king_spawn_time + 0.2) {
-                king_model_transform = this.king_Fish_Matrix.times(Mat4.translation([(6 / (t - this.king_dist)) * (0.05) * Math.cos(this.king_angle), (6 / (t - this.king_dist)) * (0.05) * Math.sin(this.king_angle), 0]));
+            if (t > this.big_fish1_spawn_time + 0.2) {
+                big_fish1_model_transform = this.big_fish1_Fish_Matrix.times(Mat4.translation([(6 / (t - this.big_fish1_dist)) * (0.05) * Math.cos(this.big_fish1_angle), (6 / (t - this.big_fish1_dist)) * (0.05) * Math.sin(this.big_fish1_angle), 0]));
 
-                if (6 / (t - this.king_dist) < 0.6) {
-                    this.king_dist += 9;
+                if (6 / (t - this.big_fish1_dist) < 0.6) {
+                    this.big_fish1_dist += 9;
                 }
 
-                if (t - this.king_dist > 10) {
-                    this.king_dist += 9;
+                if (t - this.big_fish1_dist > 10) {
+                    this.big_fish1_dist += 9;
                 }
 
-                this.king_Fish_Matrix = king_model_transform;
-                king_model_transform = king_model_transform.times(Mat4.rotation(this.king_angle, Vec.of(0, 0, 1)))
-                king_model_transform = king_model_transform.times(Mat4.scale([2, 1.5, 2]));
-                this.shapes.fish3D.draw(graphics_state, king_model_transform, this.materials.rudd_Fish);
-                //this.shapes.plane.draw( graphics_state, king_model_transform, this.materials.king_Fish);
+                this.big_fish1_Fish_Matrix = big_fish1_model_transform;
+                big_fish1_model_transform = big_fish1_model_transform.times(Mat4.rotation(this.big_fish1_angle, Vec.of(0, 0, 1)))
+                big_fish1_model_transform = big_fish1_model_transform.times(Mat4.scale([2, 1.5, 2]));
+                this.shapes.fish3D.draw(graphics_state, big_fish1_model_transform, this.materials.rudd_Fish);
+
             }
         }
 
-        // ***************************** END KING OF THE POND *****************************  
+        /* ===================== Finish Drawing BigFish1  =====================
+        */
         // ***************************** BEGIN MYSTERY FISH *****************************
         let mystery_model_transform = Mat4.identity();
 
