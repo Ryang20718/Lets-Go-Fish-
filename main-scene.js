@@ -588,9 +588,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.draw_the_enviroment(graphics_state, t);
     }
 
-    // *************************************************************************
-    // ***************************** DRAW FISHING ROD **************************
-    // *************************************************************************
+    /*
+    ====================== DRAW FISHING ROD ======================
+    */
     draw_fishing_rod(graphics_state, t) {
         let rod_Matrix = this.rod_Matrix.times(Mat4.translation([0, -25, 0])).times(Mat4.rotation(-Math.PI / 6, Vec.of(1, 0, 0))).times(Mat4.scale([.05, .05, 2]));
         let sphere1_Matrix = this.crosshair_Matrix.times(Mat4.scale([.05, .05, .1]));
@@ -640,9 +640,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
     }
 
-    // *************************************************************************
-    // ***************************** DRAW THE ENVIROMETNT **********************
-    // *************************************************************************
+    /*
+    ====================== DRAW Enviroment ======================
+    */
     draw_stars(graphics_state, t) {
         for (var i = 0; i < 250; i++) {
             if (Math.random() * 250 > 248) {
