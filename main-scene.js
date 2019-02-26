@@ -4,7 +4,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         if (!context.globals.has_controls)
             context.register_scene_component(new Movement_Controls(context,control_box.parentElement.insertCell()));
 
-
         // Opening Screen
         context.globals.graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -5, 1030), Vec.of(0, 100, 0), Vec.of(0, 10, 0));
 
@@ -133,7 +132,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.lights = [new Light(Vec.of(0, 5, 40, 1),Color.of(250 / 255, 214 / 255, 165 / 255, 1),1000)];
 
         this.t_reset = false;
-
 
         this.menu = new Audio("assets/Menu.mp3");
         this.menu.loop = true;
@@ -393,10 +391,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
     }
 
-    /*
-    Angle Functions
-    */
-
+    // Angle Functions
     random_big_fish1_angle() {
         var current_angle = Math.atan2((this.big_fish1_Fish_Matrix[1][3]), (this.big_fish1_Fish_Matrix[0][3]));
         this.big_fish1_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
@@ -445,9 +440,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         var current_angle = Math.atan2((this.med_fish2_Matrix[1][3]), (this.med_fish2_Matrix[0][3]));
         this.med_fish2_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-    // ***************************** END ANGLE HELPER FUNCTIONS ***************************** 
 
-    // ***************************** START OF DISPLAY ***************************** 
+    // START DISPLAY 
     display(graphics_state) {
         this.time_to_fish += 1;
         // time alloted to catch fish
@@ -495,7 +489,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
             this.shapes.mText.set_string(accuracy);
             this.draw_the_enviroment(graphics_state, t);
- 
+
             let text_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 5, 3 / 5, 3 / 5]));
             var responses = ["Son of a Fish", "Mr.Terzopoulos could do better!", "Dad you're a dumb bass", "Your brain is smaller than that fish", "Not bad for a bottom feeder", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"];
             if (this.total_fish_caught < responses.length)
@@ -569,9 +563,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.draw_the_enviroment(graphics_state, t);
     }
 
-    /*
-    ====================== DRAW FISHING ROD ======================
-    */
+    // DRAW FISHING ROD
     draw_fishing_rod(graphics_state, t) {
         let rod_Matrix = this.rod_Matrix.times(Mat4.translation([0, -25, 0])).times(Mat4.rotation(-Math.PI / 6, Vec.of(1, 0, 0))).times(Mat4.scale([.05, .05, 2]));
         let sphere1_Matrix = this.crosshair_Matrix.times(Mat4.scale([.05, .05, .1]));
@@ -621,9 +613,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
     }
 
-    /*
-    ====================== DRAW Enviroment ======================
-    */
+    // DRAW Enviroment 
     draw_stars(graphics_state, t) {
         for (var i = 0; i < 250; i++) {
             if (Math.random() * 250 > 248) {
@@ -685,31 +675,20 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.shapes.mom.draw(graphics_state, kid_matrix, this.materials.mom_img);
     }
 
-      /*
-    ====================== DRAW fishies ======================
-    */
+    // DRAW fishies
 
     draw_the_fish(graphics_state, t) {
-        /*
-        Start of BIG FISH1
-        */
+        //DRAW BIG FISH1
         let big_fish1_model_transform = Mat4.identity();
-
         if (!this.big_fish1_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.big_fish1_Fish_Matrix[0][3] + Math.cos(this.big_fish1_angle) - 0.3 * Math.sin(this.big_fish1_angle)) > 5.5 || Math.abs(this.big_fish1_Fish_Matrix[1][3] + 0.3 * Math.cos(this.big_fish1_angle) + Math.sin(this.big_fish1_angle)) > 5.5) && Math.round((t % 0.3) * 10) / 10 == 0) {
                 this.random_big_fish1_angle();
             }
-            // draw big1 fish
-            
             if (t > this.big_fish1_spawn_time && t < this.big_fish1_spawn_time + 0.2) {
-                if (this.big_fish1_model_spawn[0][0] < 2) {
-                    if (Math.round((t % 0.1) * 10) / 10 == 0) {
-                        this.big_fish1_model_spawn = this.big_fish1_model_spawn.times(Mat4.scale([1, 1, 1]));
-                    }
-                }
+                if ((this.big_fish1_model_spawn[0][0] < 2) && (Math.round((t % 0.1) * 10) / 10 == 0))
+                    this.big_fish1_model_spawn = this.big_fish1_model_spawn.times(Mat4.scale([1, 1, 1]));
                 this.shapes.fish3D.draw(graphics_state, this.big_fish1_model_spawn, this.materials.rudd_Fish);
-
                 this.big_fish1_Fish_Matrix[0][3] = 0;
                 this.big_fish1_Fish_Matrix[1][3] = 0;
             }
@@ -719,39 +698,22 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 if (6 / (t - this.big_fish1_dist) < 0.6) {
                     this.big_fish1_dist += 9;
                 }
-
                 if (t - this.big_fish1_dist > 10) {
                     this.big_fish1_dist += 9;
                 }
-
                 this.big_fish1_Fish_Matrix = big_fish1_model_transform;
                 big_fish1_model_transform = big_fish1_model_transform.times(Mat4.rotation(this.big_fish1_angle, Vec.of(0, 0, 1)))
                 big_fish1_model_transform = big_fish1_model_transform.times(Mat4.scale([2, 1.5, 2]));
                 this.shapes.fish3D.draw(graphics_state, big_fish1_model_transform, this.materials.rudd_Fish);
-
             }
         }
-
-        /* 
-        
-        ===================== Finish Drawing BigFish1  =====================
-        */
-        /*
-        
-        
-        
-       ===================== BIGFISH 2 DRAWING =====================
-        */
+        // DRAW BIG FISH2
         let big_fish2_model_transform = Mat4.identity();
-
         if (!this.big_fish2_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.big_fish2_Fish_Matrix[0][3] + Math.cos(this.big_fish2_angle)) > 5 || Math.abs(this.big_fish2_Fish_Matrix[1][3] + Math.sin(this.big_fish2_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_big_fish2_angle();
             }
-
-            /* draw BIGFISH2 
-            */
             if (t > this.big_fish2_spawn_time && t < this.big_fish2_spawn_time + 0.2) {
                 if (this.big_fish2_model_spawn[0][0] < 2) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -759,7 +721,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                     }
                 }
                 this.shapes.fish3D.draw(graphics_state, this.big_fish2_model_spawn, this.materials.rudd_Fish);
-
                 this.big_fish2_Fish_Matrix[0][3] = 0;
                 this.big_fish2_Fish_Matrix[1][3] = 0;
             }
@@ -770,7 +731,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 if (6 / (t - this.big_fish2_dist) < 0.83) {
                     this.big_fish2_dist += 1;
                 }
-
                 if (t - this.big_fish2_dist > 2) {
                     this.big_fish2_dist += 1;
                 }
@@ -780,54 +740,29 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, big_fish2_model_transform, this.materials.rudd_Fish)
             }
         }
-
-        /*
-        Finish Bigfish2 
-        */
-
-        /*
-        
-        DRAW RegFish
-        */
-
+        // DRAW REG FISH
         let reg_model_transform = Mat4.identity();
-
         if (!this.reg_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.reg_Fish_Matrix[0][3] + 0.25 * Math.cos(this.reg_angle)) > 6 || Math.abs(this.reg_Fish_Matrix[1][3] + 0.25 * Math.sin(this.reg_angle)) > 6) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_reg_angle();
             }
-
-            /*
-            Reg FISH
-            */
             if (t > this.reg_spawn_time && t < this.reg_spawn_time + 0.2) {
                 if (this.reg_model_spawn[0][0] < .5) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
                         this.reg_model_spawn = this.reg_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-
                 this.shapes.fish3D.draw(graphics_state, reg_model_transform, this.materials.rudd_Fish);
             }
-
             if (t > this.reg_spawn_time + 0.2) {
                 reg_model_transform = this.reg_Fish_Matrix.times(Mat4.translation([(0.07) * Math.cos(this.reg_angle), (0.07) * Math.sin(this.reg_angle), 0]));
                 this.reg_Fish_Matrix = reg_model_transform;
                 reg_model_transform = reg_model_transform.times(Mat4.rotation(this.reg_angle, Vec.of(0, 0, 1)))
                 this.shapes.fish3D.draw(graphics_state, reg_model_transform, this.materials.rudd_Fish);
-
             }
         }
-
-        /*
-        Finish Reg FIsh
-        */
-
-        /*
-             ====Draw RegFish1===
-        */
-
+        //DRAW REG FISH1
         let reg1_model_transform = Mat4.identity();
 
         if (!this.reg1_caught) {
@@ -835,12 +770,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             if ((Math.abs(this.reg1_Fish_Matrix[0][3] + 0.25 * Math.cos(this.reg1_angle)) > 6 || Math.abs(this.reg1_Fish_Matrix[1][3] + 0.25 * Math.sin(this.reg1_angle)) > 6) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_reg1_angle();
             }
-
-            /*  
-            
-            draw reg1 fish      
-            
-            */
             if (t > this.reg1_spawn_time && t < this.reg1_spawn_time + 0.2) {
                 if (this.reg1_model_spawn[0][0] < .5) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -849,7 +778,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.shapes.fish3D.draw(graphics_state, this.reg1_model_spawn, this.materials.rudd_Fish);
             }
-
             if (t > this.reg1_spawn_time + 0.2) {
                 reg1_model_transform = this.reg1_Fish_Matrix.times(Mat4.translation([(0.07) * Math.cos(this.reg1_angle), (0.07) * Math.sin(this.reg1_angle), 0]));
                 this.reg1_Fish_Matrix = reg1_model_transform;
@@ -858,26 +786,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, reg1_model_transform, this.materials.rudd_Fish);
             }
         }
-
-        /*
-        Finish Draw Reg Fish1
-        */
-
-        /*
-        Draw RegFish2
-        
-        
-        */
-
+        //DRAW REG FISH2
         let reg2_model_transform = Mat4.identity();
-
         if (!this.reg2_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.reg2_Fish_Matrix[0][3] + 0.25 * Math.cos(this.reg2_angle)) > 6 || Math.abs(this.reg2_Fish_Matrix[1][3] + 0.25 * Math.sin(this.reg2_angle)) > 6) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_reg2_angle();
             }
-
-            // draw reg2 fish      
             if (t > this.reg2_spawn_time && t < this.reg2_spawn_time + 0.2) {
                 if (this.reg2_model_spawn[0][0] < .5) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -886,7 +801,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.shapes.fish3D.draw(graphics_state, this.reg2_model_spawn, this.materials.rudd_Fish);
             }
-
             if (t > this.reg2_spawn_time + 0.2) {
                 reg2_model_transform = this.reg2_Fish_Matrix.times(Mat4.translation([(0.07) * Math.cos(this.reg2_angle), (0.07) * Math.sin(this.reg2_angle), 0]));
                 this.reg2_Fish_Matrix = reg2_model_transform;
@@ -894,25 +808,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, reg2_model_transform, this.materials.rudd_Fish);
             }
         }
-
-        /* 
-        finish reg2 FisH 
-        */
-
-        /*
-        tiny fish draw
-        */
-
+        // DRAW TINY FISH
         let tinyFish_model_transform = Mat4.identity();
-
         if (!this.tinyFish_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.tinyFish_Matrix[0][3] + 0.05 * Math.cos(this.tinyFish_angle)) > 5 || Math.abs(this.tinyFish_Matrix[1][3] + 0.05 * Math.sin(this.tinyFish_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish_angle();
             }
-
-            //
-            //draw tinyFish     
             if (t > this.tinyFish_spawn_time && t < this.tinyFish_spawn_time + 0.2) {
                 if (this.tinyFish_model_spawn[0][0] < .25) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -921,14 +823,12 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.shapes.fish3D.draw(graphics_state, this.tinyFish_model_spawn, this.materials.rudd_Fish);
             }
-
             if (t > this.tinyFish_spawn_time + 0.2) {
                 tinyFish_model_transform = this.tinyFish_Matrix.times(Mat4.translation([(4 / (t - this.tinyFish_dist)) * (0.05) * Math.cos(this.tinyFish_angle), (4 / (t - this.tinyFish_dist)) * (0.05) * Math.sin(this.tinyFish_angle), 0]));
 
                 if (4 / (t - this.tinyFish_dist) < 0.8) {
                     this.tinyFish_dist += 4;
                 }
-
                 if (t - this.tinyFish_dist > 10) {
                     this.tinyFish_dist += 9;
                 }
@@ -937,26 +837,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, tinyFish_model_transform, this.materials.rudd_Fish);
             }
         }
-
-        /*
-        
-        End tinyFish
-        */
-
-        /*
-        Draw tinyFish1
-        */
-
+        // DRAW TINY FISH 1
         let tinyFish1_model_transform = Mat4.identity();
-
         if (!this.tinyFish1_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.tinyFish1_Matrix[0][3] + 0.10 * Math.cos(this.tinyFish1_angle)) > 5 || Math.abs(this.tinyFish1_Matrix[1][3] + 0.10 * Math.sin(this.tinyFish1_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish1_angle();
             }
-
-           
-            // draw tinyFish1     
             if (t > this.tinyFish1_spawn_time && t < this.tinyFish1_spawn_time + 0.2) {
                 if (this.tinyFish1_model_spawn[0][0] < .25) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -965,14 +852,12 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.shapes.fish3D.draw(graphics_state, this.tinyFish1_model_spawn, this.materials.rudd_Fish);
             }
-
             if (t > this.tinyFish1_spawn_time + 0.2) {
                 tinyFish1_model_transform = this.tinyFish1_Matrix.times(Mat4.translation([(4 / (t - this.tinyFish1_dist)) * (0.10) * Math.cos(this.tinyFish1_angle), (4 / (t - this.tinyFish1_dist)) * (0.10) * Math.sin(this.tinyFish1_angle), 0]));
 
                 if (4 / (t - this.tinyFish1_dist) < 0.8) {
                     this.tinyFish1_dist += 2;
                 }
-
                 if (t - this.tinyFish1_dist > 10) {
                     this.tinyFish1_dist += 5;
                 }
@@ -981,25 +866,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, tinyFish1_model_transform, this.materials.rudd_Fish);
             }
         }
-
-        /*
-        
-        Finish drawing tinyfish
-        */
-
-        /*
-        draw tinyFish2
-        */
-
+        // DRAW TINY FISH 2
         let tinyFish2_model_transform = Mat4.identity();
-
         if (!this.tinyFish2_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.tinyFish2_Matrix[0][3] + 0.10 * Math.cos(this.tinyFish2_angle)) > 5 || Math.abs(this.tinyFish2_Matrix[1][3] + 0.10 * Math.sin(this.tinyFish2_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish2_angle();
             }
-
-            // draw tinyFish2    
             if (t > this.tinyFish2_spawn_time && t < this.tinyFish2_spawn_time + 0.2) {
                 if (this.tinyFish2_model_spawn[0][0] < .25) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -1008,7 +881,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.shapes.fish3D.draw(graphics_state, this.tinyFish2_model_spawn, this.materials.rudd_Fish);
             }
-
             if (t > this.tinyFish2_spawn_time + 0.2) {
                 tinyFish2_model_transform = this.tinyFish2_Matrix.times(Mat4.translation([0.1 * Math.cos(this.tinyFish2_angle), 0.1 * Math.sin(this.tinyFish2_angle), 0]));
                 this.tinyFish2_Matrix = tinyFish2_model_transform;
@@ -1016,25 +888,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, tinyFish2_model_transform, this.materials.rudd_Fish);
             }
         }
-
-        /*
-        Finish TinyFish2
-        */
-
-        /*
-        tinyFish3 draw
-        */
-
+        // DRAW TINY FISH 3
         let tinyFish3_model_transform = Mat4.identity();
-
         if (!this.tinyFish3_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.tinyFish3_Matrix[0][3] + 0.10 * Math.cos(this.tinyFish3_angle)) > 5 || Math.abs(this.tinyFish3_Matrix[1][3] + 0.10 * Math.sin(this.tinyFish3_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish3_angle();
             }
-
-            // 
-            //tinyFish3     
             if (t > this.tinyFish3_spawn_time && t < this.tinyFish3_spawn_time + 0.2) {
                 if (this.tinyFish3_model_spawn[0][0] < .25) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -1043,7 +903,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.shapes.fish3D.draw(graphics_state, this.tinyFish3_model_spawn, this.materials.rudd_Fish);
             }
-
             if (t > this.tinyFish3_spawn_time + 0.2) {
                 tinyFish3_model_transform = this.tinyFish3_Matrix.times(Mat4.translation([0.1 * Math.cos(this.tinyFish3_angle), 0.1 * Math.sin(this.tinyFish3_angle), 0]));
                 this.tinyFish3_Matrix = tinyFish3_model_transform;
@@ -1051,15 +910,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, tinyFish3_model_transform, this.materials.rudd_Fish);
             }
         }
-
-        /*
-        Finish tinyFish3
-        */
-
-        /*
-        draw tinyFish4
-        */
-
+        // DRAW TINY FISH 4
         let tinyFish4_model_transform = Mat4.identity();
 
         if (!this.tinyFish4_caught) {
@@ -1067,8 +918,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             if ((Math.abs(this.tinyFish4_Matrix[0][3] + 0.15 * Math.cos(this.tinyFish4_angle)) > 5 || Math.abs(this.tinyFish4_Matrix[1][3] + 0.15 * Math.sin(this.tinyFish4_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish4_angle();
             }
-
-            // draw tinyFish      
             if (t > this.tinyFish4_spawn_time && t < this.tinyFish4_spawn_time + 0.2) {
                 if (this.tinyFish4_model_spawn[0][0] < .25) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -1077,7 +926,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.shapes.fish3D.draw(graphics_state, this.tinyFish4_model_spawn, this.materials.rudd_Fish);
             }
-
             if (t > this.tinyFish4_spawn_time + 0.2) {
                 tinyFish4_model_transform = this.tinyFish4_Matrix.times(Mat4.translation([0.2 * Math.cos(this.tinyFish4_angle), 0.2 * Math.sin(this.tinyFish4_angle), 0]));
                 this.tinyFish4_Matrix = tinyFish4_model_transform;
@@ -1085,22 +933,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, tinyFish4_model_transform, this.materials.rudd_Fish);
             }
         }
-
-        /*
-        finish tinyFish4 
-        */
-
-        // ***************************** BEGIN TOUCHY FISH *****************************
-
+        // DRAW MEDIUM FISH 
         let med_fish_model_transform = Mat4.identity();
-
         if (!this.med_fish_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.med_fish_Fish_Matrix[0][3] + (0.25) * Math.cos(this.med_fish_angle)) > 5 || Math.abs(this.med_fish_Fish_Matrix[1][3] + Math.sin(this.med_fish_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_med_fish_angle();
             }
-
-            // Code block to draw Touchy fish      
             if (t > this.med_fish_spawn_time && t < this.med_fish_spawn_time + 0.2) {
                 if (this.med_fish_model_spawn[0][0] < .5) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -1109,14 +948,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.shapes.fish3D.draw(graphics_state, this.med_fish_model_spawn, this.materials.rudd_Fish);
             }
-
             if (t > this.med_fish_spawn_time + 0.2) {
                 med_fish_model_transform = this.med_fish_Fish_Matrix.times(Mat4.translation([(8 / (t - this.med_fish_dist)) * (0.02) * Math.cos(this.med_fish_angle), (8 / (t - this.med_fish_dist)) * (0.02) * Math.sin(this.med_fish_angle), 0]));
-
                 if (6 / (t - this.med_fish_dist) < 0.5) {
                     this.med_fish_dist += 4;
                 }
-
                 if (t - this.med_fish_dist > 5) {
                     this.med_fish_dist += 4;
                 }
@@ -1125,25 +961,17 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, med_fish_model_transform, this.materials.rudd_Fish);
             }
         }
-
-        // ***************************** END TOUCHY FISH ***************************** 
-
-        // ***************************** BEGIN NIBBLER *****************************
-
+        // DRAW MED FISH 2
         let med_fish2_model_transform = Mat4.identity();
-
         if (!this.med_fish2_caught) {
             // If statement to turn fish if it will translate out of pond
             if ((Math.abs(this.med_fish2_Matrix[0][3] + Math.cos(this.med_fish2_angle)) > 5 || Math.abs(this.med_fish2_Matrix[1][3] + Math.sin(this.med_fish2_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_med_fish2_angle();
                 this.med_fish2_direction *= -1;
             }
-
             if (Math.round((t % 1.5) * 10) / 10 == .7) {
                 this.med_fish2_angle = (Math.atan2((this.med_fish2_Matrix[1][3]), (this.med_fish2_Matrix[0][3]))) + (this.med_fish2_direction * (0.01));
             }
-
-            // Code block to draw Nibbler      
             if (t > this.med_fish2_spawn_time && t < this.med_fish2_spawn_time + 0.2) {
                 if (this.med_fish2_model_spawn[0][0] < 0.5) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
@@ -1154,7 +982,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.med_fish2_Matrix[0][3] = 0;
                 this.med_fish2_Matrix[1][3] = 0;
             }
-
             if (t > this.med_fish2_spawn_time + 0.2) {
                 med_fish2_model_transform = this.med_fish2_Matrix.times(Mat4.translation([(0.15) * Math.cos(this.med_fish2_angle), (0.15) * Math.sin(this.med_fish2_angle), 0]));
                 this.med_fish2_Matrix = med_fish2_model_transform;
@@ -1162,8 +989,5 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.fish3D.draw(graphics_state, med_fish2_model_transform, this.materials.rudd_Fish);
             }
         }
-
-        // ***************************** END NIBBLER FISH *****************************
     }
-
 }
