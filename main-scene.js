@@ -133,6 +133,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.t_reset = false;
 
+        this.titanic = new Audio("assets/titanic.mp3")
         this.menu = new Audio("assets/Menu.mp3");
         this.menu.loop = true;
         this.menu_volume = 0.5;
@@ -333,6 +334,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.laughter.play();
     }
 
+    play_titanic(){
+        this.titanic.play();
+    }
     catch_fish() {
         this.total_times_tried += 1;
         // how many times user tries to catch fish by pressing control
@@ -342,11 +346,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (Math.abs((this.big_fish1_Fish_Matrix[0][3] + Math.cos(this.big_fish1_angle) - 0.3 * Math.sin(this.big_fish1_angle)) - x) < 2 && Math.abs((this.big_fish1_Fish_Matrix[1][3] + 0.3 * Math.cos(this.big_fish1_angle) + Math.sin(this.big_fish1_angle)) - y) < 2 && !this.big_fish1_caught) {
             this.big_fish1_caught = this.gen_catch();
-            this.big_fish1_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -2])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
+            this.big_fish1_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -0.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0)));
             this.caught_fish_matrix = this.big_fish1_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([2, 1, 2]));
         } else if (Math.abs((this.big_fish2_Fish_Matrix[0][3] + Math.cos(this.big_fish2_angle)) - x) < 1 && Math.abs((this.big_fish2_Fish_Matrix[1][3] + Math.sin(this.big_fish2_angle)) - y) < 1 && !this.big_fish2_caught) {
             this.big_fish2_caught = this.gen_catch();
-            this.big_fish2_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -2])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
+            this.big_fish2_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -0.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0)));
             this.caught_fish_matrix = this.big_fish2_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([2, 1, 2]));
         } else if (Math.abs((this.reg_Fish_Matrix[0][3] + 0.25 * Math.cos(this.reg_angle)) - x) < 1 && Math.abs((this.reg_Fish_Matrix[1][3] + 0.25 * Math.sin(this.reg_angle)) - y) < 1 && !this.reg_caught) {
             this.reg_caught = this.gen_catch();
@@ -473,7 +477,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.fishing_ost_volume -= 0.01;
             if (this.fishing_ost_volume <= 0) {
                 this.fishing_ost.pause();
-                this.play_laughter();
             }
             //transforming camera backwd
             if (!this.zoom_animation)
@@ -496,6 +499,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.rText.set_string(responses[this.total_fish_caught]);
             else
                 this.shapes.rText.set_string(responses[responses.length - 1]);
+            if(this.total_fish_caught < 6){
+                this.fishing_ost.pause();
+                if (this.total_fish_caught < 4){
+                    this.play_laughter();
+                }else{
+                    this.play_titanic();
+                }
+            }
             this.shapes.rText.draw(graphics_state, text_matrix.times(Mat4.translation([-6, 3, -4])).times(Mat4.scale([1 / 6, 1 / 6, 1 / 6])), this.materials.text_image);
             this.draw_kid(graphics_state, t);
         }
@@ -550,7 +561,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
-            if (!this.fish_is_caught) {
+            if (!this.fish_is_caught && this.time_to_fish < 1400) {
                 this.total_fish_caught += 1;
                 // increment total fish counter
 
@@ -703,7 +714,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.big_fish1_Fish_Matrix = big_fish1_model_transform;
                 big_fish1_model_transform = big_fish1_model_transform.times(Mat4.rotation(this.big_fish1_angle, Vec.of(0, 0, 1)))
-                big_fish1_model_transform = big_fish1_model_transform.times(Mat4.scale([2, 1.5, 2]));
+                big_fish1_model_transform = big_fish1_model_transform.times(Mat4.scale([1.5, 1.2, 1.5]));
                 this.shapes.fish3D.draw(graphics_state, big_fish1_model_transform, this.materials.rudd_Fish);
             }
         }
@@ -736,7 +747,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
                 this.big_fish2_Fish_Matrix = big_fish2_model_transform;
                 big_fish2_model_transform = big_fish2_model_transform.times(Mat4.rotation(this.big_fish2_angle, Vec.of(0, 0, 1)))
-                big_fish2_model_transform = big_fish2_model_transform.times(Mat4.scale([2, 1.5, 2]));
+                big_fish2_model_transform = big_fish2_model_transform.times(Mat4.scale([1.5, 1.2, 1.5]));
                 this.shapes.fish3D.draw(graphics_state, big_fish2_model_transform, this.materials.rudd_Fish)
             }
         }
