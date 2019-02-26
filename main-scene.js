@@ -362,12 +362,12 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (Math.abs((this.big_fish1_Fish_Matrix[0][3] + Math.cos(this.big_fish1_angle) - 0.3 * Math.sin(this.big_fish1_angle)) - x) < 2 && Math.abs((this.big_fish1_Fish_Matrix[1][3] + 0.3 * Math.cos(this.big_fish1_angle) + Math.sin(this.big_fish1_angle)) - y) < 2 && !this.big_fish1_caught) {
             this.big_fish1_caught = this.gen_catch();
-            this.big_fish1_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
-            this.caught_fish_matrix = this.big_fish1_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
+            this.big_fish1_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -2])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
+            this.caught_fish_matrix = this.big_fish1_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([2, 1, 2]));
         } else if (Math.abs((this.big_fish2_Fish_Matrix[0][3] + Math.cos(this.big_fish2_angle)) - x) < 1 && Math.abs((this.big_fish2_Fish_Matrix[1][3] + Math.sin(this.big_fish2_angle)) - y) < 1 && !this.big_fish2_caught) {
             this.big_fish2_caught = this.gen_catch();
-            this.big_fish2_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -.5])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
-            this.caught_fish_matrix = this.big_fish2_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([1, 0.5, 1]));
+            this.big_fish2_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], -2])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([1, .5, 1]));
+            this.caught_fish_matrix = this.big_fish2_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0))).times(Mat4.scale([2, 1, 2]));
         } else if (Math.abs((this.reg_Fish_Matrix[0][3] + 0.25 * Math.cos(this.reg_angle)) - x) < 1 && Math.abs((this.reg_Fish_Matrix[1][3] + 0.25 * Math.sin(this.reg_angle)) - y) < 1 && !this.reg_caught) {
             this.reg_caught = this.gen_catch();
             this.reg_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
@@ -884,7 +884,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         /*
         Draw RegFish2
         
-        
+    
         */
 
         let reg2_model_transform = Mat4.identity();
@@ -1021,7 +1021,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             if (t > this.tinyFish2_spawn_time && t < this.tinyFish2_spawn_time + 0.2) {
                 if (this.tinyFish2_model_spawn[0][0] < .25) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
-                        this.tinyFish2_model_spawn = this.tinyFish2_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
+                        this.tinyFish2_model_spawn = this.tinyFish2_model_spawn.times(Mat4.scale([1.1, 1.2, 1.1]));
                     }
                 }
                 this.shapes.fish3D.draw(graphics_state, this.tinyFish2_model_spawn, this.materials.rudd_Fish);
@@ -1056,7 +1056,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             if (t > this.tinyFish3_spawn_time && t < this.tinyFish3_spawn_time + 0.2) {
                 if (this.tinyFish3_model_spawn[0][0] < .25) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
-                        this.tinyFish3_model_spawn = this.tinyFish3_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
+                        this.tinyFish3_model_spawn = this.tinyFish3_model_spawn.times(Mat4.scale([1.1, 1.2, 1.1]));
                     }
                 }
                 this.shapes.fish3D.draw(graphics_state, this.tinyFish3_model_spawn, this.materials.rudd_Fish);
