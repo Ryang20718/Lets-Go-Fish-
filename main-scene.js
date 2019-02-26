@@ -80,24 +80,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             yellow: context.get_instance(Phong_Shader).material(Color.of(1, 1, 0, 1), {
                 ambient: 1
             }),
-            big_fish1: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1
-            }),
-            big_fish2: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1
-            }),
-            reg_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1
-            }),
-            tinyFish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1
-            }),
-            touchy_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1
-            }),
-            nibbler: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
-                ambient: 1
-            }),
             rudd_Fish: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: 1,
                 texture: context.get_instance("assets/RuddFish.png", false)
@@ -233,19 +215,19 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.tinyFish4_spawn_time = Math.random() * 8;
         this.tinyFish4_caught = false;
 
-        this.touchy_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, 0.1])).times(Mat4.scale([.5, .5, .5]));
-        this.touchy_angle = 0;
-        this.touchy_model_spawn = Mat4.identity().times(Mat4.scale([.05, .05, .05]));
-        this.touchy_spawn_time = Math.random() * 12 + 10;
-        this.touchy_dist = 0.01;
-        this.touchy_caught = false;
+        this.med_fish_Fish_Matrix = Mat4.identity().times(Mat4.translation([20, 20, 0.1])).times(Mat4.scale([.5, .5, .5]));
+        this.med_fish_angle = 0;
+        this.med_fish_model_spawn = Mat4.identity().times(Mat4.scale([.05, .05, .05]));
+        this.med_fish_spawn_time = Math.random() * 12 + 10;
+        this.med_fish_dist = 0.01;
+        this.med_fish_caught = false;
 
-        this.nibbler_Matrix = Mat4.identity().times(Mat4.translation([20, 20, 0.15])).times(Mat4.scale([.5, .5, .5]));
-        this.nibbler_angle = 0;
-        this.nibbler_model_spawn = Mat4.identity().times(Mat4.scale([.05, .05, .05]));
-        this.nibbler_spawn_time = Math.random() * 12 + 1;
-        this.nibbler_direction = -1;
-        this.nibbler_caught = false;
+        this.med_fish2_Matrix = Mat4.identity().times(Mat4.translation([20, 20, 0.15])).times(Mat4.scale([.5, .5, .5]));
+        this.med_fish2_angle = 0;
+        this.med_fish2_model_spawn = Mat4.identity().times(Mat4.scale([.05, .05, .05]));
+        this.med_fish2_spawn_time = Math.random() * 12 + 1;
+        this.med_fish2_direction = -1;
+        this.med_fish2_caught = false;
 
         // RENDER TERRAIN MATRIXES
         this.sign_Matrix = Mat4.identity().times(Mat4.scale([10, 10, 10])).times(Mat4.translation([0, 0, 100]));
@@ -400,14 +382,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.tinyFish4_caught = this.gen_catch();
             this.tinyFish4_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
             this.caught_fish_matrix = this.tinyFish4_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
-        } else if (Math.abs((this.touchy_Fish_Matrix[0][3] + (0.25) * Math.cos(this.touchy_angle)) - x) < 1 && Math.abs((this.touchy_Fish_Matrix[1][3] + Math.sin(this.touchy_angle)) - y) < 1 && !this.touchy_caught) {
-            this.touchy_caught = this.gen_catch();
-            this.touchy_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
-            this.caught_fish_matrix = this.touchy_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
-        } else if (Math.abs((this.nibbler_Matrix[0][3] + Math.cos(this.nibbler_angle)) - x) < 1 && Math.abs((this.nibbler_Matrix[1][3] + Math.sin(this.nibbler_angle)) - y) < 1 && !this.nibbler_caught) {
-            this.nibbler_caught = this.gen_catch();
-            this.nibbler_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
-            this.caught_fish_matrix = this.nibbler_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
+        } else if (Math.abs((this.med_fish_Fish_Matrix[0][3] + (0.25) * Math.cos(this.med_fish_angle)) - x) < 1 && Math.abs((this.med_fish_Fish_Matrix[1][3] + Math.sin(this.med_fish_angle)) - y) < 1 && !this.med_fish_caught) {
+            this.med_fish_caught = this.gen_catch();
+            this.med_fish_Fish_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.med_fish_Fish_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
+        } else if (Math.abs((this.med_fish2_Matrix[0][3] + Math.cos(this.med_fish2_angle)) - x) < 1 && Math.abs((this.med_fish2_Matrix[1][3] + Math.sin(this.med_fish2_angle)) - y) < 1 && !this.med_fish2_caught) {
+            this.med_fish2_caught = this.gen_catch();
+            this.med_fish2_Matrix = Mat4.identity().times(Mat4.translation([this.crosshair_Matrix[0][3], this.crosshair_Matrix[1][3], 0])).times(Mat4.rotation(-Math.PI / 2, Vec.of(0, 1, 0))).times(Mat4.scale([.5, .5, .5]));
+            this.caught_fish_matrix = this.med_fish2_Matrix.times(Mat4.rotation(Math.PI / 4, Vec.of(1, 0, 0)));
         }
     }
 
@@ -455,13 +437,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         var current_angle = Math.atan2((this.tinyFish4_Matrix[1][3]), (this.tinyFish4_Matrix[0][3]));
         this.tinyFish4_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-    random_touchy_angle() {
-        var current_angle = Math.atan2((this.touchy_Fish_Matrix[1][3]), (this.touchy_Fish_Matrix[0][3]));
-        this.touchy_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
+    random_med_fish_angle() {
+        var current_angle = Math.atan2((this.med_fish_Fish_Matrix[1][3]), (this.med_fish_Fish_Matrix[0][3]));
+        this.med_fish_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
-    random_nibbler_angle() {
-        var current_angle = Math.atan2((this.nibbler_Matrix[1][3]), (this.nibbler_Matrix[0][3]));
-        this.nibbler_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
+    random_med_fish2_angle() {
+        var current_angle = Math.atan2((this.med_fish2_Matrix[1][3]), (this.med_fish2_Matrix[0][3]));
+        this.med_fish2_angle = (current_angle + Math.PI) - (0.25 * Math.PI) + (Math.random() * 0.5 * Math.PI);
     }
     // ***************************** END ANGLE HELPER FUNCTIONS ***************************** 
 
@@ -1110,37 +1092,37 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         // ***************************** BEGIN TOUCHY FISH *****************************
 
-        let touchy_model_transform = Mat4.identity();
+        let med_fish_model_transform = Mat4.identity();
 
-        if (!this.touchy_caught) {
+        if (!this.med_fish_caught) {
             // If statement to turn fish if it will translate out of pond
-            if ((Math.abs(this.touchy_Fish_Matrix[0][3] + (0.25) * Math.cos(this.touchy_angle)) > 5 || Math.abs(this.touchy_Fish_Matrix[1][3] + Math.sin(this.touchy_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
-                this.random_touchy_angle();
+            if ((Math.abs(this.med_fish_Fish_Matrix[0][3] + (0.25) * Math.cos(this.med_fish_angle)) > 5 || Math.abs(this.med_fish_Fish_Matrix[1][3] + Math.sin(this.med_fish_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
+                this.random_med_fish_angle();
             }
 
             // Code block to draw Touchy fish      
-            if (t > this.touchy_spawn_time && t < this.touchy_spawn_time + 0.2) {
-                if (this.touchy_model_spawn[0][0] < .5) {
+            if (t > this.med_fish_spawn_time && t < this.med_fish_spawn_time + 0.2) {
+                if (this.med_fish_model_spawn[0][0] < .5) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
-                        this.touchy_model_spawn = this.touchy_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
+                        this.med_fish_model_spawn = this.med_fish_model_spawn.times(Mat4.scale([1.1, 1.1, 1.1]));
                     }
                 }
-                this.shapes.fish3D.draw(graphics_state, this.touchy_model_spawn, this.materials.rudd_Fish);
+                this.shapes.fish3D.draw(graphics_state, this.med_fish_model_spawn, this.materials.rudd_Fish);
             }
 
-            if (t > this.touchy_spawn_time + 0.2) {
-                touchy_model_transform = this.touchy_Fish_Matrix.times(Mat4.translation([(8 / (t - this.touchy_dist)) * (0.02) * Math.cos(this.touchy_angle), (8 / (t - this.touchy_dist)) * (0.02) * Math.sin(this.touchy_angle), 0]));
+            if (t > this.med_fish_spawn_time + 0.2) {
+                med_fish_model_transform = this.med_fish_Fish_Matrix.times(Mat4.translation([(8 / (t - this.med_fish_dist)) * (0.02) * Math.cos(this.med_fish_angle), (8 / (t - this.med_fish_dist)) * (0.02) * Math.sin(this.med_fish_angle), 0]));
 
-                if (6 / (t - this.touchy_dist) < 0.5) {
-                    this.touchy_dist += 4;
+                if (6 / (t - this.med_fish_dist) < 0.5) {
+                    this.med_fish_dist += 4;
                 }
 
-                if (t - this.touchy_dist > 5) {
-                    this.touchy_dist += 4;
+                if (t - this.med_fish_dist > 5) {
+                    this.med_fish_dist += 4;
                 }
-                this.touchy_Fish_Matrix = touchy_model_transform;
-                touchy_model_transform = touchy_model_transform.times(Mat4.rotation(this.touchy_angle, Vec.of(0, 0, 1)))
-                this.shapes.fish3D.draw(graphics_state, touchy_model_transform, this.materials.rudd_Fish);
+                this.med_fish_Fish_Matrix = med_fish_model_transform;
+                med_fish_model_transform = med_fish_model_transform.times(Mat4.rotation(this.med_fish_angle, Vec.of(0, 0, 1)))
+                this.shapes.fish3D.draw(graphics_state, med_fish_model_transform, this.materials.rudd_Fish);
             }
         }
 
@@ -1148,36 +1130,36 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         // ***************************** BEGIN NIBBLER *****************************
 
-        let nibbler_model_transform = Mat4.identity();
+        let med_fish2_model_transform = Mat4.identity();
 
-        if (!this.nibbler_caught) {
+        if (!this.med_fish2_caught) {
             // If statement to turn fish if it will translate out of pond
-            if ((Math.abs(this.nibbler_Matrix[0][3] + Math.cos(this.nibbler_angle)) > 5 || Math.abs(this.nibbler_Matrix[1][3] + Math.sin(this.nibbler_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
-                this.random_nibbler_angle();
-                this.nibbler_direction *= -1;
+            if ((Math.abs(this.med_fish2_Matrix[0][3] + Math.cos(this.med_fish2_angle)) > 5 || Math.abs(this.med_fish2_Matrix[1][3] + Math.sin(this.med_fish2_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
+                this.random_med_fish2_angle();
+                this.med_fish2_direction *= -1;
             }
 
             if (Math.round((t % 1.5) * 10) / 10 == .7) {
-                this.nibbler_angle = (Math.atan2((this.nibbler_Matrix[1][3]), (this.nibbler_Matrix[0][3]))) + (this.nibbler_direction * (0.01));
+                this.med_fish2_angle = (Math.atan2((this.med_fish2_Matrix[1][3]), (this.med_fish2_Matrix[0][3]))) + (this.med_fish2_direction * (0.01));
             }
 
             // Code block to draw Nibbler      
-            if (t > this.nibbler_spawn_time && t < this.nibbler_spawn_time + 0.2) {
-                if (this.nibbler_model_spawn[0][0] < 0.5) {
+            if (t > this.med_fish2_spawn_time && t < this.med_fish2_spawn_time + 0.2) {
+                if (this.med_fish2_model_spawn[0][0] < 0.5) {
                     if (Math.round((t % 0.1) * 10) / 10 == 0) {
-                        this.nibbler_model_spawn = this.nibbler_model_spawn.times(Mat4.scale([1.4, 1.4, 1.4]));
+                        this.med_fish2_model_spawn = this.med_fish2_model_spawn.times(Mat4.scale([1.4, 1.4, 1.4]));
                     }
                 }
-                this.shapes.fish3D.draw(graphics_state, this.nibbler_model_spawn, this.materials.rudd_Fish);
-                this.nibbler_Matrix[0][3] = 0;
-                this.nibbler_Matrix[1][3] = 0;
+                this.shapes.fish3D.draw(graphics_state, this.med_fish2_model_spawn, this.materials.rudd_Fish);
+                this.med_fish2_Matrix[0][3] = 0;
+                this.med_fish2_Matrix[1][3] = 0;
             }
 
-            if (t > this.nibbler_spawn_time + 0.2) {
-                nibbler_model_transform = this.nibbler_Matrix.times(Mat4.translation([(0.15) * Math.cos(this.nibbler_angle), (0.15) * Math.sin(this.nibbler_angle), 0]));
-                this.nibbler_Matrix = nibbler_model_transform;
-                nibbler_model_transform = nibbler_model_transform.times(Mat4.rotation(this.nibbler_angle, Vec.of(0, 0, 1)))
-                this.shapes.fish3D.draw(graphics_state, nibbler_model_transform, this.materials.rudd_Fish);
+            if (t > this.med_fish2_spawn_time + 0.2) {
+                med_fish2_model_transform = this.med_fish2_Matrix.times(Mat4.translation([(0.15) * Math.cos(this.med_fish2_angle), (0.15) * Math.sin(this.med_fish2_angle), 0]));
+                this.med_fish2_Matrix = med_fish2_model_transform;
+                med_fish2_model_transform = med_fish2_model_transform.times(Mat4.rotation(this.med_fish2_angle, Vec.of(0, 0, 1)))
+                this.shapes.fish3D.draw(graphics_state, med_fish2_model_transform, this.materials.rudd_Fish);
             }
         }
 
