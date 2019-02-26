@@ -2,4 +2,7 @@
 
 ### Contributors
 - Ryan Yang, Jane Lee, Sean Yin
-- Extra Stuff Can go here
+Finished Parts:
+
+In Progress:
+
