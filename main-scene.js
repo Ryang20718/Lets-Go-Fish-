@@ -51,7 +51,8 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             eye: new Shape_From_File("assets/eye_right.obj"),
             tShirt: new Shape_From_File("assets/tShirt.obj"),
             pants: new Shape_From_File("assets/pants.obj"),
-            hair: new Shape_From_File("assets/hair.obj")
+            hair: new Shape_From_File("assets/hair.obj"),
+            rough_rock: new Rock()
         }
         this.submit_shapes(context, shapes);
 
@@ -645,6 +646,15 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.shapes.pine_tree_branch.draw(graphics_state, branch_Matrix, this.materials.branch);
     }
 
+    draw_rock(graphics_state, t){
+        let rock_Matrix = Mat4.identity();
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((-Math.PI/4) , Vec.of( 0, 1, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, -24))));
+        this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.yellow);
+
+    }
+
     draw_the_enviroment(graphics_state, t) {
         let tree_list = [[[12, 22, 10], [3.5, 3.5, 3.5]], [[-15, 30, 28], [10, 10, 10]], [[30, 24, 28], [10, 10, 10]], [[0, 20, 10], [3.5, 3.5, 3.5]], [[-18, 7, 12], [4.5, 4.5, 4.5]], [[-9, 19, 12], [4, 4, 4]], [[-16, 16, 8], [3, 3, 3]], [[8, 20, 7], [2.5, 2.5, 2.5]], [[15, 5, 14], [5, 5, 5]], [[10, -17, 8], [3, 3, 3]], [[-9, -16, 8], [2.5, 2.5, 2.5]]];
         for (var i = 0; i < tree_list.length; i++) {
@@ -655,6 +665,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             ambient: 0.9
         }));
         this.draw_stars(graphics_state, t);
+
+        this.draw_rock(graphics_state, t);
+
+
+
         let ground_Matrix = Mat4.identity().times(Mat4.translation([0, 0, 1])).times(Mat4.scale([42.6, 42.6, .01]));
         this.shapes.torus.draw(graphics_state, ground_Matrix, this.materials.ground);
     }
