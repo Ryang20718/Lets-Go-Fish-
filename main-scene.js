@@ -450,7 +450,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     display(graphics_state) {
         this.time_to_fish += 1;
         // time alloted to catch fish
-        if (this.time_to_fish > 1400) {
+        if (this.time_to_fish > 1700) {
             //set roughly 30-40 seconds of fish catching
             this.ending_animation = true;
         }
@@ -562,7 +562,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
-            if (!this.fish_is_caught && this.time_to_fish < 1400) {
+            if (!this.fish_is_caught && this.time_to_fish < 1700) {
                 this.total_fish_caught += 1;
                 // increment total fish counter
 
