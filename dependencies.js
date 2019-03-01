@@ -383,15 +383,14 @@ class Rock extends Shape {
             [ (2 + 2/r3),  0,  2], [ (2 + 2/r3),  0,  -2], [ 2,  2,  2],
             [ 2,  2,  2], [ 2,  2,  -2], [ (2 + 2/r3),  0,  -2]
 
-
-//             [0, 0,  1], [ 0, 1,  1], [1, 0,  1],
-//             [0, 0, -1], [ 0, 1, -1], [1, 0, -1],
-//             [0, 0,  1], [ 0, 0, -1], [1, 0, -1], [1, 0, 1],
-//             [0, 0,  1], [ 0, 0, -1], [0, 1, -1], [0, 1, 1],
-//             [1, 0,  1], [ 1, 0, -1], [0, 1, -1], [0, 1, 1]
+        ));
 
 
-            ));
+
+        this.texture_coords.push(...Vec.cast(
+            [0,    0], [0, 1], [1,    0], [1, 1]
+        )); 
+
 
         // Supply vectors that point away from eace face of the cube.  They should match up with the points in the above list
         // Normal vectors are needed so the graphics engine can know if the shape is pointed at light or not, and color it accordingly.
@@ -434,21 +433,8 @@ class Rock extends Shape {
 
             [ 3,  1,  0], [ 3,  1,  0], [ 3,  1,  0],
             [ 3,  1,  0], [ 3,  1,  0], [ 3,  1,  0]
-
-
-
-
-
-
-
-
-//             [ 0,  0,  1], [ 0,  0,  1], [ 0,  0,  1],
-//             [ 0,  0, -1], [ 0,  0, -1], [ 0,  0, -1],
-//             [ 0, -1,  0], [ 0, -1,  0], [ 0, -1,  0], [ 0, -1,  0],
-//             [-1,  0,  0], [-1,  0,  0], [-1,  0,  0], [-1,  0,  0],
-//             [r2, r2,  0], [r2, r2,  0], [r2, r2,  0], [r2, r2,  0]
             
-            ));
+        ));
 
         // Those two lists, positions and normals, fully describe the "vertices".  What's the "i"th vertex?  Simply the combined
         // data you get if you look up index "i" of both lists above -- a position and a normal vector, together.  Now let's
@@ -492,14 +478,7 @@ class Rock extends Shape {
             72, 73, 74,
             75, 76, 77
 
-
-
-//             3, 4, 5,
-//             6, 7, 8, 6, 8, 9,
-//             10, 11, 12, 10, 13, 12,
-//             14, 15, 16, 14, 17, 16
-
-            );
+        );
     }
 }
 
