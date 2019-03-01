@@ -514,6 +514,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.shapes.rText.set_string(responses[this.total_fish_caught]);
             else
                 this.shapes.rText.set_string(responses[responses.length - 1]);
+            
             if(this.total_fish_caught < 6){
                 this.fishing_ost.pause();
                 if (this.total_fish_caught < 4){
