@@ -638,7 +638,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         
         if (this.crosshair_Matrix[2][3] > 2) {
             var fix_rotation = fish_matrix.times(Mat4.rotation(1, [0, -1, 0]));
-            this.shapes.plane.draw( graphics_state, fix_rotation, this.caught_fish_material);
             this.zoom_animation = true;
             if(this.start_zoom == -1)  {
             this.start_zoom = t;
