@@ -266,7 +266,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         this.catching = false;
         this.catching_timer = 0;
-        this.zoom_animation = false;
+        this.camera_zoom = false;
         this.start_zoom = -1;
 
         this.can_start_to_catch = false;
@@ -337,9 +337,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
     }
     trigger_animation(graphics_state) {
-        var desired = Mat4.look_at(Vec.of(0, -28, 8), Vec.of(0, 0, 0), Vec.of(0, 10, 0));
-        desired = desired.map((x,i)=>Vec.from(graphics_state.camera_transform[i]).mix(x, .05));
-        graphics_state.camera_transform = desired;
+        var new_matrix = Mat4.look_at(Vec.of(0, -28, 8), Vec.of(0, 0, 0), Vec.of(0, 10, 0));
+        new_matrix = new_matrix.map((x,i)=>Vec.from(graphics_state.camera_transform[i]).mix(x, .05));
+        graphics_state.camera_transform = new_matrix;
         this.animation_t += 0.01;
         if (this.animation_t >= 1)
             this.beginning_animation = false;
@@ -501,7 +501,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 this.fishing_ost.pause();
             }
             //transforming camera backwd
-            if (!this.zoom_animation)
+            if (!this.camera_zoom)
                 graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -25, 10), Vec.of(0, 0, 0), Vec.of(0, 10, 0));
             else
                 graphics_state.camera_transform = this.storedCamera;
@@ -550,7 +550,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             //  ******************************* End Shadow Map ****************************
 
             //transforming camera backwd
-            if (!this.zoom_animation)
+            if (!this.camera_zoom)
                 graphics_state.camera_transform = Mat4.look_at(Vec.of(0, -25, 10), Vec.of(0, 0, 0), Vec.of(0, 10, 0));
             else
                 graphics_state.camera_transform = this.storedCamera;
@@ -638,35 +638,35 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         
         if (this.crosshair_Matrix[2][3] > 2) {
             var fix_rotation = fish_matrix.times(Mat4.rotation(1, [0, -1, 0]));
-            this.zoom_animation = true;
+            this.camera_zoom = true;
             if(this.start_zoom == -1)  {
             this.start_zoom = t;
             }
             if ((t - this.start_zoom) > 2) {
                 this.fish_is_caught = false;
-                this.zoom_animation = false;
+                this.camera_zoom = false;
                 this.start_zoom = -1;
             }
-            this.caught_fish_camera(graphics_state, fish_matrix, t);
+            this.fish_zoom(graphics_state, fish_matrix, t);
         }
     }
    
-    caught_fish_camera(graphics_state, fish_matrix, t) {
+    fish_zoom(graphics_state, fish_matrix, t) {
             if((t - this.start_zoom) <=  3) {
-                  var desired = Mat4.identity().times(Mat4.rotation(1.6, [1, 0, 0]));
-                  desired[0][3] = fish_matrix[0][3];
-                  desired[1][3] = fish_matrix[1][3];
-                  desired[2][3] = fish_matrix[2][3];
+                  var new_matrix = Mat4.identity().times(Mat4.rotation(1.6, [1, 0, 0]));
+                  new_matrix[0][3] = fish_matrix[0][3];
+                  new_matrix[1][3] = fish_matrix[1][3];
+                  new_matrix[2][3] = fish_matrix[2][3];
 
-                  desired = Mat4.inverse(desired.times(Mat4.translation([0, 0, 5])));
-                  desired = desired.map((x, i) => Vec.from( graphics_state.camera_transform[i]).mix( x, .1));
-                  graphics_state.camera_transform = desired; 
+                  new_matrix = Mat4.inverse(new_matrix.times(Mat4.translation([0, 0, 5])));
+                  new_matrix = new_matrix.map((x, i) => Vec.from( graphics_state.camera_transform[i]).mix( x, .1));
+                  graphics_state.camera_transform = new_matrix; 
                   this.storedCamera = graphics_state.camera_transform;
             }  else {
                   this.fish_is_caught = false;
                   this.caught_fish_matrix[0][3] = 100;
                   this.caught_fish_matrix[1][3] = 100;
-                  this.zoom_animation = false;
+                  this.camera_zoom = false;
                   this.start_zoom = -1;
             }
       }  
