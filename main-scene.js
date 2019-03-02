@@ -659,13 +659,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                   new_matrix[2][3] = fish_matrix[2][3];
 
                   new_matrix = Mat4.inverse(new_matrix.times(Mat4.translation([0, 0, 5])));
-                  new_matrix = new_matrix.map((x, i) => Vec.from( graphics_state.camera_transform[i]).mix( x, .1));
+                  new_matrix = new_matrix.map((x, i) => Vec.from( graphics_state.camera_transform[i]).mix( x, .09));
                   graphics_state.camera_transform = new_matrix; 
                   this.storedCamera = graphics_state.camera_transform;
             }  else {
                   this.fish_is_caught = false;
-                  this.caught_fish_matrix[0][3] = 100;
-                  this.caught_fish_matrix[1][3] = 100;
+                  this.caught_fish_matrix[0][3] = 90;
+                  this.caught_fish_matrix[1][3] = 90;
                   this.camera_zoom = false;
                   this.start_zoom = -1;
             }
