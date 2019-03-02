@@ -654,8 +654,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     caught_fish_camera(graphics_state, fish_matrix, t) {
             if((t - this.start_zoom) <=  3) {
                   var desired = Mat4.identity().times(Mat4.rotation(1.6, [1, 0, 0]));
-                  desired[0][3] = fish_matrix[0][3];desired[1][3] = fish_matrix[1][3];desired[2][3] = fish_matrix[2][3];
-                   desired = Mat4.inverse(desired.times(Mat4.translation([0, 0, 5])));
+                  desired[0][3] = fish_matrix[0][3];
+                  desired[1][3] = fish_matrix[1][3];
+                  desired[2][3] = fish_matrix[2][3];
+
+                  desired = Mat4.inverse(desired.times(Mat4.translation([0, 0, 5])));
                   desired = desired.map((x, i) => Vec.from( graphics_state.camera_transform[i]).mix( x, .1));
                   graphics_state.camera_transform = desired; 
                   this.storedCamera = graphics_state.camera_transform;
