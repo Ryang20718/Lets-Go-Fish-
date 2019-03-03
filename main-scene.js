@@ -487,7 +487,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.time_to_fish += 1;
         }
         // time alloted to catch fish
-        if (this.time_to_fish > 1400) {
+        if (this.time_to_fish > 1200) {
             //set roughly 30-40 seconds of fish catching
             this.ending_animation = true;
         }
@@ -533,7 +533,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             this.draw_the_environment(graphics_state, t);
 
             let text_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 5, 3 / 5, 3 / 5]));
-            var responses = ["Son of a Fish", "Mr.Terzopoulos could do better!", "Dad you're a dumb bass", "Your brain is smaller than that fish", "Not bad for a bottom feeder", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"];
+            var responses = ["Son of a Fish", "Mr.Terzopoulos could do better!", "Dad you're a dumb bass", "Your brain is smaller than that fish...", "Not bad for a bottom feeder", "Maybe you're not useless after all!", "Is that all we have for dinner?!?!", "Nice Job!!!"];
             if (this.total_fish_caught < responses.length)
                 this.shapes.rText.set_string(responses[this.total_fish_caught]);
             else
@@ -548,7 +548,14 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 }
             }
             this.shapes.rText.draw(graphics_state, text_matrix.times(Mat4.translation([-6, 3, -4])).times(Mat4.scale([1 / 6, 1 / 6, 1 / 6])), this.materials.text_image);
+            
+            this.shapes.sphere6.draw(graphics_state, this.bottom_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.shadow);
+            
+            let new_pond_Matrix = Mat4.identity().times(Mat4.translation([0, 0, 1])).times(Mat4.scale([7, 7, .01]));
+            this.shapes.pond.draw(graphics_state, new_pond_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.pond);//draw pond
+            
             this.draw_kid(graphics_state, t);
+            
         }
 
         if (!this.beginning_animation && !this.ending_animation) {
@@ -601,15 +608,17 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
-            if (!this.fish_is_caught && this.time_to_fish < 1400) {
+            if (!this.fish_is_caught && this.time_to_fish < 1200) {
                 this.total_fish_caught += 1;
                 // increment total fish counter
             }
         }
 
         // Draw flattened blue sphere for temporary pond:
+        
         let pond_Matrix = Mat4.identity().times(Mat4.translation([0, 0, 1])).times(Mat4.scale([7, 7, .01]));
         this.shapes.pond.draw(graphics_state, pond_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.pond);
+        
         this.draw_the_environment(graphics_state, t);
     }
 
@@ -849,7 +858,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         //DRAW BIG FISH1
         let big_fish1_model_transform = Mat4.identity();
         if (!this.big_fish1_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.big_fish1_Fish_Matrix[0][3] + Math.cos(this.big_fish1_angle) - 0.3 * Math.sin(this.big_fish1_angle)) > 5.5 || Math.abs(this.big_fish1_Fish_Matrix[1][3] + 0.3 * Math.cos(this.big_fish1_angle) + Math.sin(this.big_fish1_angle)) > 5.5) && Math.round((t % 0.3) * 10) / 10 == 0) {
                 this.random_big_fish1_angle();
             }
@@ -875,7 +884,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // DRAW BIG FISH2
         let big_fish2_model_transform = Mat4.identity();
         if (!this.big_fish2_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.big_fish2_Fish_Matrix[0][3] + Math.cos(this.big_fish2_angle)) > 5 || Math.abs(this.big_fish2_Fish_Matrix[1][3] + Math.sin(this.big_fish2_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_big_fish2_angle();
             }
@@ -901,7 +910,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // DRAW REG FISH
         let reg_model_transform = Mat4.identity();
         if (!this.reg_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.reg_Fish_Matrix[0][3] + 0.25 * Math.cos(this.reg_angle)) > 6 || Math.abs(this.reg_Fish_Matrix[1][3] + 0.25 * Math.sin(this.reg_angle)) > 6) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_reg_angle();
             }
@@ -920,7 +929,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         //DRAW REG FISH1
         let reg1_model_transform = Mat4.identity();
         if (!this.reg1_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.reg1_Fish_Matrix[0][3] + 0.25 * Math.cos(this.reg1_angle)) > 6 || Math.abs(this.reg1_Fish_Matrix[1][3] + 0.25 * Math.sin(this.reg1_angle)) > 6) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_reg1_angle();
             }
@@ -939,7 +948,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         //DRAW REG FISH2
         let reg2_model_transform = Mat4.identity();
         if (!this.reg2_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.reg2_Fish_Matrix[0][3] + 0.25 * Math.cos(this.reg2_angle)) > 6 || Math.abs(this.reg2_Fish_Matrix[1][3] + 0.25 * Math.sin(this.reg2_angle)) > 6) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_reg2_angle();
             }
@@ -958,7 +967,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // DRAW TINY FISH
         let tinyFish_model_transform = Mat4.identity();
         if (!this.tinyFish_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.tinyFish_Matrix[0][3] + 0.05 * Math.cos(this.tinyFish_angle)) > 5 || Math.abs(this.tinyFish_Matrix[1][3] + 0.05 * Math.sin(this.tinyFish_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish_angle();
             }
@@ -981,7 +990,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // DRAW TINY FISH 1
         let tinyFish1_model_transform = Mat4.identity();
         if (!this.tinyFish1_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.tinyFish1_Matrix[0][3] + 0.10 * Math.cos(this.tinyFish1_angle)) > 5 || Math.abs(this.tinyFish1_Matrix[1][3] + 0.10 * Math.sin(this.tinyFish1_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish1_angle();
             }
@@ -1004,7 +1013,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // DRAW TINY FISH 2
         let tinyFish2_model_transform = Mat4.identity();
         if (!this.tinyFish2_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.tinyFish2_Matrix[0][3] + 0.10 * Math.cos(this.tinyFish2_angle)) > 5 || Math.abs(this.tinyFish2_Matrix[1][3] + 0.10 * Math.sin(this.tinyFish2_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish2_angle();
             }
@@ -1023,7 +1032,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // DRAW TINY FISH 3
         let tinyFish3_model_transform = Mat4.identity();
         if (!this.tinyFish3_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.tinyFish3_Matrix[0][3] + 0.10 * Math.cos(this.tinyFish3_angle)) > 5 || Math.abs(this.tinyFish3_Matrix[1][3] + 0.10 * Math.sin(this.tinyFish3_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish3_angle();
             }
@@ -1042,7 +1051,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // DRAW TINY FISH 4
         let tinyFish4_model_transform = Mat4.identity();
         if (!this.tinyFish4_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.tinyFish4_Matrix[0][3] + 0.15 * Math.cos(this.tinyFish4_angle)) > 5 || Math.abs(this.tinyFish4_Matrix[1][3] + 0.15 * Math.sin(this.tinyFish4_angle)) > 5) && Math.round((t % 0.2) * 10) / 10 == 0) {
                 this.random_tinyFish4_angle();
             }
@@ -1061,7 +1070,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // DRAW MEDIUM FISH 
         let med_fish_model_transform = Mat4.identity();
         if (!this.med_fish_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.med_fish_Fish_Matrix[0][3] + (0.25) * Math.cos(this.med_fish_angle)) > 5 || Math.abs(this.med_fish_Fish_Matrix[1][3] + Math.sin(this.med_fish_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_med_fish_angle();
             }
@@ -1084,7 +1093,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // DRAW MED FISH 2
         let med_fish2_model_transform = Mat4.identity();
         if (!this.med_fish2_caught) {
-            // If statement to turn fish if it will translate out of pond
+            // check for catch
             if ((Math.abs(this.med_fish2_Matrix[0][3] + Math.cos(this.med_fish2_angle)) > 5 || Math.abs(this.med_fish2_Matrix[1][3] + Math.sin(this.med_fish2_angle)) > 5) && Math.round((t % 0.5) * 10) / 10 == 0) {
                 this.random_med_fish2_angle();
                 this.med_fish2_direction *= -1;
