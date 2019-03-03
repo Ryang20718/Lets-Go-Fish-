@@ -530,7 +530,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             accuracy = "Your fishing accuracy is " + accuracy + " %";
 
             this.shapes.mText.set_string(accuracy);
-            this.draw_the_enviroment(graphics_state, t);
+            this.draw_the_environment(graphics_state, t);
 
             let text_matrix = Mat4.identity().times(Mat4.translation([0, -25, 6.5])).times(Mat4.rotation(Math.PI / 2, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 5, 3 / 5, 3 / 5]));
             var responses = ["Son of a Fish", "Mr.Terzopoulos could do better!", "Dad you're a dumb bass", "Your brain is smaller than that fish", "Not bad for a bottom feeder", "Maybe you're not useless after all!", "Is that all we have for dinner?", "Nice Job!"];
@@ -610,7 +610,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         // Draw flattened blue sphere for temporary pond:
         let pond_Matrix = Mat4.identity().times(Mat4.translation([0, 0, 1])).times(Mat4.scale([7, 7, .01]));
         this.shapes.pond.draw(graphics_state, pond_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.pond);
-        this.draw_the_enviroment(graphics_state, t);
+        this.draw_the_environment(graphics_state, t);
     }
 
     // DRAW FISHING ROD
@@ -688,7 +688,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     
      //new code
 
-    // DRAW Enviroment 
+    // DRAW environment 
     draw_stars(graphics_state, t) {
         for (var i = 0; i < 250; i++) {
             if (Math.random() * 250 > 248) {
@@ -793,7 +793,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.shapes.sphere6.draw(graphics_state, rock_Matrix, this.materials.rock_tex5);
     }
 
-    draw_the_enviroment(graphics_state, t) {
+    draw_the_environment(graphics_state, t) {
         let tree_list = [[[12, 22, 10], [3.5, 3.5, 3.5]], [[-15, 30, 28], [10, 10, 10]], [[30, 24, 28], [10, 10, 10]], [[0, 20, 10], [3.5, 3.5, 3.5]], [[-18, 7, 12], [4.5, 4.5, 4.5]], [[-9, 19, 12], [4, 4, 4]], [[-16, 16, 8], [3, 3, 3]], [[8, 20, 7], [2.5, 2.5, 2.5]], [[15, 5, 14], [5, 5, 5]], [[10, -17, 8], [3, 3, 3]], [[-9, -16, 8], [2.5, 2.5, 2.5]]];
         for (var i = 0; i < tree_list.length; i++) {
             this.draw_tree(graphics_state, t, tree_list[i][0], tree_list[i][1]);
