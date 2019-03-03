@@ -483,9 +483,11 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
     // START DISPLAY 
     display(graphics_state) {
+        if(this.time_to_fish != 0){
         this.time_to_fish += 1;
+        }
         // time alloted to catch fish
-        if (this.time_to_fish > 1700) {
+        if (this.time_to_fish > 1400) {
             //set roughly 30-40 seconds of fish catching
             this.ending_animation = true;
         }
@@ -500,6 +502,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             let sign_Matrix = this.sign_Matrix.times(Mat4.rotation(Math.PI / 36, Vec.of(1, 0, 0))).times(Mat4.scale([3 / 2, 3 / 2, 3 / 2]));
             this.shapes.plane.draw(graphics_state, sign_Matrix, this.materials.start_sign);
             if (this.begin_animation) {
+                this.time_to_fish += 1;
                 this.trigger_animation(graphics_state)
                 if (this.menu_volume > 0)
                     this.menu_volume = this.menu_volume - 0.01;
@@ -598,7 +601,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
-            if (!this.fish_is_caught && this.time_to_fish < 1700) {
+            if (!this.fish_is_caught && this.time_to_fish < 1400) {
                 this.total_fish_caught += 1;
                 // increment total fish counter
             }
