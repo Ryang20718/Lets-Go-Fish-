@@ -56,7 +56,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         }
         this.submit_shapes(context, shapes);
         
-        // Jane
         this.materials = {
             pond: context.get_instance(Phong_Shader).material(Color.of(0, .7, 1, .5), {
                 ambient: 0.3
@@ -65,10 +64,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 ambient: .20,
                 texture: context.get_instance("assets/ground_texture1.jpeg", false)
             }),
-//             ground2: context.get_instance(Phong_Shader).material(Color.of(109 / 255, 78 / 255, 0 / 255, 1), {
-//                 ambient: .5,
-//                 texture: context.get_instance("assets/prof.jpeg", false)
-//             }),
             shadow: context.get_instance(Shadow_Shader).material(Color.of(.3, .3, .3, 1), {
                 ambient: 1,
                 texture: this.texture
@@ -136,12 +131,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 specularity: 0,
                 texture: context.get_instance("/assets/text.png", false)
             }),
-//             rough_rock: context.get_instance(Fake_Bump_Map).material(Color.of(92, 99, 112, 1), {
-//                 ambient: .5,
-// //                 diffusivity: 5,
-// //                 specularity: .5,
-//                 texture: context.get_instance("assets/rock_texture2.jpg", false)
-//             }),
             rock_tex: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: 0.8,
                 diffusivity: .5,
@@ -717,16 +706,9 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.shapes.pine_tree_branch.draw(graphics_state, branch_Matrix, this.materials.branch);
     }
 
-    // Jane
     draw_rock(graphics_state, t){
 
-//         // ORIGINAL
-//         let rock_Matrix = Mat4.identity();
-//         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
-//         rock_Matrix = rock_Matrix.times((Mat4.rotation((-Math.PI*(0.23)) , Vec.of( 0, 1, 0 ) )));
-//         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, -24))));
-//         this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
-
+        // Manually positioning and scaling rocks, custom polygonal 3D object.
         let rock_Matrix = Mat4.identity();
         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
         rock_Matrix = rock_Matrix.times((Mat4.rotation((-Math.PI*(0.22)) , Vec.of( 0, 1, 0 ) )));
@@ -755,7 +737,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.8, 1, 1))));
         this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
 
-
         rock_Matrix = Mat4.identity();
         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI*(0.04)) , Vec.of( 0, 1, 0 ) )));
@@ -770,7 +751,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.5, 0.5, 0.5))));
         this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
 
-
         rock_Matrix = Mat4.identity();
         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI*(0.31)) , Vec.of( 0, 1, 0 ) )));
@@ -784,7 +764,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.65, 0.7, 0.65))));
         this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
 
-
         rock_Matrix = Mat4.identity();
         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
         rock_Matrix = rock_Matrix.times((Mat4.rotation((-Math.PI*(0.27)) , Vec.of( 0, 1, 0 ) )));
@@ -795,58 +774,21 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     }
 
     draw_pebble(graphics_state, t, num){
-
-        // Original
         let rock_Matrix = Mat4.identity();
         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, 1))));
         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/25*(num+0.5)) , Vec.of( 0, 0, 1 ) )));
         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 17.5, 0))));
         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.55, 0.35, 0.35))));
         this.shapes.sphere6.draw(graphics_state, rock_Matrix, this.materials.rock_tex3);
-
-
-//         // Original
-//         let rock_Matrix = Mat4.identity();
-//         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, 1))));
-//         rock_Matrix = rock_Matrix.times((Mat4.rotation((-2.6*Math.PI/10*num) , Vec.of( 0, 0, 1 ) )));
-//         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 20, 0))));
-//         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 1.5, 1, 1.1))));
-//         this.shapes.sphere6.draw(graphics_state, rock_Matrix, this.materials.rock_tex);
-
-
-//         let rock_Matrix = Mat4.identity();
-//         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, 1))));
-//         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 18, 0))));
-//         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 1.25, 1, 1.1))));
-//         this.shapes.sphere6.draw(graphics_state, rock_Matrix, this.materials.rock_tex);
-
     }
-        draw_pebble2(graphics_state, t, num){
 
-        // Original
+    draw_pebble2(graphics_state, t, num){
         let rock_Matrix = Mat4.identity();
         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, 1))));
         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/25*num) , Vec.of( 0, 0, 1 ) )));
         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 17.5, 0))));
         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.60, 0.4, 0.4))));
         this.shapes.sphere6.draw(graphics_state, rock_Matrix, this.materials.rock_tex5);
-
-
-//         // Original
-//         let rock_Matrix = Mat4.identity();
-//         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, 1))));
-//         rock_Matrix = rock_Matrix.times((Mat4.rotation((-2.6*Math.PI/10*num) , Vec.of( 0, 0, 1 ) )));
-//         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 20, 0))));
-//         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 1.5, 1, 1.1))));
-//         this.shapes.sphere6.draw(graphics_state, rock_Matrix, this.materials.rock_tex);
-
-
-//         let rock_Matrix = Mat4.identity();
-//         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, 1))));
-//         rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 18, 0))));
-//         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 1.25, 1, 1.1))));
-//         this.shapes.sphere6.draw(graphics_state, rock_Matrix, this.materials.rock_tex);
-
     }
 
     draw_the_enviroment(graphics_state, t) {
@@ -858,17 +800,15 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             color: Color.of(.1, .4, .5, 1),
             ambient: 0.9
         }));
-        this.draw_stars(graphics_state, t);
 
+        this.draw_stars(graphics_state, t);
         this.draw_rock(graphics_state, t);
 
         for (var j = 0; j < 50; j ++){
+            // Alternating pattern of rocks
             this.draw_pebble(graphics_state, t, j);
             this.draw_pebble2(graphics_state, t, j);
         }
-
-        
-
 
         let ground_Matrix = Mat4.identity().times(Mat4.translation([0, 0, 1])).times(Mat4.scale([42.6, 42.6, .01]));
         this.shapes.torus.draw(graphics_state, ground_Matrix, this.materials.ground);
