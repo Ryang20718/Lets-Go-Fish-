@@ -792,13 +792,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.5, 0.5, 0.5))));
         this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
 
-
-
-
-
-
-
-
     }
 
     draw_pebble(graphics_state, t, num){
