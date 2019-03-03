@@ -612,7 +612,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             if (!this.fish_is_caught && this.time_to_fish < 1700) {
                 this.total_fish_caught += 1;
                 // increment total fish counter
-
             }
         }
 
@@ -682,7 +681,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                   new_matrix[0][3] = fish_matrix[0][3];
                   new_matrix[1][3] = fish_matrix[1][3];
                   new_matrix[2][3] = fish_matrix[2][3];
-
                   new_matrix = Mat4.inverse(new_matrix.times(Mat4.translation([0, 0, 5])));
                   new_matrix = new_matrix.map((x, i) => Vec.from( graphics_state.camera_transform[i]).mix( x, .09));
                   graphics_state.camera_transform = new_matrix; 
