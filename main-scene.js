@@ -487,7 +487,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         this.time_to_fish += 1;
         }
         // time alloted to catch fish
-        if (this.time_to_fish > 1200) {
+        if (this.time_to_fish > 1400) {
             //set roughly 30-40 seconds of fish catching
             this.ending_animation = true;
         }
@@ -549,13 +549,13 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             }
             this.shapes.rText.draw(graphics_state, text_matrix.times(Mat4.translation([-6, 3, -4])).times(Mat4.scale([1 / 6, 1 / 6, 1 / 6])), this.materials.text_image);
             
-            this.shapes.sphere6.draw(graphics_state, this.bottom_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.shadow);
             
             let new_pond_Matrix = Mat4.identity().times(Mat4.translation([0, 0, 1])).times(Mat4.scale([7, 7, .01]));
-            this.shapes.pond.draw(graphics_state, new_pond_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.pond);//draw pond
-            
+            this.shapes.pond.draw(graphics_state, new_pond_Matrix.times(Mat4.scale([1.8, 1.8, 1.8])), this.materials.white.override({
+            color: Color.of(27/255, 84/255, 111/255, 1)
+        }));//draw pond
+
             this.draw_kid(graphics_state, t);
-            
         }
 
         if (!this.beginning_animation && !this.ending_animation) {
@@ -608,7 +608,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
 
         if (this.fish_is_caught) {
             this.caught_fish_animation(graphics_state, this.caught_fish_matrix, t);
-            if (!this.fish_is_caught && this.time_to_fish < 1200) {
+            if (!this.fish_is_caught && this.time_to_fish < 1400) {
                 this.total_fish_caught += 1;
                 // increment total fish counter
             }
@@ -849,7 +849,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             ambient: 0.9
         }));
         //hair
-        this.shapes.mom.draw(graphics_state, kid_matrix, this.materials.mom_img);
+        this.shapes.mom.draw(graphics_state, kid_matrix, this.materials.yellow);
     }
 
     // DRAW fishies
