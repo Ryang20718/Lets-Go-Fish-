@@ -707,7 +707,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
     }
 
     draw_rock(graphics_state, t){
-
         // Manually positioning and scaling rocks, custom polygonal 3D object.
         let rock_Matrix = Mat4.identity();
         rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
