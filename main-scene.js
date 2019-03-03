@@ -750,6 +750,53 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
         rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.3, 0.5, 0.7))));
         this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
 
+        rock_Matrix = Mat4.identity();
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI*(0.06)) , Vec.of( 0, 1, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, -33))));
+        rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.8, 1, 1))));
+        this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
+
+
+        rock_Matrix = Mat4.identity();
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI*(0.04)) , Vec.of( 0, 1, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, -35))));
+        rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 1, 1.5, 1.1))));
+        this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
+
+        rock_Matrix = Mat4.identity();
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI*(0.05)) , Vec.of( 0, 1, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, -30))));
+        rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.5, 0.5, 0.5))));
+        this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
+
+
+        rock_Matrix = Mat4.identity();
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI*(0.31)) , Vec.of( 0, 1, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, -24))));
+        rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.5, 0.5, 0.5))));
+        this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
+        rock_Matrix = Mat4.identity();
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI*(0.29)) , Vec.of( 0, 1, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, -25.5))));
+        rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.65, 0.7, 0.65))));
+        this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
+
+
+        rock_Matrix = Mat4.identity();
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((Math.PI/2) , Vec.of( 1, 0, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.rotation((-Math.PI*(0.27)) , Vec.of( 0, 1, 0 ) )));
+        rock_Matrix = rock_Matrix.times((Mat4.translation(Vec.of( 0, 0, -27))));
+        rock_Matrix = rock_Matrix.times((Mat4.scale(Vec.of( 0.5, 0.5, 0.5))));
+        this.shapes.rough_rock.draw(graphics_state, rock_Matrix, this.materials.grey);
+
+
+
+
 
 
 
