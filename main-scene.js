@@ -119,12 +119,6 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
                 ambient: 1,
                 texture: context.get_instance("assets/Bark.jpg", false)
             }),
-//             rock: context.get_instance(Fake_Bump_Map).material(Color.of(.4, .25, .15, 1), {
-//                 ambient: .5,
-//                 diffusivity: 5,
-//                 specularity: .5,
-//                 texture: context.get_instance("assets/rock_tex.jpg", false)
-//             }),
             text_image: context.get_instance(Phong_Shader).material(Color.of(0, 0, 0, 1), {
                 ambient: 1,
                 diffusivity: 0,
@@ -541,7 +535,7 @@ window.Fishing_Game = window.classes.Fishing_Game = class Fishing_Game extends S
             
             if(this.total_fish_caught < 6){
                 this.fishing_ost.pause();
-                if (this.total_fish_caught < 4){
+                if (this.total_fish_caught < 3){
                     this.play_laughter();
                 }else{
                     this.play_titanic();
