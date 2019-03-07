@@ -25,14 +25,7 @@
     * Fish Caught
     * Insults
 
-#### In progress:
+#### LINK TO DEMO
+[View On Youtube](https://www.youtube.com/watch?v=8wLDV_Jpqsw)
                 
-+ Rock Texture map
-+ Uneven Surface?
-    + Item B 1
-    + Item B 2
-    + Item B 3
-+ Item C
-    * Item C 1
-    * Item C 2
-    * Item C 3
+
