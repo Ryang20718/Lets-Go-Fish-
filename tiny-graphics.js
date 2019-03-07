@@ -1,28 +1,6 @@
-// tiny-graphics.js - A file that shows how to organize a complete graphics program.
-// It wraps common WebGL commands, math, and web page interactions.  (by Garett)
-
 window.Vec = window.tiny_graphics.Vec =
 class Vec extends Float32Array        // Vectors of floating point numbers.  This puts vector math into JavaScript.
-                                      // See these examples for usage of each function:
-  //     equals: "Vec.of( 1,0,0 ).equals( Vec.of( 1,0,0 ) )" returns true.
-  //       plus: "Vec.of( 1,0,0 ).plus  ( Vec.of( 1,0,0 ) )" returns the Vec [ 2,0,0 ].
-  //      minus: "Vec.of( 1,0,0 ).minus ( Vec.of( 1,0,0 ) )" returns the Vec [ 0,0,0 ].
-  // mult-pairs: "Vec.of( 1,2,3 ).mult_pairs( Vec.of( 3,2,0 ) )" returns the Vec [ 3,4,0 ].
-  //      scale: "Vec.of( 1,2,3 ).scale( 2 )" overwrites the Vec with [ 2,4,6 ].
-  //      times: "Vec.of( 1,2,3 ).times( 2 )" returns the Vec [ 2,4,6 ].
-  // randomized: Returns this Vec plus a random vector of a given maximum length.
-  //        mix: "Vec.of( 0,2,4 ).mix( Vec.of( 10,10,10 ), .5 )" returns the Vec [ 5,6,7 ].
-  //       norm: "Vec.of( 1,2,3 ).norm()" returns the square root of 15.
-  // normalized: "Vec.of( 4,4,4 ).normalized()" returns the Vec [ sqrt(3), sqrt(3), sqrt(3) ]
-  //  normalize: "Vec.of( 4,4,4 ).normalize()" overwrites the Vec with [ sqrt(3), sqrt(3), sqrt(3) ].
-  //        dot: "Vec.of( 1,2,3 ).dot( Vec.of( 1,2,3 ) )" returns 15.
-  //       cast: "Vec.cast( [-1,-1,0], [1,-1,0], [-1,1,0] )" converts a list of Array literals into a list of Vecs.
-  //        to3: "Vec.of( 1,2,3,4 ).to3()" returns the Vec [ 1,2,3 ].  Use only on 4x1 Vecs to truncate them.
-  //        to4: "Vec.of( 1,2,3 ).to4( true or false )" returns the homogeneous Vec [ 1,2,3, 1 or 0 ].  Use only on 3x1.
-  //      cross: "Vec.of( 1,0,0 ).cross( Vec.of( 0,1,0 ) )" returns the Vec [ 0,0,1 ].  Use only on 3x1 Vecs.
-  //  to_string: "Vec.of( 1,2,3 ).to_string()" returns "[vec 1, 2, 3]"
-                            //  Notes:  Vecs should only be created with of() due to wierdness with the TypedArray spec.
-                            //  Also, assign them with .copy() to avoid referring two variables to the same Vec object.
+
 { copy        () { return Vec.from( this )                                }
   equals     (b) { return this.every( (x,i) => x == b[i]                ) }
   plus       (b) { return this.map(   (x,i) => x +  b[i]                ) }
@@ -51,17 +29,7 @@ class Vec extends Float32Array        // Vectors of floating point numbers.  Thi
 
 window.Mat = window.tiny_graphics.Mat =
 class Mat extends Array                         // M by N matrices of floats.  Enables matrix and vector math.  Usage:
-  //  "Mat( rows )" returns a Mat with those rows, where rows is an array of float arrays.
-  //  "M.set_identity( m, n )" assigns the m by n identity matrix to Mat M.
-  //  "M.sub_block( start, end )" where start and end are each a [ row, column ] pair returns a sub-rectangle cut out from M.
-  //  "M.copy()" creates a deep copy of M and returns it so you can modify it without affecting the original.
-  //  "M.equals(b)" as well as plus and minus work the same as for Vec but the two operands are Mats instead; b must be a Mat.
-  //  "M.transposed()" returns a new matrix where all rows of M became columns and vice versa.
-  //  "M.times(b)" (where the post-multiplied b can be a scalar, a Vec, or another Mat) returns a new Mat or Vec holding the product.
-  //  "M.pre_multiply(b)"  overwrites the matrix M with the product of b * M where b must be another Mat.
-  //  "M.post_multiply(b)" overwrites the matrix M with the product of M * b where b can be a Mat, Vec, or scalar.
-  //  "Mat.flatten_2D_to_1D( M )" flattens input (a Mat or any array of Vecs or float arrays) into a row-major 1D array of raw floats.
-  //  "M.to_string()" where M contains the 4x4 identity returns "[[1, 0, 0, 0] [0, 1, 0, 0] [0, 0, 1, 0] [0, 0, 0, 1]]".
+
 { constructor  ( ...args ) { super(0); this.push( ...args ) }
   set_identity ( m, n )    { this.length = 0; for( let i = 0; i < m; i++ ) { this.push( Array(n).fill(0) ); if( i < n ) this[i][i] = 1; } }
   sub_block( start, end )  { return Mat.from( this.slice( start[0], end[0] ).map( r => r.slice( start[1], end[1] ) ) ); }
@@ -122,7 +90,7 @@ class Mat4 extends Mat                               // Generate special 4x4 mat
                                            [ 0, 0, 1, t[2] ],
                                            [ 0, 0, 0,   1  ] );
                           }                      
-  // Note:  look_at() assumes the result will be used for a camera and stores its result in inverse space.  You can also use
+  
   // it to point the basis of any *object* towards anything but you must re-invert it first.  Each input must be 3x1 Vec.                         
   static look_at( eye, at, up ) { let z = at.minus( eye ).normalized(),
                                       x =  z.cross( up  ).normalized(),        // Compute vectors along the requested coordinate axes.
@@ -175,11 +143,7 @@ class Mat4 extends Mat                               // Generate special 4x4 mat
 window.Keyboard_Manager = window.tiny_graphics.Keyboard_Manager =
 class Keyboard_Manager     // This class maintains a running list of which keys are depressed.  You can map combinations of shortcut
   {                        // keys to trigger callbacks you provide by calling add().  See add()'s arguments.  The shortcut list is 
-                           // indexed by convenient strings showing each bound shortcut combination.  The constructor optionally
-                           // takes "target", which is the desired DOM element for keys to be pressed inside of, and
-                           // "callback_behavior", which will be called for every key action and allows extra behavior on each event
-                           // -- giving an opportunity to customize their bubbling, preventDefault, and more.  It defaults to no
-                           // additional behavior besides the callback itself on each assigned key action.
+
     constructor( target = document, callback_behavior = ( callback, event ) => callback( event ) )
       { this.saved_controls = {};     
         this.actively_pressed_keys = new Set();
@@ -212,8 +176,7 @@ class Keyboard_Manager     // This class maintains a running list of which keys 
             this.callback_behavior( saved.keyup_callback, event );                  // The keys match, so fire the callback.
         lifted_key_symbols.forEach( k => this.actively_pressed_keys.delete( k ) );
       }
-      // Method add() adds a keyboard operation.  The argument shortcut_combination wants an array of strings that follow 
-      // standard KeyboardEvent key names. Both the keyup and keydown callbacks for any key combo are optional.
+
     add( shortcut_combination, callback = () => {}, keyup_callback = () => {} )
       { this.saved_controls[ shortcut_combination.join('+') ] = { shortcut_combination, callback, keyup_callback }; }
   }
@@ -222,10 +185,7 @@ class Keyboard_Manager     // This class maintains a running list of which keys 
 window.Vertex_Buffer = window.tiny_graphics.Vertex_Buffer =
 class Vertex_Buffer           // To use Vertex_Buffer, make a subclass of it that overrides the constructor and fills in the right fields.  
 {                             // Vertex_Buffer organizes data related to one 3D shape and copies it into GPU memory.  That data is broken
-                              // down per vertex in the shape.  You can make several fields that you can look up in a vertex; for each
-                              // field, a whole array will be made here of that data type and it will be indexed per vertex.  Along with
-                              // those lists is an additional array "indices" describing triangles, expressed as triples of vertex indices,
-                              // connecting the vertices to one another.
+
   constructor( ...array_names )                          // This superclass constructor expects a list of names of arrays that you plan for
     { this.array_names = array_names;                    // your subclass to fill in and associate with the vertices.
       for( let n of array_names ) this[n] = [];          // Initialize a blank array member of the Shape with each of the names provided.
@@ -279,25 +239,7 @@ class Vertex_Buffer           // To use Vertex_Buffer, make a subclass of it tha
 window.Shape = window.tiny_graphics.Shape =
 class Shape extends Vertex_Buffer
 {           // This class is used the same way as Vertex_Buffer, by subclassing it and writing a constructor that fills in certain fields.
-            // Shape extends Vertex_Buffer's functionality for copying shapes into buffers the graphics card's memory.  It also adds the
-            // basic assumption that each vertex will have a 3D position and a 3D normal vector as available fields to look up.  This means
-            // there will be at least two arrays for the user to fill in: "positions" enumerating all the vertices' locations, and "normals"
-            // enumerating all vertices' normal vectors pointing away from the surface.  Both are of type Vec of length 3.  By including 
-            // these, Shape adds to class Vertex_Buffer the ability to compound shapes in together into a single performance-friendly
-            // Vertex_Buffer, placing this shape into a larger one at a custom transforms by adjusting positions and normals with a call to
-            // insert_transformed_copy_into().  Compared to Vertex_Buffer we also gain the ability via flat-shading to compute normals from
-            // scratch for a shape that has none, and the ability to eliminate inter-triangle sharing of vertices for any data we want to
-            // abruptly vary as we cross over a triangle edge (such as texture images).
 
-            // Like in class Vertex_Buffer we have an array "indices" to fill in as well, a list of index triples defining which three 
-            // vertices belong to each triangle.  Call new on a Shape and fill its arrays (probably in an overridden constructor).  Then,
-            // submit it to Scene_Component's submit_shapes() and the GPU buffers will receive all the per-vertex data and the triangles
-            // list needed to draw the shape correctly.
-
-            // IMPORTANT: To use this class you must define all fields for every single vertex by filling in the arrays of each field, so 
-            // this includes positions, normals, any more fields a specific Shape subclass decides to include per vertex, such as texture 
-            // coordinates.  Be warned that leaving any empty elements in the lists will result in an out of bounds GPU warning (and nothing
-            // drawn) whenever the "indices" list contains references to that position in the lists.
   static insert_transformed_copy_into( recipient, args, points_transform = Mat4.identity() )    // For building compound shapes.
     { const temp_shape = new this( ...args );  // If you try to bypass making a temporary shape and instead directly insert new data into
                                                // the recipient, you'll run into trouble when the recursion tree stops at different depths.
@@ -316,8 +258,6 @@ class Shape extends Vertex_Buffer
       { constructor( ...args ) { super( ...args );  this.duplicate_the_shared_vertices();  this.flat_shade(); }
         duplicate_the_shared_vertices()
           {   //  Prepare an indexed shape for flat shading if it is not ready -- that is, if there are any edges where 
-              //  the same vertices are indexed by both the adjacent triangles, and those two triangles are not co-planar.
-              //  The two would therefore fight over assigning different normal vectors to the shared vertices.
             const temp_positions = [], temp_tex_coords = [], temp_indices = [];
             for( let [i, it] of this.indices.entries() )
               { temp_positions.push( this.positions[it] );  temp_tex_coords.push( this.texture_coords[it] );  temp_indices.push( i ); }
@@ -476,10 +416,10 @@ class Webgl_Manager      // This class manages a whole graphics program for one 
       this.canvas.style[ "width" ]  =  width + "px";    // and then change the size in canvas attributes.
       this.canvas.style[ "height" ] = height + "px";     
       Object.assign( this,        { width, height } );   // Have to assign to both; these attributes on a canvas 
-      Object.assign( this.canvas, { width, height } );   // have a special effect on buffers, separate from their style.
-      this.gl.viewport( 0, 0, width, height );           // Build the canvas's matrix for converting -1 to 1 ranged coords (NCDS)
-    }                                                    // into its own pixel coords.
-  get_instance( shader_or_texture )                 // If a scene requests that the Canvas keeps a certain resource (a Shader 
+      Object.assign( this.canvas, { width, height } );   // 
+      this.gl.viewport( 0, 0, width, height );           // 
+    }                                                    // 
+  get_instance( shader_or_texture )                 // 
     { if( this.instances[ shader_or_texture ] )     // or Texture) loaded, check if we already have one GPU-side first.
         return this.instances[ shader_or_texture ];     // Return the one that already is loaded if it exists.  Otherwise,
       if( typeof shader_or_texture == "string" )        // If a texture was requested, load it onto a GPU buffer.
