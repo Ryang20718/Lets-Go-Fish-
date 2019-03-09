@@ -9,16 +9,6 @@ window.Triangle = window.classes.Triangle = class Triangle extends Shape {
     }
 }
 
-window.Circle = window.classes.Circle = class Circle extends Shape {
-    constructor() {
-        super("positions", "normals", "texture_coords");
-        this.positions.push(...Vec.cast([-1, -1, 0], [1, -1, 0], [-1, 1, 0], [1, 1, 0]));
-        this.normals.push(...Vec.cast([0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]));
-        this.texture_coords.push(...Vec.cast([0, 0], [2, 0], [0, 2], [2, 2]));
-        this.indices.push(0, 1, 2, 1, 3, 2);
-    }
-}
-
 window.Square = window.classes.Square = class Square extends Shape {
     constructor() {
         super("positions", "normals", "texture_coords");
@@ -26,35 +16,6 @@ window.Square = window.classes.Square = class Square extends Shape {
         this.normals.push(...Vec.cast([0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]));
         this.texture_coords.push(...Vec.cast([0, 0], [1, 0], [0, 1], [1, 1]));
         this.indices.push(0, 1, 2, 1, 3, 2);
-    }
-}
-
-window.Custom_Line = window.classes.Custom_Line = class Custom_Line extends Shape {
-    constructor(max_size) {
-        super("positions", "normals", "texture_coords");
-        this.max_size = max_size;
-        var line_matrix = Mat4.identity();
-        for (var i = 0; i < max_size; i++) {
-            Square.insert_transformed_copy_into(this, [], line_matrix);
-            line_matrix.post_multiply(Mat4.translation([1.5, 0, 0]));
-        }
-    }
-    set_string(line, gl=this.gl) {
-        this.texture_coords = [];
-        for (var i = 0; i < this.max_size; i++) {
-            var width = Math.floor((i < line.length ? line.charCodeAt(i) : ' '.charCodeAt()) / 16)
-              , height = Math.floor((i < line.length ? line.charCodeAt(i) : ' '.charCodeAt()) % 16);
-            var newLine = 3
-              , size = 32
-              , sizefloor = size - newLine;
-            var lineDimension = size * 16
-              , left = (height * size + newLine) / lineDimension
-              , top = (width * size + newLine) / lineDimension
-              , right = (height * size + sizefloor) / lineDimension
-              , bottom = (width * size + sizefloor + 5) / lineDimension;
-            this.texture_coords.push(...Vec.cast([left, 1 - bottom], [right, 1 - bottom], [left, 1 - top], [right, 1 - top]));
-        }
-        this.copy_onto_graphics_card(gl, ["texture_coords"], false);
     }
 }
 
@@ -66,6 +27,41 @@ window.Cube = window.classes.Cube = class Cube extends Shape {
                 var square_transform = Mat4.rotation(x == 0 ? Math.PI / 2 : 0, Vec.of(1, 0, 0)).times(Mat4.rotation(Math.PI * y - (x == 1 ? Math.PI / 2 : 0), Vec.of(0, 1, 0))).times(Mat4.translation([0, 0, 1]));
                 Square.insert_transformed_copy_into(this, [], square_transform);
             }
+    }
+}
+
+window.Circle = window.classes.Circle = class Circle extends Shape {
+    constructor(rows, columns) {
+        super("positions", "normals", "texture_coords");
+        const circle_points = Array(rows).fill(Vec.of(.75, 0, 0)).map((p,i,a)=>Mat4.translation([.70, 0, 0]).times(Mat4.rotation(i / (a.length - 1) * 2 * Math.PI, Vec.of(0, -1, 0))).times(p.to4(1)).to3());
+        Surface_Of_Revolution.insert_transformed_copy_into(this, [rows, columns, circle_points]);
+    }
+}
+
+window.Torus = window.classes.Torus = class Torus extends Shape {
+    constructor(rows, columns) {
+        super("positions", "normals", "texture_coords");
+        const circle_points = Array(rows).fill(Vec.of(.75, 0, 0)).map((p,i,a)=>Mat4.translation([-1, 0, 0]).times(Mat4.rotation(i / (a.length - 1) * 2 * Math.PI, Vec.of(0, -1, 0))).times(p.to4(1)).to3());
+        Surface_Of_Revolution.insert_transformed_copy_into(this, [rows, columns, circle_points]);
+    }
+}
+
+window.Capped_Cylinder = window.classes.Capped_Cylinder = class Capped_Cylinder extends Shape {
+    constructor(rows, columns, texture_range) {
+        super("positions", "normals", "texture_coords");
+        Cylindrical_Tube.insert_transformed_copy_into(this, [rows, columns, texture_range]);
+        P_2D.insert_transformed_copy_into(this, [1, columns], Mat4.translation([0, 0, .5]));
+        P_2D.insert_transformed_copy_into(this, [1, columns], Mat4.rotation(Math.PI, Vec.of(0, 1, 0)).times(Mat4.translation([0, 0, .5])));
+    }
+}
+
+window.smallSquare = window.classes.smallSquare = class smallSquare extends Shape {
+    constructor() {
+        super("positions", "normals", "texture_coords");
+        this.positions.push(...Vec.cast([-.5, -.5, 0], [.5, -.5, 0], [-.5, .5, 0], [.5, .5, 0]));
+        this.normals.push(...Vec.cast([0, 0, .5], [0, 0, .5], [0, 0, .5], [0, 0, .5]));
+        this.texture_coords.push(...Vec.cast([0, 0], [.5, 0], [0, .5], [.5, .5]));
+        this.indices.push(0, 1, 2, 1, 3, 2);
     }
 }
 
@@ -97,6 +93,35 @@ window.SubSphere = window.classes.SubSphere = class SubSphere extends Shape {
         this.helperRecurse(first, b, third, count - 1);
         this.helperRecurse(second, third, c, count - 1);
         this.helperRecurse(first, third, second, count - 1);
+    }
+}
+
+window.Custom_Line = window.classes.Custom_Line = class Custom_Line extends Shape {
+    constructor(max_size) {
+        super("positions", "normals", "texture_coords");
+        this.max_size = max_size;
+        var line_matrix = Mat4.identity();
+        for (var i = 0; i < max_size; i++) {
+            Square.insert_transformed_copy_into(this, [], line_matrix);
+            line_matrix.post_multiply(Mat4.translation([1.5, 0, 0]));
+        }
+    }
+    set_string(line, gl=this.gl) {
+        this.texture_coords = [];
+        for (var i = 0; i < this.max_size; i++) {
+            var width = Math.floor((i < line.length ? line.charCodeAt(i) : ' '.charCodeAt()) / 16)
+              , height = Math.floor((i < line.length ? line.charCodeAt(i) : ' '.charCodeAt()) % 16);
+            var newLine = 3
+              , size = 32
+              , sizefloor = size - newLine;
+            var lineDimension = size * 16
+              , left = (height * size + newLine) / lineDimension
+              , top = (width * size + newLine) / lineDimension
+              , right = (height * size + sizefloor) / lineDimension
+              , bottom = (width * size + sizefloor + 5) / lineDimension;
+            this.texture_coords.push(...Vec.cast([left, 1 - bottom], [right, 1 - bottom], [left, 1 - top], [right, 1 - top]));
+        }
+        this.copy_onto_graphics_card(gl, ["texture_coords"], false);
     }
 }
 
@@ -162,15 +187,6 @@ window.P_2D = window.classes.P_2D = class P_2D extends Surface_Of_Revolution {
         this.texture_coords.forEach((x,i,a)=>a[i] = this.positions[i].map(x=>x / 2 + .5).slice(0, 2));
     }
 }
-window.smallSquare = window.classes.smallSquare = class smallSquare extends Shape {
-    constructor() {
-        super("positions", "normals", "texture_coords");
-        this.positions.push(...Vec.cast([-.5, -.5, 0], [.5, -.5, 0], [-.5, .5, 0], [.5, .5, 0]));
-        this.normals.push(...Vec.cast([0, 0, .5], [0, 0, .5], [0, 0, .5], [0, 0, .5]));
-        this.texture_coords.push(...Vec.cast([0, 0], [.5, 0], [0, .5], [.5, .5]));
-        this.indices.push(0, 1, 2, 1, 3, 2);
-    }
-}
 
 window.Rock = window.classes.Rock = class Rock extends Shape {
     constructor() {
@@ -206,31 +222,6 @@ window.Cylindrical_Tube = window.classes.Cylindrical_Tube = class Cylindrical_Tu
 window.U_CONE = window.classes.U_CONE = class U_CONE extends Surface_Of_Revolution {
     constructor(rows, columns, texture_range) {
         super(rows, columns, Vec.cast([0, 0, 1], [1, 0, -1]), texture_range);
-    }
-}
-
-window.Circle = window.classes.Circle = class Circle extends Shape {
-    constructor(rows, columns) {
-        super("positions", "normals", "texture_coords");
-        const circle_points = Array(rows).fill(Vec.of(.75, 0, 0)).map((p,i,a)=>Mat4.translation([.70, 0, 0]).times(Mat4.rotation(i / (a.length - 1) * 2 * Math.PI, Vec.of(0, -1, 0))).times(p.to4(1)).to3());
-        Surface_Of_Revolution.insert_transformed_copy_into(this, [rows, columns, circle_points]);
-    }
-}
-
-window.Torus = window.classes.Torus = class Torus extends Shape {
-    constructor(rows, columns) {
-        super("positions", "normals", "texture_coords");
-        const circle_points = Array(rows).fill(Vec.of(.75, 0, 0)).map((p,i,a)=>Mat4.translation([-1, 0, 0]).times(Mat4.rotation(i / (a.length - 1) * 2 * Math.PI, Vec.of(0, -1, 0))).times(p.to4(1)).to3());
-        Surface_Of_Revolution.insert_transformed_copy_into(this, [rows, columns, circle_points]);
-    }
-}
-
-window.Capped_Cylinder = window.classes.Capped_Cylinder = class Capped_Cylinder extends Shape {
-    constructor(rows, columns, texture_range) {
-        super("positions", "normals", "texture_coords");
-        Cylindrical_Tube.insert_transformed_copy_into(this, [rows, columns, texture_range]);
-        P_2D.insert_transformed_copy_into(this, [1, columns], Mat4.translation([0, 0, .5]));
-        P_2D.insert_transformed_copy_into(this, [1, columns], Mat4.rotation(Math.PI, Vec.of(0, 1, 0)).times(Mat4.translation([0, 0, .5])));
     }
 }
 
@@ -278,154 +269,6 @@ window.Basic_Shader = window.classes.Basic_Shader = class Basic_Shader extends S
     }
     fragment_glsl_code() {
         return `void main() { gl_FragColor = VERTEX_COLOR; }`;
-    }
-}
-
-window.Phong_Shader = window.classes.Phong_Shader = class Phong_Shader extends Shader {
-    material(color, properties) {
-        return new class Material {
-            constructor(shader, color=Color.of(0, 0, 0, 1), ambient=0, diffusivity=1, specularity=1, smoothness=40) {
-                Object.assign(this, {
-                    shader,
-                    color,
-                    ambient,
-                    diffusivity,
-                    specularity,
-                    smoothness
-                });
-                Object.assign(this, properties);
-            }
-            override(properties) {
-                const copied = new this.constructor();
-                Object.assign(copied, this);
-                Object.assign(copied, properties);
-                copied.color = copied.color.copy();
-                if (properties["opacity"] != undefined)
-                    copied.color[3] = properties["opacity"];
-                return copied;
-            }
-        }
-        (this,color);
-    }
-    map_attribute_name_to_buffer_name(name) {
-        return {
-            object_space_pos: "positions",
-            normal: "normals",
-            tex_coord: "texture_coords"
-        }[name];
-    }
-    shared_glsl_code() {
-        return `precision mediump float;
-        const int N_LIGHTS = 2;
-        uniform float ambient, diffusivity, specularity, smoothness, animation_time, attenuation_factor[N_LIGHTS];
-        uniform bool GOURAUD, COLOR_NORMALS, USE_TEXTURE;
-        uniform vec4 lightPosition[N_LIGHTS], lightColor[N_LIGHTS], shapeColor;
-        varying vec3 N, E;
-        varying vec2 f_tex_coord;
-        varying vec4 VERTEX_COLOR;
-        varying vec3 L[N_LIGHTS], H[N_LIGHTS];
-        varying float dist[N_LIGHTS];
-        vec3 phong_model_lights( vec3 N )
-          { vec3 result = vec3(0.0);
-            for(int i = 0; i < N_LIGHTS; i++)
-              {
-                float attenuation_multiplier = 1.0 / (1.0 + attenuation_factor[i] * (dist[i] * dist[i]));
-                float diffuse  =      max( dot(N, L[i]), 0.0 );
-                float specular = pow( max( dot(N, H[i]), 0.0 ), smoothness );
-                result += attenuation_multiplier * ( shapeColor.xyz * diffusivity * diffuse + lightColor[i].xyz * specularity * specular );
-              }
-            return result;
-          }
-        `;
-    }
-    vertex_glsl_code() {
-        return `
-        attribute vec3 object_space_pos, normal;
-        attribute vec2 tex_coord;
-        uniform mat4 camera_transform, camera_model_transform, projection_camera_model_transform;
-        uniform mat3 inverse_transpose_modelview;
-        void main() {
-          gl_Position = projection_camera_model_transform * vec4(object_space_pos, 1.0);
-          N = normalize( inverse_transpose_modelview * normal );
-          f_tex_coord = tex_coord;
-          if( COLOR_NORMALS ) {
-            VERTEX_COLOR = vec4( N[0] > 0.0 ? N[0] : sin( animation_time * 3.0   ) * -N[0],
-            N[1] > 0.0 ? N[1] : sin( animation_time * 15.0  ) * -N[1],
-            N[2] > 0.0 ? N[2] : sin( animation_time * 45.0  ) * -N[2] , 1.0 );
-            return;
-          }
-          vec3 screen_space_pos = ( camera_model_transform * vec4(object_space_pos, 1.0) ).xyz;
-          E = normalize( -screen_space_pos );
-          for( int i = 0; i < N_LIGHTS; i++ ) {
-            L[i] = normalize( ( camera_transform * lightPosition[i] ).xyz - lightPosition[i].w * screen_space_pos );
-            H[i] = normalize( L[i] + E );
-            dist[i]  = lightPosition[i].w > 0.0 ? distance((camera_transform * lightPosition[i]).xyz, screen_space_pos)
-                                                : distance( attenuation_factor[i] * -lightPosition[i].xyz, object_space_pos.xyz );
-          }
-          if( GOURAUD ) {
-            VERTEX_COLOR = vec4( shapeColor.xyz * ambient, shapeColor.w);
-            VERTEX_COLOR.xyz += phong_model_lights( N );
-          }
-        }`;
-    }
-    fragment_glsl_code() {
-        return `
-        uniform sampler2D texture;
-        void main() { 
-        if( GOURAUD || COLOR_NORMALS ) {
-            gl_FragColor = VERTEX_COLOR;
-            return;
-        }
-        vec4 tex_color = texture2D( texture, f_tex_coord );
-        if( USE_TEXTURE && tex_color.w < .01 ) discard;
-        if( USE_TEXTURE ) gl_FragColor = vec4( ( tex_color.xyz + shapeColor.xyz ) * ambient, shapeColor.w * tex_color.w ); 
-        else gl_FragColor = vec4( shapeColor.xyz * ambient, shapeColor.w );
-        gl_FragColor.xyz += phong_model_lights( N );
-        }`;
-    }
-    update_GPU(g_state, model_transform, material, gpu=this.g_addrs, gl=this.gl) {
-        this.update_matrices(g_state, model_transform, gpu, gl);
-        gl.uniform1f(gpu.animation_time_loc, g_state.animation_time / 1000);
-        if (g_state.gouraud === undefined)
-            g_state.gouraud = g_state.color_normals = false;
-        gl.uniform1i(gpu.GOURAUD_loc, g_state.gouraud || material.gouraud);
-        gl.uniform1i(gpu.COLOR_NORMALS_loc, g_state.color_normals);
-        gl.uniform4fv(gpu.shapeColor_loc, material.color);
-        gl.uniform1f(gpu.ambient_loc, material.ambient);
-        gl.uniform1f(gpu.diffusivity_loc, material.diffusivity);
-        gl.uniform1f(gpu.specularity_loc, material.specularity);
-        gl.uniform1f(gpu.smoothness_loc, material.smoothness);
-        if (material.texture) {
-            gpu.shader_attributes["tex_coord"].enabled = true;
-            gl.uniform1f(gpu.USE_TEXTURE_loc, 1);
-            gl.bindTexture(gl.TEXTURE_2D, material.texture.id);
-        } else {
-            gl.uniform1f(gpu.USE_TEXTURE_loc, 0);
-            gpu.shader_attributes["tex_coord"].enabled = false;
-        }
-        if (!g_state.lights.length)
-            return;
-        var lightPositions_flattened = []
-          , lightColors_flattened = []
-          , lightAttenuations_flattened = [];
-        for (var i = 0; i < 4 * g_state.lights.length; i++) {
-            lightPositions_flattened.push(g_state.lights[Math.floor(i / 4)].position[i % 4]);
-            lightColors_flattened.push(g_state.lights[Math.floor(i / 4)].color[i % 4]);
-            lightAttenuations_flattened[Math.floor(i / 4)] = g_state.lights[Math.floor(i / 4)].attenuation;
-        }
-        gl.uniform4fv(gpu.lightPosition_loc, lightPositions_flattened);
-        gl.uniform4fv(gpu.lightColor_loc, lightColors_flattened);
-        gl.uniform1fv(gpu.attenuation_factor_loc, lightAttenuations_flattened);
-    }
-    update_matrices(g_state, model_transform, gpu, gl) {
-        let[P,C,M] = [g_state.projection_transform, g_state.camera_transform, model_transform]
-          , CM = C.times(M)
-          , PCM = P.times(CM)
-          , inv_CM = Mat4.inverse(CM).sub_block([0, 0], [3, 3]);
-        gl.uniformMatrix4fv(gpu.camera_transform_loc, false, Mat.flatten_2D_to_1D(C.transposed()));
-        gl.uniformMatrix4fv(gpu.camera_model_transform_loc, false, Mat.flatten_2D_to_1D(CM.transposed()));
-        gl.uniformMatrix4fv(gpu.projection_camera_model_transform_loc, false, Mat.flatten_2D_to_1D(PCM.transposed()));
-        gl.uniformMatrix3fv(gpu.inverse_transpose_modelview_loc, false, Mat.flatten_2D_to_1D(inv_CM));
     }
 }
 
@@ -621,6 +464,154 @@ window.Shadow_Shader = window.classes.Shadow_Shader = class Shadow_Shader extend
     }
 }
 
+window.Phong_Shader = window.classes.Phong_Shader = class Phong_Shader extends Shader {
+    material(color, properties) {
+        return new class Material {
+            constructor(shader, color=Color.of(0, 0, 0, 1), ambient=0, diffusivity=1, specularity=1, smoothness=40) {
+                Object.assign(this, {
+                    shader,
+                    color,
+                    ambient,
+                    diffusivity,
+                    specularity,
+                    smoothness
+                });
+                Object.assign(this, properties);
+            }
+            override(properties) {
+                const copied = new this.constructor();
+                Object.assign(copied, this);
+                Object.assign(copied, properties);
+                copied.color = copied.color.copy();
+                if (properties["opacity"] != undefined)
+                    copied.color[3] = properties["opacity"];
+                return copied;
+            }
+        }
+        (this,color);
+    }
+    map_attribute_name_to_buffer_name(name) {
+        return {
+            object_space_pos: "positions",
+            normal: "normals",
+            tex_coord: "texture_coords"
+        }[name];
+    }
+    shared_glsl_code() {
+        return `precision mediump float;
+        const int N_LIGHTS = 2;
+        uniform float ambient, diffusivity, specularity, smoothness, animation_time, attenuation_factor[N_LIGHTS];
+        uniform bool GOURAUD, COLOR_NORMALS, USE_TEXTURE;
+        uniform vec4 lightPosition[N_LIGHTS], lightColor[N_LIGHTS], shapeColor;
+        varying vec3 N, E;
+        varying vec2 f_tex_coord;
+        varying vec4 VERTEX_COLOR;
+        varying vec3 L[N_LIGHTS], H[N_LIGHTS];
+        varying float dist[N_LIGHTS];
+        vec3 phong_model_lights( vec3 N )
+          { vec3 result = vec3(0.0);
+            for(int i = 0; i < N_LIGHTS; i++)
+              {
+                float attenuation_multiplier = 1.0 / (1.0 + attenuation_factor[i] * (dist[i] * dist[i]));
+                float diffuse  =      max( dot(N, L[i]), 0.0 );
+                float specular = pow( max( dot(N, H[i]), 0.0 ), smoothness );
+                result += attenuation_multiplier * ( shapeColor.xyz * diffusivity * diffuse + lightColor[i].xyz * specularity * specular );
+              }
+            return result;
+          }
+        `;
+    }
+    vertex_glsl_code() {
+        return `
+        attribute vec3 object_space_pos, normal;
+        attribute vec2 tex_coord;
+        uniform mat4 camera_transform, camera_model_transform, projection_camera_model_transform;
+        uniform mat3 inverse_transpose_modelview;
+        void main() {
+          gl_Position = projection_camera_model_transform * vec4(object_space_pos, 1.0);
+          N = normalize( inverse_transpose_modelview * normal );
+          f_tex_coord = tex_coord;
+          if( COLOR_NORMALS ) {
+            VERTEX_COLOR = vec4( N[0] > 0.0 ? N[0] : sin( animation_time * 3.0   ) * -N[0],
+            N[1] > 0.0 ? N[1] : sin( animation_time * 15.0  ) * -N[1],
+            N[2] > 0.0 ? N[2] : sin( animation_time * 45.0  ) * -N[2] , 1.0 );
+            return;
+          }
+          vec3 screen_space_pos = ( camera_model_transform * vec4(object_space_pos, 1.0) ).xyz;
+          E = normalize( -screen_space_pos );
+          for( int i = 0; i < N_LIGHTS; i++ ) {
+            L[i] = normalize( ( camera_transform * lightPosition[i] ).xyz - lightPosition[i].w * screen_space_pos );
+            H[i] = normalize( L[i] + E );
+            dist[i]  = lightPosition[i].w > 0.0 ? distance((camera_transform * lightPosition[i]).xyz, screen_space_pos)
+                                                : distance( attenuation_factor[i] * -lightPosition[i].xyz, object_space_pos.xyz );
+          }
+          if( GOURAUD ) {
+            VERTEX_COLOR = vec4( shapeColor.xyz * ambient, shapeColor.w);
+            VERTEX_COLOR.xyz += phong_model_lights( N );
+          }
+        }`;
+    }
+    fragment_glsl_code() {
+        return `
+        uniform sampler2D texture;
+        void main() { 
+        if( GOURAUD || COLOR_NORMALS ) {
+            gl_FragColor = VERTEX_COLOR;
+            return;
+        }
+        vec4 tex_color = texture2D( texture, f_tex_coord );
+        if( USE_TEXTURE && tex_color.w < .01 ) discard;
+        if( USE_TEXTURE ) gl_FragColor = vec4( ( tex_color.xyz + shapeColor.xyz ) * ambient, shapeColor.w * tex_color.w ); 
+        else gl_FragColor = vec4( shapeColor.xyz * ambient, shapeColor.w );
+        gl_FragColor.xyz += phong_model_lights( N );
+        }`;
+    }
+    update_GPU(g_state, model_transform, material, gpu=this.g_addrs, gl=this.gl) {
+        this.update_matrices(g_state, model_transform, gpu, gl);
+        gl.uniform1f(gpu.animation_time_loc, g_state.animation_time / 1000);
+        if (g_state.gouraud === undefined)
+            g_state.gouraud = g_state.color_normals = false;
+        gl.uniform1i(gpu.GOURAUD_loc, g_state.gouraud || material.gouraud);
+        gl.uniform1i(gpu.COLOR_NORMALS_loc, g_state.color_normals);
+        gl.uniform4fv(gpu.shapeColor_loc, material.color);
+        gl.uniform1f(gpu.ambient_loc, material.ambient);
+        gl.uniform1f(gpu.diffusivity_loc, material.diffusivity);
+        gl.uniform1f(gpu.specularity_loc, material.specularity);
+        gl.uniform1f(gpu.smoothness_loc, material.smoothness);
+        if (material.texture) {
+            gpu.shader_attributes["tex_coord"].enabled = true;
+            gl.uniform1f(gpu.USE_TEXTURE_loc, 1);
+            gl.bindTexture(gl.TEXTURE_2D, material.texture.id);
+        } else {
+            gl.uniform1f(gpu.USE_TEXTURE_loc, 0);
+            gpu.shader_attributes["tex_coord"].enabled = false;
+        }
+        if (!g_state.lights.length)
+            return;
+        var lightPositions_flattened = []
+          , lightColors_flattened = []
+          , lightAttenuations_flattened = [];
+        for (var i = 0; i < 4 * g_state.lights.length; i++) {
+            lightPositions_flattened.push(g_state.lights[Math.floor(i / 4)].position[i % 4]);
+            lightColors_flattened.push(g_state.lights[Math.floor(i / 4)].color[i % 4]);
+            lightAttenuations_flattened[Math.floor(i / 4)] = g_state.lights[Math.floor(i / 4)].attenuation;
+        }
+        gl.uniform4fv(gpu.lightPosition_loc, lightPositions_flattened);
+        gl.uniform4fv(gpu.lightColor_loc, lightColors_flattened);
+        gl.uniform1fv(gpu.attenuation_factor_loc, lightAttenuations_flattened);
+    }
+    update_matrices(g_state, model_transform, gpu, gl) {
+        let[P,C,M] = [g_state.projection_transform, g_state.camera_transform, model_transform]
+          , CM = C.times(M)
+          , PCM = P.times(CM)
+          , inv_CM = Mat4.inverse(CM).sub_block([0, 0], [3, 3]);
+        gl.uniformMatrix4fv(gpu.camera_transform_loc, false, Mat.flatten_2D_to_1D(C.transposed()));
+        gl.uniformMatrix4fv(gpu.camera_model_transform_loc, false, Mat.flatten_2D_to_1D(CM.transposed()));
+        gl.uniformMatrix4fv(gpu.projection_camera_model_transform_loc, false, Mat.flatten_2D_to_1D(PCM.transposed()));
+        gl.uniformMatrix3fv(gpu.inverse_transpose_modelview_loc, false, Mat.flatten_2D_to_1D(inv_CM));
+    }
+}
+
 window.Fake_Bump_Map = window.classes.Fake_Bump_Map = class Fake_Bump_Map extends Phong_Shader {
     fragment_glsl_code() {
         return `
@@ -632,6 +623,97 @@ window.Fake_Bump_Map = window.classes.Fake_Bump_Map = class Fake_Bump_Map extend
         else gl_FragColor = vec4( shapeColor.xyz * ambient, shapeColor.w );
         gl_FragColor.xyz += phong_model_lights( bumped_N ); 
         }`;
+    }
+}
+
+window.Shape_From_File = window.classes.Shape_From_File = class Shape_From_File extends Shape {
+    constructor(filename) {
+        super("positions", "normals", "texture_coords");
+        this.load_file(filename);
+    }
+    load_file(filename) {
+        return fetch(filename).then(response=>{
+            if (response.ok)
+                return Promise.resolve(response.text())
+            else
+                return Promise.reject(response.status)
+        }
+        ).then(obj_file_contents=>this.parse_into_mesh(obj_file_contents)).catch(error=>{
+            this.copy_onto_graphics_card(this.gl);
+        }
+        )
+    }
+    parse_into_mesh(data) {
+        var vertices = []
+          , vNorm = []
+          , textu = []
+          , separate = {};
+        separate.vertices = [];
+        separate.norms = [];
+        separate.textu = [];
+        separate.hashindices = {};
+        separate.indices = [];
+        separate.index = 0;
+        var lines = data.split('\n');
+        var vertRE = /^v\s/;
+        var NORMAL_RE = /^vn\s/;
+        var TEXTURE_RE = /^vt\s/;
+        var reFac = /^f\s/;
+        var WHITESPACE_RE = /\s+/;
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            var pElm = line.split(WHITESPACE_RE);
+            pElm.shift();
+            if (vertRE.test(line))
+                vertices.push.apply(vertices, pElm);
+            else if (NORMAL_RE.test(line))
+                vNorm.push.apply(vNorm, pElm);
+            else if (TEXTURE_RE.test(line))
+                textu.push.apply(textu, pElm);
+            else if (reFac.test(line)) {
+                var quad = false;
+                for (var j = 0, eleLen = pElm.length; j < eleLen; j++) {
+                    if (j === 3 && !quad) {
+                        j = 2;
+                        quad = true;
+                    }
+                    if (pElm[j]in separate.hashindices)
+                        separate.indices.push(separate.hashindices[pElm[j]]);
+                    else {
+                        var vertex = pElm[j].split('/');
+                        separate.vertices.push(+vertices[(vertex[0] - 1) * 3 + 0]);
+                        separate.vertices.push(+vertices[(vertex[0] - 1) * 3 + 1]);
+                        separate.vertices.push(+vertices[(vertex[0] - 1) * 3 + 2]);
+                        if (textu.length) {
+                            separate.textu.push(+textu[((vertex[1] - 1) || vertex[0]) * 2 + 0]);
+                            separate.textu.push(+textu[((vertex[1] - 1) || vertex[0]) * 2 + 1]);
+                        }
+                        separate.norms.push(+vNorm[((vertex[2] - 1) || vertex[0]) * 3 + 0]);
+                        separate.norms.push(+vNorm[((vertex[2] - 1) || vertex[0]) * 3 + 1]);
+                        separate.norms.push(+vNorm[((vertex[2] - 1) || vertex[0]) * 3 + 2]);
+                        separate.hashindices[pElm[j]] = separate.index;
+                        separate.indices.push(separate.index);
+                        separate.index += 1;
+                    }
+                    if (j === 3 && quad)
+                        separate.indices.push(separate.hashindices[pElm[0]]);
+                }
+            }
+
+        }
+        for (var j = 0; j < separate.vertices.length / 3; j++) {
+            this.positions.push(Vec.of(separate.vertices[3 * j], separate.vertices[3 * j + 1], separate.vertices[3 * j + 2]));
+            this.normals.push(Vec.of(separate.norms[3 * j], separate.norms[3 * j + 1], separate.norms[3 * j + 2]));
+            this.texture_coords.push(Vec.of(separate.textu[2 * j], separate.textu[2 * j + 1]));
+        }
+        this.indices = separate.indices;
+        this.normalize_positions(false);
+        this.copy_onto_graphics_card(this.gl);
+        this.ready = true;
+    }
+    draw(graphics_state, model_transform, material) {
+        if (this.ready)
+            super.draw(graphics_state, model_transform, material);
     }
 }
 
@@ -744,96 +826,5 @@ window.Movement_Controls = window.classes.Movement_Controls = class Movement_Con
         const inv = Mat4.inverse(this.target());
         this.pos = inv.times(Vec.of(0, 0, 0, 1));
         this.z_axis = inv.times(Vec.of(0, 0, 1, 0));
-    }
-}
-
-window.Shape_From_File = window.classes.Shape_From_File = class Shape_From_File extends Shape {
-    constructor(filename) {
-        super("positions", "normals", "texture_coords");
-        this.load_file(filename);
-    }
-    load_file(filename) {
-        return fetch(filename).then(response=>{
-            if (response.ok)
-                return Promise.resolve(response.text())
-            else
-                return Promise.reject(response.status)
-        }
-        ).then(obj_file_contents=>this.parse_into_mesh(obj_file_contents)).catch(error=>{
-            this.copy_onto_graphics_card(this.gl);
-        }
-        )
-    }
-    parse_into_mesh(data) {
-        var vertices = []
-          , vNorm = []
-          , textu = []
-          , separate = {};
-        separate.vertices = [];
-        separate.norms = [];
-        separate.textu = [];
-        separate.hashindices = {};
-        separate.indices = [];
-        separate.index = 0;
-        var lines = data.split('\n');
-        var vertRE = /^v\s/;
-        var NORMAL_RE = /^vn\s/;
-        var TEXTURE_RE = /^vt\s/;
-        var reFac = /^f\s/;
-        var WHITESPACE_RE = /\s+/;
-        for (var i = 0; i < lines.length; i++) {
-            var line = lines[i].trim();
-            var pElm = line.split(WHITESPACE_RE);
-            pElm.shift();
-            if (vertRE.test(line))
-                vertices.push.apply(vertices, pElm);
-            else if (NORMAL_RE.test(line))
-                vNorm.push.apply(vNorm, pElm);
-            else if (TEXTURE_RE.test(line))
-                textu.push.apply(textu, pElm);
-            else if (reFac.test(line)) {
-                var quad = false;
-                for (var j = 0, eleLen = pElm.length; j < eleLen; j++) {
-                    if (j === 3 && !quad) {
-                        j = 2;
-                        quad = true;
-                    }
-                    if (pElm[j]in separate.hashindices)
-                        separate.indices.push(separate.hashindices[pElm[j]]);
-                    else {
-                        var vertex = pElm[j].split('/');
-                        separate.vertices.push(+vertices[(vertex[0] - 1) * 3 + 0]);
-                        separate.vertices.push(+vertices[(vertex[0] - 1) * 3 + 1]);
-                        separate.vertices.push(+vertices[(vertex[0] - 1) * 3 + 2]);
-                        if (textu.length) {
-                            separate.textu.push(+textu[((vertex[1] - 1) || vertex[0]) * 2 + 0]);
-                            separate.textu.push(+textu[((vertex[1] - 1) || vertex[0]) * 2 + 1]);
-                        }
-                        separate.norms.push(+vNorm[((vertex[2] - 1) || vertex[0]) * 3 + 0]);
-                        separate.norms.push(+vNorm[((vertex[2] - 1) || vertex[0]) * 3 + 1]);
-                        separate.norms.push(+vNorm[((vertex[2] - 1) || vertex[0]) * 3 + 2]);
-                        separate.hashindices[pElm[j]] = separate.index;
-                        separate.indices.push(separate.index);
-                        separate.index += 1;
-                    }
-                    if (j === 3 && quad)
-                        separate.indices.push(separate.hashindices[pElm[0]]);
-                }
-            }
-
-        }
-        for (var j = 0; j < separate.vertices.length / 3; j++) {
-            this.positions.push(Vec.of(separate.vertices[3 * j], separate.vertices[3 * j + 1], separate.vertices[3 * j + 2]));
-            this.normals.push(Vec.of(separate.norms[3 * j], separate.norms[3 * j + 1], separate.norms[3 * j + 2]));
-            this.texture_coords.push(Vec.of(separate.textu[2 * j], separate.textu[2 * j + 1]));
-        }
-        this.indices = separate.indices;
-        this.normalize_positions(false);
-        this.copy_onto_graphics_card(this.gl);
-        this.ready = true;
-    }
-    draw(graphics_state, model_transform, material) {
-        if (this.ready)
-            super.draw(graphics_state, model_transform, material);
     }
 }
