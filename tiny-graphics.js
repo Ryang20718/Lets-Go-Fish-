@@ -142,7 +142,7 @@ class Mat4 extends Mat                               // Generate special 4x4 mat
 
 window.Keyboard_Manager = window.tiny_graphics.Keyboard_Manager =
 class Keyboard_Manager     // This class maintains a running list of which keys are depressed.  You can map combinations of shortcut
-  {                        // keys to trigger callbacks you provide by calling add().  See add()'s arguments.  The shortcut list is 
+  {    
 
     constructor( target = document, callback_behavior = ( callback, event ) => callback( event ) )
       { this.saved_controls = {};     
@@ -215,9 +215,9 @@ class Vertex_Buffer           // To use Vertex_Buffer, make a subclass of it tha
       }                                                               // If no indices were provided, assume the vertices are arranged
       else  gl.drawArrays( this.gl[type], 0, this.positions.length );          // as triples of positions in a field called "positions".
     }
-  draw( graphics_state, model_transform, material, type = "TRIANGLES", gl = this.gl )        // To appear onscreen, a shape of any variety
+  draw( graphics_state, model_transform, material, type = "TRIANGLES", gl = this.gl )        // To aty
     { if( !this.gl ) throw "This shape's arrays are not copied over to graphics card yet.";  // goes through this draw() function, which
-      material.shader.activate();                                                            // executes the shader programs.  The shaders
+      material.shader.activate();                                                            // e  The shaders
       material.shader.update_GPU( graphics_state, model_transform, material );               // draw the right shape due to pre-selecting
                                                                                              // the correct buffer region in the GPU that
       for( let [ attr_name, attribute ] of Object.entries( material.shader.g_addrs.shader_attributes ) )  // holds that shape's data.
@@ -238,14 +238,16 @@ class Vertex_Buffer           // To use Vertex_Buffer, make a subclass of it tha
 
 window.Shape = window.tiny_graphics.Shape =
 class Shape extends Vertex_Buffer
-{           // This class is used the same way as Vertex_Buffer, by subclassing it and writing a constructor that fills in certain fields.
+{          
+    
+    
 
   static insert_transformed_copy_into( recipient, args, points_transform = Mat4.identity() )    // For building compound shapes.
-    { const temp_shape = new this( ...args );  // If you try to bypass making a temporary shape and instead directly insert new data into
-                                               // the recipient, you'll run into trouble when the recursion tree stops at different depths.
+    { const temp_shape = new this( ...args );  // If you try to bypto
+                                               // the reifferent depths.
       recipient.indices.push( ...temp_shape.indices.map( i => i + recipient.positions.length ) );
       
-      for( let a of temp_shape.array_names )            // Copy each array from temp_shape into the recipient shape.
+      for( let a of temp_shape.array_names )            // Copy 
       { if( a == "positions" )                          // Apply points_transform to all points added during this call:
           recipient[a].push( ...temp_shape[a].map( p => points_transform.times( p.to4(1) ).to3() ) );
         else if( a == "normals" )                       // Do the same for normals, but use the inverse transpose matrix as math requires:
@@ -264,7 +266,7 @@ class Shape extends Vertex_Buffer
             this.positions =  temp_positions;       this.indices = temp_indices;    this.texture_coords = temp_tex_coords;
           }
         flat_shade()                // Automatically assign the correct normals to each triangular element to achieve flat shading.
-          {                         // Affect all recently added triangles (those past "offset" in the list).  Assumes that no
+          {                         // Affect all rece
             this.indexed = false;   // vertices are shared across seams.   First, iterate through the index or position triples:
             for( let counter = 0; counter < (this.indexed ? this.indices.length : this.positions.length); counter += 3 )
             { const indices = this.indexed ? [ this.indices[ counter ], this.indices[ counter + 1 ], this.indices[ counter + 2 ] ] : 
@@ -273,7 +275,7 @@ class Shape extends Vertex_Buffer
               const n1 = p1.minus(p2).cross( p3.minus(p1) ).normalized();    // Cross the two edge vectors of this
                                                                              // triangle together to get its normal.
                if( n1.times(.1).plus(p1).norm() < p1.norm() ) n1.scale(-1);  // Flip the normal if adding it to the 
-                                                                             // triangle brings it closer to the origin.
+                                                                             // t
               for( let i of indices ) this.normals[ i ] = Vec.from( n1 );    // Propagate this normal to the 3 vertices.
             }
           }
@@ -293,7 +295,7 @@ class Shape extends Vertex_Buffer
 
 
 window.Graphics_State = window.tiny_graphics.Graphics_State =
-class Graphics_State                                            // Stores things that affect multiple shapes, such as lights and the camera.
+class Graphics_State                                            
 { constructor( camera_transform = Mat4.identity(), projection_transform = Mat4.identity() ) 
     { Object.assign( this, { camera_transform, projection_transform, animation_time: 0, animation_delta_time: 0, lights: [] } ); }
 }
@@ -371,15 +373,15 @@ class Texture                                // The Texture class wraps a pointe
         { gl.pixelStorei  ( gl.UNPACK_FLIP_Y_WEBGL, bool_will_copy_to_GPU );
           gl.bindTexture  ( gl.TEXTURE_2D, this.id );
           gl.texImage2D   ( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image );
-          gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );  // Always use bi-linear sampling when the image
-                                                                                // will appear magnified. When it will appear shrunk,
-          if( use_mipMap )                                                      // it's best to use tri-linear sampling of its mip maps:
+          gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );  // 
+                                                                                // 
+          if( use_mipMap )                                                      // 
             { gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); gl.generateMipmap(gl.TEXTURE_2D); }
-          else                                                                        // We can also use the worst sampling method, to
-              gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );   // illustrate the difference that mip-mapping makes.
+          else                                                                        // 
+              gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );   // 
           this.loaded = true;
         }
-      if( bool_will_copy_to_GPU )                                               // Avoid a browser warning, and load the image file.
+      if( bool_will_copy_to_GPU )                                               // 
         { this.image.crossOrigin = "Anonymous"; this.image.src = this.filename; }
     }
 }
@@ -388,7 +390,7 @@ class Texture                                // The Texture class wraps a pointe
 window.Webgl_Manager = window.tiny_graphics.Webgl_Manager =
 class Webgl_Manager      // This class manages a whole graphics program for one on-page canvas, including its textures, shapes, shaders,
 {                        // and scenes.  In addition to requesting a WebGL context and storing the aforementioned items, it informs the
-                         // canvas of which functions to call during events - such as a key getting pressed or it being time to redraw.
+                         
   constructor( canvas, background_color, dimensions )
     { let gl, demos = [];
       Object.assign( this, { instances: new Map(), shapes_in_use: {}, scene_components: [], prev_time: 0, canvas,
@@ -400,19 +402,19 @@ class Webgl_Manager      // This class manages a whole graphics program for one 
       
       this.set_size( dimensions );
       gl.clearColor.apply( gl, background_color );    // Tell the GPU which color to clear the canvas with each frame.
-      gl.enable( gl.DEPTH_TEST );   gl.enable( gl.BLEND );            // Enable Z-Buffering test with blending.
-      gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );           // Specify an interpolation method for blending "transparent" 
-                                                                      // triangles over the existing pixels.
+      gl.enable( gl.DEPTH_TEST );   gl.enable( gl.BLEND );            
+      gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );           
+                                                                      
       gl.bindTexture(gl.TEXTURE_2D, gl.createTexture() ); // A single red pixel, as a placeholder image to prevent a console warning:
       gl.texImage2D (gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
          
-      window.requestAnimFrame = ( w =>                                    // Find the correct browser's version of requestAnimationFrame()
+      window.requestAnimFrame = ( w =>                                    
            w.requestAnimationFrame    || w.webkitRequestAnimationFrame    // needed for queue-ing up re-display events:
         || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame
         || function( callback, element ) { w.setTimeout(callback, 1000/60);  } )( window );
     }
-  set_size( dimensions = [ 1080, 600 ] )                // This function allows you to re-size the canvas anytime.  
-    { const [ width, height ] = dimensions;             // To work, it must change the size in CSS, wait for style to re-flow, 
+  set_size( dimensions = [ 1080, 600 ] )               
+    { const [ width, height ] = dimensions;             
       this.canvas.style[ "width" ]  =  width + "px";    // and then change the size in canvas attributes.
       this.canvas.style[ "height" ] = height + "px";     
       Object.assign( this,        { width, height } );   // Have to assign to both; these attributes on a canvas 
@@ -420,9 +422,9 @@ class Webgl_Manager      // This class manages a whole graphics program for one 
       this.gl.viewport( 0, 0, width, height );           // 
     }                                                    // 
   get_instance( shader_or_texture )                 // 
-    { if( this.instances[ shader_or_texture ] )     // or Texture) loaded, check if we already have one GPU-side first.
+    { if( this.instances[ shader_or_texture ] )     // e first.
         return this.instances[ shader_or_texture ];     // Return the one that already is loaded if it exists.  Otherwise,
-      if( typeof shader_or_texture == "string" )        // If a texture was requested, load it onto a GPU buffer.
+      if( typeof shader_or_texture == "string" )        // If a ter.
         return this.instances[ shader_or_texture ] = new Texture( this.gl, ...arguments );  // Or if it's a shader:
       return   this.instances[ shader_or_texture ] = new ( shader_or_texture )( this.gl );  // Compile it and put it on the GPU.
     }
@@ -444,7 +446,7 @@ class Webgl_Manager      // This class manages a whole graphics program for one 
 
 window.Scene_Component = window.tiny_graphics.Scene_Component =
 class Scene_Component       // The Scene_Component superclass is the base class for any scene part or code snippet that you can add to a
-{                           // canvas.  Make your own subclass(es) of this and override their methods "display()" and "make_control_panel()"
+{                           // c_control_panel()"
                             // to make them do something.  Finally, push them onto your Webgl_Manager's "scene_components" array.
   constructor( webgl_manager, control_box )
     { const callback_behavior = ( callback, event ) => 
@@ -485,9 +487,9 @@ class Scene_Component       // The Scene_Component superclass is the base class 
       if( !shortcut_combination ) return;
       this.key_controls.add( shortcut_combination, press, release );
     }
-  submit_shapes( webgl_manager, shapes )            // Call this to start using a set of shapes.  It ensures that this scene as well as the
-                                                    // Webgl_Manager has pointers to the shapes when needed.  It also loads each shape onto
-    { if( !this.shapes ) this.shapes = {};          // the GPU if other scenes haven't done so already.  The shapes will be accessible from
+  submit_shapes( webgl_manager, shapes )            // Call this to start using a sehapes.  It ensures that this scene as well as the
+                                                    // Webgl_Manager has pointewhen needed.  It also loads each shape onto
+    { if( !this.shapes ) this.shapes = {};          // 
       for( let s in shapes )                        // a scene by calling "this.ahapes".
         { if( webgl_manager.shapes_in_use[s] )                 // If two scenes give any shape the same name as an existing one, the
             this.shapes[s] = webgl_manager.shapes_in_use[s];   // existing one is used instead and the new shape is thrown out.
@@ -593,101 +595,5 @@ class Code_Manager                            // Break up a string containing co
           this.tokens.push( token )
           if( token.type != "whitespace" && token.type != "comment" ) this.no_comments.push( token.value );
         }  
-    }
-}
-
-
-window.Code_Widget = window.tiny_graphics.Code_Widget =
-class Code_Widget
-{ constructor( element, selected_class )
-    { let rules = [ ".code-widget .code-panel { background:white; overflow:auto; font-family:monospace; width:1060px; padding:10px; padding-bottom:40px; max-height: 500px; \
-                                                  border-radius:12px; box-shadow: 20px 20px 90px 0px powderblue inset, 5px 5px 30px 0px blue inset }",
-                ".code-widget .code-display { min-width:1800px; padding:10px; white-space:pre-wrap; background:transparent }",
-                ".code-widget .edit-button { left:800px; z-index:2; position:absolute; outline:0; height:80px; width:80px; border-radius:50% }",
-                ".code-widget table { display:block; overflow-x:auto; width:1080px; border-radius:25px; border-collapse:collapse; border: 2px solid black }",
-               ".code-widget table.class-list td { border-width:thin; background: #EEEEEE; padding:12px; font-family:monospace; border: 1px solid black }"
-                 ];
-
-      for( const r of rules ) document.styleSheets[0].insertRule( r, 1 );
-      
-      if( !window[ selected_class ] ) throw "Class not found.";
-      selected_class = window[ selected_class ];
-        
-
-      element = document.querySelector( "#" + element );
-      const code_panel = element.appendChild( document.createElement( "div" ) );
-      code_panel.className = "code-panel";
-      const text        = code_panel.appendChild( document.createElement( "p" ) );
-      text.textContent  = "Below is the code for the demo that's running.  Click links to see definitions!";
-      this.code_display = code_panel.appendChild( document.createElement( "div" ) );
-      this.code_display.className = "code-display";
-
-      const class_list = element.appendChild( document.createElement( "table" ) );
-      class_list.className = "class-list";   
-      const top_cell = class_list.insertRow( -1 ).insertCell( -1 );
-      top_cell.colSpan = 2;
-      top_cell.appendChild( document.createTextNode("Click below to navigate through all classes that are defined.") );
-      const content = top_cell.appendChild( document.createElement( "p" ) );
-      content.style = "text-align:center; margin:0; font-weight:bold";
-      content.innerHTML = "main-scene.js<br>Main Scene: ";
-      const main_scene_link = content.appendChild( document.createElement( "a" ) );
-      main_scene_link.href = "javascript:void(0);"
-      main_scene_link.addEventListener( 'click', () => this.display_code( selected_class ) );
-      main_scene_link.textContent = selected_class.name;
-
-      const second_cell = class_list.insertRow( -1 ).insertCell( -1 );
-      second_cell.colSpan = 2;
-      second_cell.style = "text-align:center; font-weight:bold";
-      const index_src_link = second_cell.appendChild( document.createElement( "a" ) );
-      index_src_link.href = "javascript:void(0);"
-      index_src_link.addEventListener( 'click', () => this.display_code() );
-      index_src_link.textContent = "This page's complete HTML source";
-
-      const third_row = class_list.insertRow( -1 );
-      third_row.style = "text-align:center";
-      third_row.innerHTML = "<td><b>tiny-graphics.js</b><br>(Always the same)</td> \
-                             <td><b>dependencies.js</b><br>(Different for every demo)</td>";
-    
-      const fourth_row = class_list.insertRow( -1 );
-
-      for( let list of [ tiny_graphics, classes ] )
-      { const cell = fourth_row.appendChild( document.createElement( "td" ) );
-        const class_names = Object.keys( list ).filter( x => x != selected_class.name );     // List all class names except the main one,
-        cell.style = "white-space:normal"                                                    // which we'll display separately.
-        for( let name of class_names )
-        { const class_link = cell.appendChild( document.createElement( "a" ) );
-          class_link.style["margin-right"] = "80px"
-          class_link.href = "javascript:void(0);"
-          class_link.addEventListener( 'click', () => this.display_code( window[name] ) );
-          class_link.textContent = name;
-          cell.appendChild( document.createTextNode(" ") );
-        }
-      }
-      this.display_code( selected_class );
-    }
-  display_code( class_to_display )                                                           // Pass undefined to choose index.html source.
-    { this.selected_class = class_to_display;
-      if( class_to_display ) this.format_code( class_to_display.toString() );
-      else fetch( document.location.href )
-                .then(   response => response.text() )
-                .then( pageSource => this.format_code( pageSource ) );
-    }
-  format_code( code_string )
-    { this.code_display.innerHTML = "";
-      const color_map = { string: "chocolate", comment: "green", regex: "blue", number: "magenta", 
-                            name: "black", punctuator: "red", whitespace: "black" };
-
-      for( let t of new Code_Manager( code_string ).tokens )
-        if( t.type == "name" && [ ...Object.keys( tiny_graphics ), ...Object.keys( classes ) ].includes( t.value ) )
-          { const link = this.code_display.appendChild( document.createElement( 'a' ) );
-            link.href = "javascript:void(0);"
-            link.addEventListener( 'click', () => this.display_code( window[ t.value ] ) );
-            link.textContent = t.value;
-          }
-        else
-          { const span = this.code_display.appendChild( document.createElement( 'span' ) );
-            span.style.color = color_map[t.type];
-            span.textContent = t.value;
-          }
     }
 }
