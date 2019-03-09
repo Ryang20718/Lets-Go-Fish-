@@ -936,48 +936,6 @@ class Fake_Bump_Map extends Phong_Shader                         // Same as Phon
 
 
 
-window.Global_Info_Table = window.classes.Global_Info_Table =
-class Global_Info_Table extends Scene_Component                 // A class that just toggles, monitors, and reports some 
-{ make_control_panel()                                          // global values via its control panel.
-    { const globals = this.globals;
-      globals.has_info_table = true;
-      this.key_triggered_button( "(Un)pause animation", ["Alt", "a"], function() { globals.animate ^= 1; } ); this.new_line();
-     
-     //
-      this.live_string( box => { box.textContent = "Animation Time: " + ( globals.graphics_state.animation_time/1000 ).toFixed(3) + "s" } );
-      this.live_string( box => { box.textContent = globals.animate ? " " : " (paused)" } );  this.new_line();
-     
-     
-     
-      this.key_triggered_button( "Gouraud shading",     ["Alt", "g"], function() { globals.graphics_state.gouraud       ^= 1;         } ); 
-      this.new_line();
-      this.key_triggered_button( "Normals shading",     ["Alt", "n"], function() { globals.graphics_state.color_normals ^= 1;         } ); 
-      this.new_line();
-      
-      const label = this.control_panel.appendChild( document.createElement( "p" ) );
-      label.style = "align:center";
-      label.innerHTML = "see values below";
-
-      const show_object = ( element, obj = globals ) => 
-      { if( this.box ) this.box.innerHTML = "";
-        else this.box = element.appendChild( Object.assign( document.createElement( "div" ), { style: "overflow:auto; width: 200px" } ) );
-        if( obj !== globals )
-          this.box.appendChild( Object.assign( document.createElement( "div" ), { className:"link", innerText: "(back to globals)", 
-                                               onmousedown: () => this.current_object = globals } ) )
-        if( obj.to_string ) return this.box.appendChild( Object.assign( document.createElement( "div" ), { innerText: obj.to_string() } ) );
-        for( let [key,val] of Object.entries( obj ) )
-        { if( typeof( val ) == "object" ) 
-            this.box.appendChild( Object.assign( document.createElement( "a" ), { className:"link", innerText: key, 
-                                                 onmousedown: () => this.current_object = val } ) )
-          else
-            this.box.appendChild( Object.assign( document.createElement( "span" ), { innerText: key + ": " + val.toString() } ) );
-          this.box.appendChild( document.createElement( "br" ) );
-        }
-      }
-      this.live_string( box => show_object( box, this.current_object ) );      
-    }
-}
-
 
 
 
