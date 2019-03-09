@@ -1,9 +1,9 @@
 window.Triangle = window.classes.Triangle =
 class Triangle extends Shape    // 
 { constructor()                 
-    { super( "positions", "normals", "texture_coords" );                       
+    { super( "pos", "normals", "texture_coords" );                       
 
-      this.positions      = [ Vec.of(0,0,0), Vec.of(1,0,0), Vec.of(0,1,0) ];
+      this.pos     = [ Vec.of(0,0,0), Vec.of(1,0,0), Vec.of(0,1,0) ];
       this.normals        = [ Vec.of(0,0,1), Vec.of(0,0,1), Vec.of(0,0,1) ];
       this.texture_coords = [ Vec.of(0,0),   Vec.of(1,0),   Vec.of(0,1)   ]; 
       this.indices        = [ 0, 1, 2 ];                         
@@ -146,28 +146,28 @@ class Grid_Patch extends Shape              //
   constructor( width, height, next_row_function, next_column_function, texture_coord_range = [ [ 0, width ], [ 0, height ] ]  )
     { super( "positions", "normals", "texture_coords" );
       let points = [];
-      for( let r = 0; r <= width; r++ ) 
+      for( let left = 0; left <= width; left++ ) 
       { points.push( new Array( height+1 ) );                                                    //
                                       
-        points[ r ][ 0 ] = next_row_function( r/width, points[ r-1 ] && points[ r-1 ][ 0 ] );      //                                                                                                   
+        points[ left ][ 0 ] = next_row_function( left/width, points[ left-1 ] && points[ left-1 ][ 0 ] );      //                                                                                                   
       }
-      for(   let r = 0; r <= width;    r++ )               // 
-        for( let c = 0; c <= height; c++ )
-        { if( c > 0 ) points[r][ c ] = next_column_function( c/height, points[r][ c-1 ], r/width );
+      for(   let left = 0; left <= width;    left++ )               // 
+        for( let k = 0; k <= height; k++ )
+        { if( k > 0 ) points[left][ k ] = next_column_function( k/height, points[left][ k-1 ], left/width );
       
-          this.positions.push( points[r][ c ] );        
-                                                                                      // Interpolate texture coords from a provided range.
-          const a1 = c/height, a2 = r/width, x_range = texture_coord_range[0], y_range = texture_coord_range[1];
+          this.positions.push( points[left][ k ] );        
+                                                                                     
+          const a1 = k/height, a2 = left/width, x_range = texture_coord_range[0], y_range = texture_coord_range[1];
           this.texture_coords.push( Vec.of( ( a1 )*x_range[1] + ( 1-a1 )*x_range[0], ( a2 )*y_range[1] + ( 1-a2 )*y_range[0] ) );
         }
-      for(   let r = 0; r <= width;    r++ )            // Generate normals by averaging the cross products of all defined neighbor pairs.
-        for( let c = 0; c <= height; c++ )
-        { let nowPos = points[r][c], nextTo = new Array(4), normal = Vec.of( 0,0,0 );          
+      for(   let left = 0; left <= width;    left++ )            
+        for( let k = 0; k <= height; k++ )
+        { let nowPos = points[left][k], nextTo = new Array(4), normal = Vec.of( 0,0,0 );          
           for( let [ y, dir ] of [ [ -1,0 ], [ 0,1 ], [ 1,0 ], [ 0,-1 ] ].entries() )         // Stnal order.
-            nextTo[y] = points[ r + dir[1] ] && points[ r + dir[1] ][ c + dir[0] ];        // Leavr
+            nextTo[y] = points[ left + dir[1] ] && points[ left + dir[1] ][ k + dir[0] ];        // Leavr
                                                                                               // 
           for( let y = 0; y < 4; y++ )                                          // 
-            if( nextTo[y] && nextTo[ (y+1)%4 ] )                          // a consistent rotational direction through the pairs:
+            if( nextTo[y] && nextTo[ (y+1)%4 ] )                          // a ch the pairs:
               normal = normal.plus( nextTo[y].minus( nowPos ).cross( nextTo[ (y+1)%4 ].minus( nowPos ) ) );          
           normal.normalize();                                                              // N vector.
                                                      //:
@@ -210,8 +210,8 @@ class Surface_Of_Revolution extends Grid_Patch      // Scolumns.
     }
 }
 
-window.Regular_2D_Polygon = window.classes.Regular_2D_Polygon =
-class Regular_2D_Polygon extends Surface_Of_Revolution  // 
+window.P_2D = window.classes.P_2D =
+class P_2D extends Surface_Of_Revolution  // 
   { constructor( rows, columns ) { super( rows, columns, Vec.cast( [0, 0, 0], [1, 0, 0] ) ); 
                                    this.normals = this.normals.map( x => Vec.of( 0,0,1 ) );
                                   //insert
@@ -407,8 +407,8 @@ window.Cylindrical_Tube = window.classes.Cylindrical_Tube =
 class Cylindrical_Tube extends Surface_Of_Revolution    // An open tube shape with equally sized sections, pointing down Z locally.    
   { constructor( rows, columns, texture_range ) { super( rows, columns, Vec.cast( [1, 0, .5], [1, 0, -.5] ), texture_range ); } }
 
-window.Cone_Tip = window.classes.Cone_Tip =
-class Cone_Tip extends Surface_Of_Revolution        // Note:  Touches the Z axis; squares degenerate into triangles as they sweep around.
+window.U_CONE = window.classes.U_CONE =
+class U_CONE extends Surface_Of_Revolution        // Note:  Touches the Z axis; squares degenerate into triangles as they sweep around.
   { constructor( rows, columns, texture_range ) { super( rows, columns, Vec.cast( [0, 0, 1],  [1, 0, -1]  ), texture_range ); } }
 
 window.Circle = window.classes.Circle =
@@ -440,12 +440,12 @@ class Torus extends Shape                                         // Buildevolut
 
 
 window.Capped_Cylinder = window.classes.Capped_Cylinder =
-class Capped_Cylinder extends Shape                       // Combine a tube and two regular polygons to make a closed cylinder.
+class Capped_Cylinder extends Shape                       // 
   { constructor( rows, columns, texture_range )           // Flat shade this to make a prism, where #columns = #sides.
       { super( "positions", "normals", "texture_coords" );
         Cylindrical_Tube  .insert_transformed_copy_into( this, [ rows, columns, texture_range ] );
-        Regular_2D_Polygon.insert_transformed_copy_into( this, [ 1, columns ],                                                  Mat4.translation([ 0, 0, .5 ]) );
-        Regular_2D_Polygon.insert_transformed_copy_into( this, [ 1, columns ], Mat4.rotation( Math.PI, Vec.of(0, 1, 0) ).times( Mat4.translation([ 0, 0, .5 ]) ) ); } }
+        P_2D.insert_transformed_copy_into( this, [ 1, columns ],                                                  Mat4.translation([ 0, 0, .5 ]) );
+        P_2D.insert_transformed_copy_into( this, [ 1, columns ], Mat4.rotation( Math.PI, Vec.of(0, 1, 0) ).times( Mat4.translation([ 0, 0, .5 ]) ) ); } }
 
   
 window.Axis_Arrows = window.classes.Axis_Arrows =
